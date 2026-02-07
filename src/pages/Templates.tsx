@@ -41,7 +41,7 @@ export default function Templates() {
           <div>
             <h1 className="text-2xl font-bold text-foreground">Message Templates</h1>
             <p className="text-sm text-muted-foreground">
-              Edit templates used at each pipeline stage. Variables: {'{{fullName}}'}, {'{{retreatName}}'}, {'{{startDate}}'}, {'{{endDate}}'}, {'{{location}}'}, {'{{paymentLink}}'}, etc.
+              Edit templates used at each pipeline stage. Variables: {'{{firstName}}'}, {'{{retreatName}}'}, {'{{startDate}}'}, {'{{endDate}}'}, {'{{paymentLink}}'}, {'{{scheduleLink}}'}
             </p>
           </div>
         </div>
