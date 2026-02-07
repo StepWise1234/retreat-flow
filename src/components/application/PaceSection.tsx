@@ -94,8 +94,8 @@ export default function PaceSection() {
             />
           </div>
 
-          {/* Orbital timeline around the circle */}
-          <div className="absolute inset-0">
+        {/* Orbital timeline around the circle */}
+          <div className="absolute inset-0" style={{ transform: 'translate(-100px, -200px)' }}>
             <OrbitalTimeline
               items={TRAINING_FEATURES}
               radius={260}
