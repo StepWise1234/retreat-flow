@@ -257,15 +257,15 @@ export default function ApplicationForm() {
     { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-400', dot: 'bg-emerald-500' },
   ];
 
-  // Dusk gradient backgrounds — progressively darker at each step
+  // Subtle dusk gradient — professional, light base that warms gently across steps
   const duskGradients = [
-    'from-[hsl(330,60%,92%)] via-[hsl(20,80%,88%)] to-[hsl(30,70%,85%)]',     // Step 0: golden hour
-    'from-[hsl(20,70%,85%)] via-[hsl(15,60%,78%)] to-[hsl(350,50%,75%)]',      // Step 1: late golden
-    'from-[hsl(350,50%,75%)] via-[hsl(330,45%,68%)] to-[hsl(310,40%,62%)]',    // Step 2: pink dusk
-    'from-[hsl(310,40%,62%)] via-[hsl(280,35%,52%)] to-[hsl(260,40%,45%)]',    // Step 3: purple twilight
-    'from-[hsl(260,40%,45%)] via-[hsl(240,35%,38%)] to-[hsl(230,40%,32%)]',    // Step 4: deep blue
-    'from-[hsl(230,40%,32%)] via-[hsl(225,38%,25%)] to-[hsl(220,40%,20%)]',    // Step 5: near night
-    'from-[hsl(220,40%,20%)] via-[hsl(215,45%,15%)] to-[hsl(210,50%,10%)]',    // Step 6: night sky
+    'from-[hsl(40,30%,97%)] via-[hsl(30,35%,95%)] to-[hsl(25,30%,93%)]',       // Step 0: warm white
+    'from-[hsl(30,35%,95%)] via-[hsl(25,30%,93%)] to-[hsl(20,28%,91%)]',       // Step 1: soft cream
+    'from-[hsl(25,28%,93%)] via-[hsl(20,25%,91%)] to-[hsl(15,25%,89%)]',       // Step 2: warm peach hint
+    'from-[hsl(20,25%,91%)] via-[hsl(330,18%,89%)] to-[hsl(320,15%,87%)]',     // Step 3: blush touch
+    'from-[hsl(330,18%,89%)] via-[hsl(300,12%,87%)] to-[hsl(280,14%,85%)]',    // Step 4: soft lavender
+    'from-[hsl(280,14%,85%)] via-[hsl(260,14%,83%)] to-[hsl(240,15%,81%)]',    // Step 5: twilight hint
+    'from-[hsl(250,16%,82%)] via-[hsl(235,18%,78%)] to-[hsl(225,20%,75%)]',    // Step 6: calm dusk
   ];
 
   return (
@@ -304,10 +304,8 @@ export default function ApplicationForm() {
           })}
         </div>
 
-        {/* Form card — stays light & readable against darkening background */}
-        <div className="rounded-2xl border bg-card/90 backdrop-blur-md p-6 sm:p-8 shadow-lg animate-fade-in transition-shadow duration-1000"
-          style={{ boxShadow: step > 3 ? '0 8px 40px rgba(0,0,0,0.3)' : undefined }}
-        >
+        {/* Form card */}
+        <div className="rounded-2xl border bg-card/95 backdrop-blur-md p-6 sm:p-8 shadow-sm animate-fade-in">
 
           {/* SECTION 0: Training & Personal Info */}
           {step === 0 && (
