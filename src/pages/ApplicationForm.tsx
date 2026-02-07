@@ -257,7 +257,7 @@ export default function ApplicationForm() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[hsl(330,60%,85%)] via-[hsl(20,80%,80%)] via-60% to-[hsl(210,50%,75%)]">
+    <div className="min-h-screen bg-gradient-to-b from-[hsl(330,60%,92%)] via-[hsl(20,80%,90%)] via-60% to-[hsl(210,50%,87%)]">
       <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
         {/* Hero header with image */}
         <div className="relative mb-8 overflow-hidden rounded-2xl shadow-lg">
