@@ -72,17 +72,30 @@ export default function PaceSection() {
 
         {/* Center composition — circle behind, silhouette overlapping, orbital around */}
         <div className="relative flex items-center justify-center">
-          {/* Sage circle + orbital — single container ensures shared center */}
+          {/* Celadon circle */}
           <div
-            className="absolute h-72 w-72 sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
-            style={{ left: '-10%', top: '25px' }}
+            className="absolute h-72 w-72 rounded-full sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
+            style={{
+              left: '-10%',
+              top: '25px',
+              backgroundColor: 'hsl(160 30% 72%)',
+            }}
+          />
+
+          {/* Silhouette — mix-blend-mode removes white bg */}
+          <div
+            className="relative z-10 h-[22rem] w-[18rem] sm:h-[26rem] sm:w-[22rem] md:h-[32rem] md:w-[26rem]"
+            style={{ mixBlendMode: 'multiply' }}
           >
-            {/* Celadon circle */}
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{ backgroundColor: 'hsl(160 30% 72%)' }}
+            <img
+              src={silhouetteImg}
+              alt="Calm silhouette profile with eyes closed"
+              className="h-full w-full object-contain object-bottom"
             />
-            {/* Orbital ring */}
+          </div>
+
+          {/* Orbital timeline around the circle */}
+          <div className="absolute inset-0">
             <OrbitalTimeline
               items={TRAINING_FEATURES}
               radius={260}
