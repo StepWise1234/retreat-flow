@@ -281,7 +281,7 @@ export default function ApplicationForm() {
         </div>
 
         {/* Step progress */}
-        <div className="mb-6 flex items-center justify-center gap-1 flex-wrap">
+        <div className="mb-6 flex items-center justify-center gap-1 overflow-x-auto pb-1">
           {SECTIONS.map((section, idx) => {
             const color = progressColors[idx];
             const isComplete = idx < step;
@@ -291,7 +291,7 @@ export default function ApplicationForm() {
                 key={idx}
                 onClick={() => setStep(idx)}
                 className={cn(
-                  'flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium transition-all border',
+                  'flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium transition-all border whitespace-nowrap shrink-0',
                   isCurrent && `${color.bg} ${color.text} ${color.border}`,
                   isComplete && `${color.dot} text-white border-transparent`,
                   !isCurrent && !isComplete && 'bg-secondary text-muted-foreground border-transparent'
