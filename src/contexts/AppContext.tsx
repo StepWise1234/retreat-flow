@@ -49,7 +49,12 @@ interface AppContextType {
   bulkRemoveTag: (registrationIds: string[], tag: string) => void;
 }
 
-const AppContext = createContext<AppContextType | null>(null);
+// Persist context across HMR reloads
+const _global = globalThis as any;
+if (!_global.__APP_CONTEXT__) {
+  _global.__APP_CONTEXT__ = createContext<AppContextType | null>(null);
+}
+const AppContext = _global.__APP_CONTEXT__ as React.Context<AppContextType | null>;
 
 export function useApp() {
   const ctx = useContext(AppContext);
