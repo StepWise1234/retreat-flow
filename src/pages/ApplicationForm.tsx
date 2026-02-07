@@ -65,11 +65,11 @@ const SUPPORT_NETWORK = [
 ];
 
 const SECTIONS = [
-  { label: 'Training & Info', index: 0 },
+  { label: 'Basics', index: 0 },
   { label: 'Experience', index: 1 },
   { label: 'Physical Health', index: 2 },
   { label: 'Mental Health', index: 3 },
-  { label: 'Stress & Wellbeing', index: 4 },
+  { label: 'Wellbeing', index: 4 },
   { label: 'Self-Care & Goals', index: 5 },
   { label: 'Confirmation', index: 6 },
 ];
