@@ -30,13 +30,22 @@ export default function RetreatCard({ retreat, registrations, colorIndex = 0 }: 
   return (
     <Link
       to={`/retreat/${retreat.id}`}
-      className="group relative block animate-fade-in rounded-lg border bg-gradient-card p-5 pt-6 shadow-sm hover-lift hover-border-glow hover-shimmer hover-rainbow-bar overflow-hidden"
-      style={{ '--retreat-accent-from': retreatColor.from, '--retreat-accent-to': retreatColor.to } as React.CSSProperties}
+      className="group relative block animate-fade-in rounded-lg border p-5 pt-6 shadow-sm hover-lift hover-border-glow hover-shimmer hover-rainbow-bar overflow-hidden"
+      style={{
+        '--retreat-accent-from': retreatColor.from,
+        '--retreat-accent-to': retreatColor.to,
+        background: `linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--card)) 40%, ${retreatColor.from}08 70%, ${retreatColor.to}12 100%)`,
+      } as React.CSSProperties}
     >
       {/* Gradient accent bar at top */}
       <div
-        className="absolute top-0 left-0 right-0 h-1 opacity-80"
+        className="absolute top-0 left-0 right-0 h-1"
         style={{ background: `linear-gradient(90deg, ${retreatColor.from}, ${retreatColor.to})` }}
+      />
+      {/* Subtle radial glow in corner */}
+      <div
+        className="pointer-events-none absolute -bottom-8 -right-8 h-32 w-32 rounded-full opacity-[0.07] blur-2xl"
+        style={{ background: `radial-gradient(circle, ${retreatColor.to}, transparent 70%)` }}
       />
       <div className="mb-3 flex items-start justify-between">
         <div>
@@ -60,7 +69,7 @@ export default function RetreatCard({ retreat, registrations, colorIndex = 0 }: 
 
       {/* Capacity */}
       <div className="mb-4">
-        <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
+        <div className="mb-1.5 flex items-center justify-between text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Users className="h-3 w-3" /> Enrolled
           </span>
@@ -68,13 +77,18 @@ export default function RetreatCard({ retreat, registrations, colorIndex = 0 }: 
             {enrolled}/{capacity}{retreat.capacityOverride && <span className="ml-0.5 text-[10px] text-muted-foreground">(+3)</span>}
           </span>
         </div>
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+        <div className="relative h-2 w-full overflow-hidden rounded-full bg-secondary/60">
           <div
-            className={cn(
-              'h-full rounded-full transition-all',
-              isOver ? 'bg-destructive' : retreat.status === 'Full' ? 'bg-stage-payment' : 'bg-primary'
-            )}
-            style={{ width: `${capacityPct}%` }}
+            className="h-full rounded-full transition-all duration-500 ease-out"
+            style={{
+              width: `${capacityPct}%`,
+              background: isOver
+                ? 'hsl(var(--destructive))'
+                : `linear-gradient(90deg, ${retreatColor.from}, ${retreatColor.to})`,
+              boxShadow: isOver
+                ? '0 0 8px hsl(var(--destructive) / 0.4)'
+                : `0 0 10px ${retreatColor.from}40, 0 0 4px ${retreatColor.to}30`,
+            }}
           />
         </div>
       </div>
