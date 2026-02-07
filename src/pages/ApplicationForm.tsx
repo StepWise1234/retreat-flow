@@ -282,15 +282,6 @@ export default function ApplicationForm() {
                     </span>
                     {' '}training.
                   </p>
-
-                  <div className="space-y-3">
-                    <p className={proseSm}>These dates work for me:</p>
-                    <ChipSelector
-                      items={TRAINING_DATES}
-                      selected={form.interestedDates}
-                      onChange={(v) => update('interestedDates', v)}
-                    />
-                  </div>
                 </div>
               )}
 
