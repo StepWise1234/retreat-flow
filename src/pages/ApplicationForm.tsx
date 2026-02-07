@@ -679,35 +679,52 @@ export default function ApplicationForm() {
           </AnimatePresence>
 
           {/* ─── Navigation ─── */}
-          <div className="mt-10 flex items-center justify-between border-t border-white/[0.06] pt-6">
-            <Button
-              variant="outline"
-              onClick={prev}
-              disabled={step === 0}
-              className="gap-1.5 border-white/10 bg-white/[0.03] text-white/60 hover:bg-white/[0.08] hover:text-white disabled:opacity-20"
-            >
-              <ChevronLeft className="h-4 w-4" /> Back
-            </Button>
+          <div className="mt-10 border-t border-white/[0.06] pt-6 space-y-4">
+            {/* Dot navigation */}
+            <div className="flex items-center justify-center gap-1.5">
+              {SECTIONS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setStep(i)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    i === step
+                      ? 'w-6 bg-[hsl(160_30%_65%)]'
+                      : i < step
+                        ? 'w-2 bg-[hsl(160_30%_65%/0.4)] hover:bg-[hsl(160_30%_65%/0.6)]'
+                        : 'w-2 bg-white/15 hover:bg-white/30'
+                  }`}
+                  aria-label={`Go to ${SECTIONS[i].label}`}
+                />
+              ))}
+            </div>
 
-            <span className="text-xs text-white/20 tabular-nums">
-              {step + 1} / {SECTIONS.length}
-            </span>
+            {/* Back / Continue buttons */}
+            <div className="flex items-center justify-between">
+              <Button
+                variant="outline"
+                onClick={prev}
+                disabled={step === 0}
+                className="gap-1.5 border-white/10 bg-white/[0.03] text-white/60 hover:bg-white/[0.08] hover:text-white disabled:opacity-20"
+              >
+                <ChevronLeft className="h-4 w-4" /> Back
+              </Button>
 
-            {step < SECTIONS.length - 1 ? (
-              <Button
-                onClick={next}
-                className="gap-1.5 bg-[hsl(160_30%_55%)] text-black hover:bg-[hsl(160_30%_65%)] border-0"
-              >
-                Continue <ChevronRight className="h-4 w-4" />
-              </Button>
-            ) : (
-              <Button
-                onClick={handleSubmit}
-                className="gap-1.5 bg-[hsl(160_30%_55%)] text-black hover:bg-[hsl(160_30%_65%)] border-0"
-              >
-                <Send className="h-4 w-4" /> Submit
-              </Button>
-            )}
+              {step < SECTIONS.length - 1 ? (
+                <Button
+                  onClick={next}
+                  className="gap-1.5 bg-[hsl(160_30%_55%)] text-black hover:bg-[hsl(160_30%_65%)] border-0"
+                >
+                  Continue <ChevronRight className="h-4 w-4" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleSubmit}
+                  className="gap-1.5 bg-[hsl(160_30%_55%)] text-black hover:bg-[hsl(160_30%_65%)] border-0"
+                >
+                  <Send className="h-4 w-4" /> Submit
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </main>
