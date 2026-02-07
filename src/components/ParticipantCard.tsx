@@ -1,5 +1,5 @@
-import { AlertTriangle, MessageCircle } from 'lucide-react';
-import { Registration, Participant } from '@/lib/types';
+import { AlertTriangle, MessageCircle, CreditCard } from 'lucide-react';
+import { Registration, Participant, PaymentStatus } from '@/lib/types';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 
@@ -10,9 +10,17 @@ interface Props {
   isDragging?: boolean;
 }
 
+const paymentBadgeStyles: Record<PaymentStatus, string> = {
+  Unpaid: 'bg-stage-payment-light text-stage-payment',
+  Partial: 'bg-stage-interview-light text-stage-interview',
+  Paid: 'bg-stage-approval-light text-stage-approval',
+  Refunded: 'bg-destructive/10 text-destructive',
+};
+
 export default function ParticipantCard({ registration, participant, onClick, isDragging }: Props) {
   const hasAllergies = participant.allergies.trim().length > 0;
   const hasSpecial = participant.specialRequests.trim().length > 0;
+  const showPayment = registration.paymentStatus !== 'Unpaid' || registration.amountDue;
 
   return (
     <button
@@ -34,6 +42,11 @@ export default function ParticipantCard({ registration, participant, onClick, is
           </span>
         </div>
         <div className="flex items-center gap-1">
+          {showPayment && (
+            <span className={cn('rounded px-1 py-0.5 text-[10px] font-medium', paymentBadgeStyles[registration.paymentStatus])}>
+              {registration.paymentStatus}
+            </span>
+          )}
           {hasAllergies && (
             <span title={`Allergies: ${participant.allergies}`}>
               <AlertTriangle className="h-3.5 w-3.5 text-stage-payment" />

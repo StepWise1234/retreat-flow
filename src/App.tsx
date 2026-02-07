@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import RetreatBoard from "./pages/RetreatBoard";
 import ApplicationForm from "./pages/ApplicationForm";
 import Templates from "./pages/Templates";
+import Archive from "./pages/Archive";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/retreat/:id" element={<RetreatBoard />} />
             <Route path="/apply" element={<ApplicationForm />} />
             <Route path="/templates" element={<Templates />} />
+            <Route path="/archive" element={<Archive />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

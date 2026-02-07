@@ -1,14 +1,17 @@
 import { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { Search, ChevronLeft } from 'lucide-react';
+import { Search, ChevronLeft, Users } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
-import { PIPELINE_STAGES, PipelineStage, STAGE_STYLE_MAP } from '@/lib/types';
+import { PIPELINE_STAGES, PipelineStage, STAGE_STYLE_MAP, STATUS_STYLES, getEnrolledCount, getStageIndex, isEnrolledStage } from '@/lib/types';
 import Layout from '@/components/Layout';
 import ParticipantCard from '@/components/ParticipantCard';
 import ParticipantDetailSheet from '@/components/ParticipantDetailSheet';
 import QuickAddLeadDialog from '@/components/QuickAddLeadDialog';
+import CapacityBanner from '@/components/CapacityBanner';
+import BoardFilters, { BoardFilter, BoardSort } from '@/components/BoardFilters';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 export default function RetreatBoard() {
@@ -16,24 +19,64 @@ export default function RetreatBoard() {
   const { getRetreat, getRegistrationsForRetreat, getParticipant, moveStage } = useApp();
   const [search, setSearch] = useState('');
   const [selectedReg, setSelectedReg] = useState<string | null>(null);
+  const [filters, setFilters] = useState<BoardFilter[]>([]);
+  const [sort, setSort] = useState<BoardSort>('stage');
 
   const retreat = getRetreat(id!);
   const allRegs = getRegistrationsForRetreat(id!);
+  const enrolled = getEnrolledCount(allRegs);
 
   const filteredRegs = useMemo(() => {
-    if (!search.trim()) return allRegs;
-    const q = search.toLowerCase();
-    return allRegs.filter((reg) => {
-      const p = getParticipant(reg.participantId);
-      if (!p) return false;
-      return (
-        p.fullName.toLowerCase().includes(q) ||
-        p.email.toLowerCase().includes(q) ||
-        p.signalHandle.toLowerCase().includes(q) ||
-        reg.tags.some((t) => t.toLowerCase().includes(q))
+    let regs = allRegs;
+
+    // Text search
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      regs = regs.filter((reg) => {
+        const p = getParticipant(reg.participantId);
+        if (!p) return false;
+        return (
+          p.fullName.toLowerCase().includes(q) ||
+          p.email.toLowerCase().includes(q) ||
+          p.signalHandle.toLowerCase().includes(q) ||
+          reg.tags.some((t) => t.toLowerCase().includes(q))
+        );
+      });
+    }
+
+    // Quick filters
+    if (filters.includes('needs-action')) {
+      const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+      regs = regs.filter((r) => new Date(r.lastTouchedAt).getTime() < sevenDaysAgo);
+    }
+    if (filters.includes('allergies')) {
+      regs = regs.filter((r) => {
+        const p = getParticipant(r.participantId);
+        return p && (p.allergies.trim() || p.specialRequests.trim());
+      });
+    }
+    if (filters.includes('payment-pending')) {
+      regs = regs.filter((r) =>
+        isEnrolledStage(r.currentStage) && (r.paymentStatus === 'Unpaid' || r.paymentStatus === 'Partial')
       );
-    });
-  }, [search, allRegs, getParticipant]);
+    }
+    if (filters.includes('interview-week')) {
+      regs = regs.filter((r) => r.currentStage === 'Interview');
+    }
+
+    // Sorting (applied within each column, but also global for list reference)
+    if (sort === 'lastTouched') {
+      regs = [...regs].sort((a, b) => new Date(b.lastTouchedAt).getTime() - new Date(a.lastTouchedAt).getTime());
+    } else if (sort === 'name') {
+      regs = [...regs].sort((a, b) => {
+        const pa = getParticipant(a.participantId);
+        const pb = getParticipant(b.participantId);
+        return (pa?.fullName ?? '').localeCompare(pb?.fullName ?? '');
+      });
+    }
+
+    return regs;
+  }, [search, allRegs, getParticipant, filters, sort]);
 
   const columns = useMemo(() => {
     return PIPELINE_STAGES.map((stage) => ({
@@ -46,8 +89,17 @@ export default function RetreatBoard() {
     if (!result.destination) return;
     const newStage = result.destination.droppableId as PipelineStage;
     const regId = result.draggableId;
-    moveStage(regId, newStage, 'Drag-and-drop');
+
+    // Check backward movement from Payment+ requiring note
+    const reg = allRegs.find((r) => r.id === regId);
+    if (reg && isEnrolledStage(reg.currentStage) && !isEnrolledStage(newStage)) {
+      moveStage(regId, newStage, 'Drag-and-drop (moved backward from enrolled stage)');
+    } else {
+      moveStage(regId, newStage, 'Drag-and-drop');
+    }
   };
+
+  const isReadOnly = retreat?.status === 'Closed' || retreat?.status === 'Archived';
 
   if (!retreat) {
     return (
@@ -66,9 +118,14 @@ export default function RetreatBoard() {
             <ChevronLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-foreground">{retreat.retreatName}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-bold text-foreground">{retreat.retreatName}</h1>
+              <Badge className={cn('text-xs', STATUS_STYLES[retreat.status])}>
+                {retreat.status}
+              </Badge>
+            </div>
             <p className="text-xs text-muted-foreground">
-              {retreat.location} · {allRegs.length} participants
+              {retreat.location} · <Users className="inline h-3 w-3" /> {enrolled}/{retreat.cohortSizeTarget} enrolled · {allRegs.length} total
             </p>
           </div>
         </div>
@@ -82,9 +139,25 @@ export default function RetreatBoard() {
               className="h-9 w-56 pl-8 text-sm"
             />
           </div>
-          <QuickAddLeadDialog retreatId={retreat.id} />
+          <BoardFilters
+            activeFilters={filters}
+            onFiltersChange={setFilters}
+            sort={sort}
+            onSortChange={setSort}
+          />
+          {!isReadOnly && <QuickAddLeadDialog retreatId={retreat.id} />}
         </div>
       </div>
+
+      {/* Capacity Banner */}
+      <CapacityBanner retreat={retreat} registrations={allRegs} />
+
+      {/* Read-only banner */}
+      {isReadOnly && (
+        <div className="mb-4 rounded-lg border border-border bg-secondary p-3 text-center text-sm text-muted-foreground">
+          This retreat is <strong>{retreat.status.toLowerCase()}</strong>. Board is read-only (notes can still be edited).
+        </div>
+      )}
 
       {/* Kanban */}
       <DragDropContext onDragEnd={handleDragEnd}>
@@ -106,7 +179,7 @@ export default function RetreatBoard() {
                 </div>
 
                 {/* Cards */}
-                <Droppable droppableId={stage}>
+                <Droppable droppableId={stage} isDropDisabled={isReadOnly}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
@@ -120,7 +193,7 @@ export default function RetreatBoard() {
                         const participant = getParticipant(reg.participantId);
                         if (!participant) return null;
                         return (
-                          <Draggable key={reg.id} draggableId={reg.id} index={index}>
+                          <Draggable key={reg.id} draggableId={reg.id} index={index} isDragDisabled={isReadOnly}>
                             {(provided, snapshot) => (
                               <div
                                 ref={provided.innerRef}
