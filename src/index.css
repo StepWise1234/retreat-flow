@@ -673,34 +673,36 @@
     transform: translateY(-1px);
   }
 
-  /* ─── Frosted form theme (application form on dark bg) ─── */
-  .form-dark input,
-  .form-dark textarea,
-  .form-dark [role="combobox"] {
-    background: hsl(0 0% 100% / 0.6) !important;
-    border-color: hsl(0 0% 0% / 0.12) !important;
-    color: hsl(222 20% 14%) !important;
+  /* ─── Conversational form inputs ─── */
+  .conv-input {
+    background: hsl(0 0% 100% / 0.04);
+    border: 1px solid hsl(0 0% 100% / 0.1);
+    border-radius: 0.75rem;
+    padding: 0.625rem 1rem;
+    color: hsl(0 0% 100% / 0.9);
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    outline: none;
   }
-  .form-dark input::placeholder,
-  .form-dark textarea::placeholder {
-    color: hsl(220 10% 46%) !important;
+  .conv-input::placeholder {
+    color: hsl(0 0% 100% / 0.2);
   }
-  .form-dark input:focus,
-  .form-dark textarea:focus,
-  .form-dark [role="combobox"]:focus {
-    border-color: hsl(160 30% 50% / 0.5) !important;
-    box-shadow: 0 0 0 2px hsl(160 30% 50% / 0.15) !important;
+  .conv-input:focus {
+    border-color: hsl(160 30% 65% / 0.4);
+    background: hsl(0 0% 100% / 0.06);
+    box-shadow: 0 0 0 2px hsl(160 30% 65% / 0.1);
   }
-  /* Slider track and thumb */
-  .form-dark [role="slider"] {
-    background: hsl(160 30% 50%) !important;
-    border-color: hsl(160 30% 50%) !important;
+
+  /* Conversational slider override */
+  .conv-slider [role="slider"] {
+    background: hsl(160 30% 60%) !important;
+    border-color: hsl(160 30% 60%) !important;
   }
-  .form-dark [data-orientation="horizontal"] > span:first-child {
-    background: hsl(0 0% 0% / 0.1) !important;
+  .conv-slider [data-orientation="horizontal"] > span:first-child {
+    background: hsl(0 0% 100% / 0.08) !important;
   }
-  .form-dark [data-orientation="horizontal"] > span:first-child > span {
-    background: hsl(160 30% 55% / 0.7) !important;
+  .conv-slider [data-orientation="horizontal"] > span:first-child > span {
+    background: hsl(160 30% 55% / 0.6) !important;
   }
 }
 
