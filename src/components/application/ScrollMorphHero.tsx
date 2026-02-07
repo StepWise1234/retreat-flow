@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, useSpring, useMotionValue, useTransform } from 'framer-motion';
 
 /* ─── Types ─── */
@@ -12,40 +12,28 @@ interface TestimonialCardTarget {
   opacity: number;
 }
 
-/* ─── Testimonials ─── */
+/* ─── Testimonials with background images ─── */
 const TESTIMONIALS = [
-  { quote: 'Transformed my entire clinical approach.', author: 'Dr. Sarah K.', role: 'Psychiatrist' },
-  { quote: 'The depth of training is unmatched.', author: 'James R.', role: 'Therapist' },
-  { quote: 'I found my community here.', author: 'Maria L.', role: 'Social Worker' },
-  { quote: 'Rigorous, safe, and deeply impactful.', author: 'Dr. Chen W.', role: 'Physician' },
-  { quote: 'Every clinician should experience this.', author: 'Ava M.', role: 'Counselor' },
-  { quote: 'Changed the trajectory of my practice.', author: 'Noah P.', role: 'Psychologist' },
-  { quote: 'Held and supported through every step.', author: 'Elena V.', role: 'Nurse Practitioner' },
-  { quote: 'A masterclass in facilitation.', author: 'Dr. Obi A.', role: 'Researcher' },
-  { quote: 'The screening process shows they care.', author: 'Sophie T.', role: 'Therapist' },
-  { quote: 'Profoundly rewired how I hold space.', author: 'Raj S.', role: 'Facilitator' },
-  { quote: 'World-class training, intimate setting.', author: 'Dr. Kim J.', role: 'Psychiatrist' },
-  { quote: 'The community stays with you forever.', author: 'Lena C.', role: 'Coach' },
-  { quote: 'Science-backed and heart-led.', author: 'Marcus D.', role: 'Physician' },
-  { quote: 'Exactly the training I was searching for.', author: 'Priya N.', role: 'Therapist' },
-  { quote: 'Safe container, exceptional mentors.', author: 'Dr. Alex F.', role: 'Clinician' },
+  { quote: 'Transformed my entire clinical approach.', author: 'Dr. Sarah K.', role: 'Psychiatrist', img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=300&q=80' },
+  { quote: 'The depth of training is unmatched.', author: 'James R.', role: 'Therapist', img: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&q=80' },
+  { quote: 'I found my community here.', author: 'Maria L.', role: 'Social Worker', img: 'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=300&q=80' },
+  { quote: 'Rigorous, safe, and deeply impactful.', author: 'Dr. Chen W.', role: 'Physician', img: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&q=80' },
+  { quote: 'Every clinician should experience this.', author: 'Ava M.', role: 'Counselor', img: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&q=80' },
+  { quote: 'Changed the trajectory of my practice.', author: 'Noah P.', role: 'Psychologist', img: 'https://images.unsplash.com/photo-1500485035595-cbe6f645feb1?w=300&q=80' },
+  { quote: 'Held and supported through every step.', author: 'Elena V.', role: 'Nurse Practitioner', img: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&q=80' },
+  { quote: 'A masterclass in facilitation.', author: 'Dr. Obi A.', role: 'Researcher', img: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=300&q=80' },
+  { quote: 'The screening process shows they care.', author: 'Sophie T.', role: 'Therapist', img: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=300&q=80' },
+  { quote: 'Profoundly rewired how I hold space.', author: 'Raj S.', role: 'Facilitator', img: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=300&q=80' },
+  { quote: 'World-class training, intimate setting.', author: 'Dr. Kim J.', role: 'Psychiatrist', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?w=300&q=80' },
+  { quote: 'The community stays with you forever.', author: 'Lena C.', role: 'Coach', img: 'https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=300&q=80' },
+  { quote: 'Science-backed and heart-led.', author: 'Marcus D.', role: 'Physician', img: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=300&q=80' },
+  { quote: 'Exactly the training I was searching for.', author: 'Priya N.', role: 'Therapist', img: 'https://images.unsplash.com/photo-1523961131990-5ea7c61b2107?w=300&q=80' },
+  { quote: 'Safe container, exceptional mentors.', author: 'Dr. Alex F.', role: 'Clinician', img: 'https://images.unsplash.com/photo-1496568816309-51d7c20e3b21?w=300&q=80' },
 ];
 
 const TOTAL_CARDS = TESTIMONIALS.length;
 const CARD_W = 110;
 const CARD_H = 80;
-
-/* ─── Gradient palette for cards ─── */
-const CARD_GRADIENTS = [
-  'from-[hsl(198,55%,28%)] to-[hsl(220,50%,35%)]',
-  'from-[hsl(250,45%,40%)] to-[hsl(280,40%,45%)]',
-  'from-[hsl(340,55%,45%)] to-[hsl(10,60%,50%)]',
-  'from-[hsl(160,50%,30%)] to-[hsl(190,55%,35%)]',
-  'from-[hsl(28,70%,45%)] to-[hsl(45,65%,50%)]',
-  'from-[hsl(200,60%,32%)] to-[hsl(230,50%,40%)]',
-  'from-[hsl(320,45%,42%)] to-[hsl(350,50%,48%)]',
-  'from-[hsl(140,50%,32%)] to-[hsl(170,55%,38%)]',
-];
 
 /* ─── Lerp helper ─── */
 const lerp = (a: number, b: number, t: number) => a * (1 - t) + b * t;
@@ -55,12 +43,10 @@ function TestimonialCard({
   testimonial,
   index,
   target,
-  gradientClass,
 }: {
   testimonial: (typeof TESTIMONIALS)[0];
   index: number;
   target: TestimonialCardTarget;
-  gradientClass: string;
 }) {
   return (
     <motion.div
@@ -87,19 +73,30 @@ function TestimonialCard({
         transition={{ duration: 0.6, type: 'spring', stiffness: 260, damping: 20 }}
         whileHover={{ rotateY: 180 }}
       >
-        {/* Front */}
+        {/* Front — image background with dark overlay */}
         <div
-          className={`absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg bg-gradient-to-br ${gradientClass} p-2.5 flex flex-col justify-between`}
+          className="absolute inset-0 h-full w-full overflow-hidden rounded-xl shadow-lg"
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <p className="text-[8px] leading-tight text-white/90 font-medium line-clamp-3">
-            "{testimonial.quote}"
-          </p>
-          <div className="flex items-center gap-1.5 mt-1">
-            <div className="h-4 w-4 rounded-full bg-white/25 flex items-center justify-center text-[6px] font-bold text-white shrink-0">
-              {testimonial.author.charAt(0)}
+          <img
+            src={testimonial.img}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+            loading="lazy"
+          />
+          {/* Dark overlay for legibility */}
+          <div className="absolute inset-0 bg-black/55" />
+          {/* Content */}
+          <div className="relative z-10 h-full flex flex-col justify-between p-2.5">
+            <p className="text-[8px] leading-tight text-white font-medium line-clamp-3 drop-shadow-sm">
+              "{testimonial.quote}"
+            </p>
+            <div className="flex items-center gap-1.5 mt-1">
+              <div className="h-4 w-4 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center text-[6px] font-bold text-white shrink-0">
+                {testimonial.author.charAt(0)}
+              </div>
+              <span className="text-[6px] text-white/80 truncate drop-shadow-sm">{testimonial.author}</span>
             </div>
-            <span className="text-[6px] text-white/70 truncate">{testimonial.author}</span>
           </div>
         </div>
 
@@ -341,7 +338,6 @@ export default function ScrollMorphHero() {
                   testimonial={t}
                   index={i}
                   target={target}
-                  gradientClass={CARD_GRADIENTS[i % CARD_GRADIENTS.length]}
                 />
               );
             })}
