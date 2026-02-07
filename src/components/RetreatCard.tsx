@@ -26,7 +26,7 @@ export default function RetreatCard({ retreat, registrations }: Props) {
   return (
     <Link
       to={`/retreat/${retreat.id}`}
-      className="group block animate-fade-in rounded-lg border bg-card p-5 shadow-sm transition-shadow hover:shadow-md"
+      className="group block animate-fade-in rounded-lg border bg-gradient-card p-5 shadow-sm hover-lift hover-border-glow hover-shimmer"
     >
       <div className="mb-3 flex items-start justify-between">
         <div>
