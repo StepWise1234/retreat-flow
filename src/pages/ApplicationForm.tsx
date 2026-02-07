@@ -169,7 +169,7 @@ const initialFormData: FormData = {
 /* ── Shared prose styling ── */
 
 const prose = 'text-xl sm:text-2xl md:text-3xl font-light leading-relaxed text-white/85 tracking-tight';
-const proseSm = 'text-lg sm:text-xl font-light leading-relaxed text-white/80';
+const proseSm = prose;
 const label = 'text-xs uppercase tracking-widest text-white/30 mb-1 block';
 
 /* ── Page transition ── */
