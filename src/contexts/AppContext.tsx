@@ -3,7 +3,7 @@ import {
   Retreat, Participant, Registration, MessageTemplate, Appointment, Task,
   PipelineStage, PIPELINE_STAGES, RetreatStatus, PaymentStatus, SchedulingStatus,
   AppointmentType, AppointmentStatus, RiskLevel, CareFlag, TaskStatus, TaskPriority,
-  isEnrolledStage, getEnrolledCount, getStageIndex, getEffectiveCapacity,
+  isEnrolledStage, getEnrolledCount, getStageIndex, getEffectiveCapacity, getInProgressRegistrations,
 } from '@/lib/types';
 import { seedRetreats, seedParticipants, seedRegistrations, seedAppointments, seedTasks } from '@/lib/seed-data';
 import { defaultTemplates } from '@/lib/templates';
@@ -138,14 +138,31 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         const retreat = prevRetreats.find((r) => r.id === retreatId);
         if (!retreat) return prevRetreats;
 
-        if (enrolled >= getEffectiveCapacity(retreat) && retreat.status === 'Open' && retreat.autoMarkFull) {
+        const capacity = getEffectiveCapacity(retreat);
+        const spotsLeft = capacity - enrolled;
+        const inProgress = getInProgressRegistrations(retreatRegs);
+
+        // Low-spots urgency toast
+        if (spotsLeft >= 0 && spotsLeft <= 2 && inProgress.length > 0) {
+          const names = inProgress
+            .map((reg) => participants.find((p) => p.id === reg.participantId)?.fullName)
+            .filter(Boolean)
+            .slice(0, 4);
+          const extra = inProgress.length > 4 ? ` +${inProgress.length - 4} more` : '';
+          toast.warning(
+            `⚠️ Only ${spotsLeft} spot${spotsLeft === 1 ? '' : 's'} left! ${inProgress.length} participant${inProgress.length === 1 ? '' : 's'} still in progress: ${names.join(', ')}${extra}`,
+            { duration: 8000 }
+          );
+        }
+
+        if (enrolled >= capacity && retreat.status === 'Open' && retreat.autoMarkFull) {
           toast.success('🎉 Retreat is now Full!');
           return prevRetreats.map((r) =>
             r.id === retreatId ? { ...r, status: 'Full' as RetreatStatus } : r
           );
         }
 
-        if (enrolled < getEffectiveCapacity(retreat) && retreat.status === 'Full' && retreat.autoReopenWhenBelowCapacity) {
+        if (enrolled < capacity && retreat.status === 'Full' && retreat.autoReopenWhenBelowCapacity) {
           toast.info('Retreat reopened: enrolled below capacity.');
           return prevRetreats.map((r) =>
             r.id === retreatId ? { ...r, status: 'Open' as RetreatStatus, capacityOverride: false } : r
@@ -155,7 +172,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         return prevRetreats;
       });
     },
-    []
+    [participants]
   );
 
   const moveStage = useCallback(
