@@ -76,8 +76,8 @@ export default function PaceSection() {
           <div
             className="absolute h-72 w-72 rounded-full sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
             style={{
-              left: '-10%',
-              top: '25px',
+              left: 'calc(-10% + 80px)',
+              top: '105px',
               backgroundColor: 'hsl(160 30% 72%)',
             }}
           />
