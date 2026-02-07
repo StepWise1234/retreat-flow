@@ -1,33 +1,11 @@
-import { Shield, Users, Heart, GraduationCap, Clock, Star } from 'lucide-react';
-
-const VALUE_PROPS = [
-  {
-    icon: GraduationCap,
-    title: 'Expert-Led Training',
-    description: 'Learn from experienced facilitators with years of hands-on practice in harm reduction and ceremony support.',
-  },
-  {
-    icon: Users,
-    title: 'Small Cohorts',
-    description: 'Intimate group sizes ensure personalized mentorship and deep connections with your fellow trainees.',
-  },
-  {
-    icon: Shield,
-    title: 'Safety First',
-    description: 'Our rigorous screening process ensures a safe, supportive environment for every participant.',
-  },
-  {
-    icon: Heart,
-    title: 'Holistic Approach',
-    description: 'Integration of mind, body, and spirit throughout your training with ongoing aftercare support.',
-  },
-];
+import { useState, useEffect } from 'react';
+import { Clock } from 'lucide-react';
 
 const STATS = [
-  { value: '200+', label: 'Graduates' },
+  { value: 'Learn', label: 'Online Flight School' },
   { value: '4-Day', label: 'Immersive Retreats' },
-  { value: '98%', label: 'Recommend Us' },
-  { value: '5+', label: 'Years Running' },
+  { value: 'Improve', label: 'Advanced Retreats' },
+  { value: 'Mastery', label: 'Industry-Leading Teachers' },
 ];
 
 const TESTIMONIALS = [
@@ -41,9 +19,23 @@ const TESTIMONIALS = [
     author: 'Training Participant',
     cohort: 'Spring 2025 Cohort',
   },
+  {
+    quote: "The community you build here stays with you long after the retreat ends. I found my people.",
+    author: 'Alumni',
+    cohort: 'Winter 2024 Cohort',
+  },
 ];
 
 export default function WhyJoinSection() {
+  const [activeQuote, setActiveQuote] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveQuote((prev) => (prev + 1) % TESTIMONIALS.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="mb-8 space-y-8">
       {/* Stats bar */}
@@ -59,54 +51,44 @@ export default function WhyJoinSection() {
         ))}
       </div>
 
-      {/* Value propositions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {VALUE_PROPS.map(({ icon: Icon, title, description }) => (
-          <div
-            key={title}
-            className="group rounded-xl border bg-card/80 backdrop-blur-sm p-5 transition-all duration-300 hover:shadow-md hover:border-primary/20"
-          >
-            <div className="flex items-start gap-3.5">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary/15 transition-colors">
-                <Icon className="h-5 w-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-                <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{description}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Testimonials */}
-      <div className="space-y-3">
+      {/* Rotating testimonials — transparent, clean, popping text */}
+      <div className="relative min-h-[140px] flex items-center justify-center overflow-hidden">
         {TESTIMONIALS.map((t, i) => (
           <div
             key={i}
-            className="rounded-xl border bg-card/80 backdrop-blur-sm p-5 relative overflow-hidden"
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 transition-all duration-700 ease-in-out"
+            style={{
+              opacity: i === activeQuote ? 1 : 0,
+              transform: i === activeQuote ? 'translateY(0) scale(1)' : 'translateY(12px) scale(0.97)',
+              pointerEvents: i === activeQuote ? 'auto' : 'none',
+            }}
           >
-            <div className="absolute top-3 right-4 flex gap-0.5">
-              {[...Array(5)].map((_, idx) => (
-                <Star key={idx} className="h-3 w-3 fill-amber-400 text-amber-400" />
-              ))}
-            </div>
-            <blockquote className="text-sm text-foreground/90 italic leading-relaxed pr-16">
+            <blockquote className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground leading-snug max-w-2xl">
               "{t.quote}"
             </blockquote>
-            <div className="mt-3 flex items-center gap-2">
-              <div className="h-6 w-6 rounded-full bg-primary/15 flex items-center justify-center">
-                <span className="text-[10px] font-bold text-primary">
-                  {t.author.charAt(0)}
-                </span>
-              </div>
-              <div>
-                <span className="text-xs font-medium text-foreground">{t.author}</span>
-                <span className="text-xs text-muted-foreground ml-1.5">· {t.cohort}</span>
-              </div>
+            <div className="mt-4 flex items-center gap-2">
+              <span className="text-sm font-medium text-foreground/70">{t.author}</span>
+              <span className="text-sm text-muted-foreground">· {t.cohort}</span>
             </div>
           </div>
         ))}
+
+        {/* Dot indicators */}
+        <div className="absolute bottom-0 flex gap-2">
+          {TESTIMONIALS.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveQuote(i)}
+              className="h-1.5 rounded-full transition-all duration-300"
+              style={{
+                width: i === activeQuote ? '24px' : '6px',
+                backgroundColor: i === activeQuote
+                  ? 'hsl(var(--primary))'
+                  : 'hsl(var(--muted-foreground) / 0.3)',
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       {/* CTA nudge */}

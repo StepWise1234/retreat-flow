@@ -1,15 +1,44 @@
+import { useEffect, useRef } from 'react';
 import { Plane, Sparkles } from 'lucide-react';
 import heroImage from '@/assets/flight-school-hero.png';
 
 export default function HeroSection() {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    const img = imgRef.current;
+    if (!hero || !img) return;
+
+    const handleScroll = () => {
+      const rect = hero.getBoundingClientRect();
+      const heroH = hero.offsetHeight;
+      // progress 0→1 as hero scrolls out of view
+      const progress = Math.max(0, Math.min(1, -rect.top / heroH));
+      // Theater zoom: scale from 1 → 1.35 as you scroll
+      const scale = 1 + progress * 0.35;
+      img.style.transform = `scale(${scale})`;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="relative mb-10 overflow-hidden rounded-2xl shadow-2xl group">
-      {/* Ken Burns animated background */}
+    <div
+      ref={heroRef}
+      className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden shadow-2xl"
+      style={{ marginBottom: '2.5rem' }}
+    >
+      {/* Background image with scroll-driven zoom */}
       <div className="absolute inset-0 overflow-hidden">
         <img
+          ref={imgRef}
           src={heroImage}
           alt="View from airplane window above pink clouds at sunset"
-          className="h-full w-full object-cover scale-105 animate-[kenburns_20s_ease-in-out_infinite_alternate]"
+          className="h-full w-full object-cover will-change-transform transition-transform duration-100 ease-out"
+          style={{ transform: 'scale(1)' }}
         />
       </div>
 
@@ -28,7 +57,7 @@ export default function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-16 sm:py-24">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-20 sm:py-32 md:py-40">
         {/* Glowing icon */}
         <div className="mb-5 relative">
           <div className="absolute inset-0 rounded-full bg-white/20 blur-xl scale-150 animate-pulse" />
@@ -37,8 +66,8 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Title with text shadow */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-[1.1]">
+        {/* Title */}
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-[1.1]">
           <span className="drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">Flight School</span>
           <br />
           <span className="bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
