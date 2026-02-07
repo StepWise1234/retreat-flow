@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import Layout from '@/components/Layout';
 import { Input } from '@/components/ui/input';
@@ -11,15 +11,8 @@ import { Slider } from '@/components/ui/slider';
 import { toast } from 'sonner';
 import { FileText, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { PIPELINE_STAGES, STAGE_STYLE_MAP } from '@/lib/types';
-
-const TRAINING_DATES = [
-  'March 13 - 16, 2026 (Boston, MA)',
-  'March 30 - April 2, 2026',
-  'June 1 - 4, 2026',
-  'July 20 - 23, 2026',
-  'August 24 - 27, 2026',
-];
+import { PIPELINE_STAGES, STAGE_STYLE_MAP, getRetreatColorById } from '@/lib/types';
+import { format, parseISO } from 'date-fns';
 
 const PHYSICAL_SYMPTOMS = [
   'Panic attacks', 'Tension', 'Quick temper/irritability', 'Inadequate Sleep',
@@ -208,6 +201,13 @@ export default function ApplicationForm() {
 
   const activeRetreats = retreats.filter((r) => r.status === 'Open' || r.status === 'Full');
 
+  /** Format retreat dates for display */
+  const formatRetreatDate = (r: typeof retreats[number]) => {
+    const start = parseISO(r.startDate);
+    const end = parseISO(r.endDate);
+    return `${format(start, 'MMMM d')} - ${format(end, 'd, yyyy')}`;
+  };
+
   const update = <K extends keyof FormData>(key: K, value: FormData[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
@@ -221,14 +221,17 @@ export default function ApplicationForm() {
   const prev = () => setStep((s) => Math.max(s - 1, 0));
 
   const handleSubmit = () => {
-    if (!form.retreatId || !form.firstName.trim() || !form.email.trim()) {
-      toast.error('Please fill in all required fields (Name, Email, Retreat)');
+    if (form.interestedDates.length === 0 || !form.firstName.trim() || !form.email.trim()) {
+      toast.error('Please fill in all required fields (Name, Email, Training Date)');
       return;
     }
     if (!form.agreeToTerms) {
       toast.error('Please acknowledge the terms to submit');
       return;
     }
+
+    // Use explicitly selected retreatId, or default to first interested retreat
+    const targetRetreatId = form.retreatId || form.interestedDates[0];
 
     const fullName = [form.preferredName || form.firstName, form.lastName].filter(Boolean).join(' ');
     const participant = addParticipant({
@@ -239,7 +242,7 @@ export default function ApplicationForm() {
       specialRequests: [form.physicalHealthIssues, form.supplements].filter(Boolean).join('; '),
     });
 
-    addRegistration(form.retreatId, participant.id, 'Application');
+    addRegistration(targetRetreatId, participant.id, 'Application');
     toast.success(`${fullName}'s application submitted successfully!`);
     setForm(initialFormData);
     setStep(0);
@@ -300,18 +303,47 @@ export default function ApplicationForm() {
           {/* SECTION 0: Training & Personal Info */}
           {step === 0 && (
             <div className="space-y-6">
-              <SectionTitle>Interested Training Date(s)</SectionTitle>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {TRAINING_DATES.map((date) => (
-                  <label key={date} className="flex items-center gap-2 rounded-md border bg-card px-3 py-2.5 text-sm cursor-pointer hover:bg-secondary/50 transition-colors">
-                    <Checkbox
-                      checked={form.interestedDates.includes(date)}
-                      onCheckedChange={() => toggleArrayItem('interestedDates', date)}
-                    />
-                    <span className="text-foreground">{date}</span>
-                  </label>
-                ))}
-              </div>
+              <SectionTitle>Interested Training Date(s) *</SectionTitle>
+              {activeRetreats.length === 0 ? (
+                <p className="text-sm text-muted-foreground rounded-md border bg-secondary/30 px-4 py-3">
+                  No upcoming training dates are currently available. Please check back soon.
+                </p>
+              ) : (
+                <div className="grid grid-cols-1 gap-2">
+                  {activeRetreats.map((r) => {
+                    const isSelected = form.interestedDates.includes(r.id);
+                    const color = getRetreatColorById(r.id, retreats);
+                    const isFull = r.status === 'Full';
+                    return (
+                      <label
+                        key={r.id}
+                        className={cn(
+                          'flex items-center gap-3 rounded-lg border px-4 py-3 text-sm cursor-pointer transition-all hover-border-glow',
+                          isSelected ? 'border-primary bg-primary/5 shadow-sm' : 'bg-card hover:bg-secondary/30'
+                        )}
+                      >
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={() => toggleArrayItem('interestedDates', r.id)}
+                        />
+                        <span
+                          className="h-3 w-3 rounded-full shrink-0"
+                          style={{ background: `linear-gradient(135deg, ${color.from}, ${color.to})` }}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <span className="font-medium text-foreground">{formatRetreatDate(r)}</span>
+                          <span className="text-muted-foreground ml-1.5">({r.location})</span>
+                        </div>
+                        {isFull && (
+                          <span className="shrink-0 rounded-full bg-stage-payment-light px-2 py-0.5 text-[10px] font-medium text-stage-payment">
+                            Waitlist
+                          </span>
+                        )}
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
 
               <SectionTitle>Name *</SectionTitle>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -601,19 +633,38 @@ export default function ApplicationForm() {
           {/* SECTION 6: Confirmation */}
           {step === 6 && (
             <div className="space-y-6">
-              <SectionTitle>Assign to Retreat *</SectionTitle>
-              <Select value={form.retreatId} onValueChange={(v) => update('retreatId', v)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a retreat" />
-                </SelectTrigger>
-                <SelectContent>
-                  {activeRetreats.map((r) => (
-                    <SelectItem key={r.id} value={r.id}>
-                      {r.retreatName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* Show selected training dates and allow choosing primary one if multiple */}
+              {form.interestedDates.length > 1 && (
+                <>
+                  <SectionTitle>Primary Retreat Assignment *</SectionTitle>
+                  <p className="text-xs text-muted-foreground -mt-4">
+                    You selected multiple dates. Choose which retreat to assign this application to:
+                  </p>
+                  <Select value={form.retreatId || form.interestedDates[0]} onValueChange={(v) => update('retreatId', v)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select primary retreat" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {form.interestedDates.map((rId) => {
+                        const r = retreats.find((ret) => ret.id === rId);
+                        if (!r) return null;
+                        const color = getRetreatColorById(r.id, retreats);
+                        return (
+                          <SelectItem key={r.id} value={r.id}>
+                            <span className="flex items-center gap-2">
+                              <span
+                                className="h-2.5 w-2.5 rounded-full shrink-0"
+                                style={{ background: `linear-gradient(135deg, ${color.from}, ${color.to})` }}
+                              />
+                              {r.retreatName}
+                            </span>
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                </>
+              )}
 
               <SectionTitle>Review</SectionTitle>
               <div className="rounded-lg border bg-secondary/30 p-4 text-sm space-y-2">
@@ -621,7 +672,25 @@ export default function ApplicationForm() {
                 <p><strong>Email:</strong> {form.email}</p>
                 <p><strong>Phone:</strong> {form.phone}</p>
                 {form.interestedDates.length > 0 && (
-                  <p><strong>Interested Dates:</strong> {form.interestedDates.join(', ')}</p>
+                  <div>
+                    <strong>Selected Training(s):</strong>
+                    <div className="mt-1 flex flex-wrap gap-1.5">
+                      {form.interestedDates.map((rId) => {
+                        const r = retreats.find((ret) => ret.id === rId);
+                        if (!r) return null;
+                        const color = getRetreatColorById(r.id, retreats);
+                        return (
+                          <span
+                            key={rId}
+                            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium text-white"
+                            style={{ background: `linear-gradient(135deg, ${color.from}, ${color.to})` }}
+                          >
+                            {formatRetreatDate(r)} — {r.location}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
                 )}
                 {form.allergies && <p><strong>Allergies:</strong> {form.allergies}</p>}
                 {form.dietaryPreferences.length > 0 && (
