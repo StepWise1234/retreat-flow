@@ -310,6 +310,20 @@ export default function ApplicationForm() {
           {/* SECTION 0: Training & Personal Info */}
           {step === 0 && (
             <div className="space-y-6">
+              <SectionTitle>Select Retreat *</SectionTitle>
+              <Select value={form.retreatId} onValueChange={(v) => update('retreatId', v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a retreat" />
+                </SelectTrigger>
+                <SelectContent>
+                  {activeRetreats.map((r) => (
+                    <SelectItem key={r.id} value={r.id}>
+                      {r.retreatName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
               <SectionTitle>Interested Training Date(s)</SectionTitle>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {TRAINING_DATES.map((date) => (
@@ -611,20 +625,6 @@ export default function ApplicationForm() {
           {/* SECTION 6: Confirmation */}
           {step === 6 && (
             <div className="space-y-6">
-              <SectionTitle>Assign to Retreat *</SectionTitle>
-              <Select value={form.retreatId} onValueChange={(v) => update('retreatId', v)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a retreat" />
-                </SelectTrigger>
-                <SelectContent>
-                  {activeRetreats.map((r) => (
-                    <SelectItem key={r.id} value={r.id}>
-                      {r.retreatName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
               <SectionTitle>Review</SectionTitle>
               <div className="rounded-lg border bg-secondary/30 p-4 text-sm space-y-2">
                 <p><strong>Name:</strong> {form.preferredName || form.firstName} {form.lastName}</p>
