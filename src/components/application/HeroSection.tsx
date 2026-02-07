@@ -42,10 +42,10 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* Multi-layer gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[hsl(280,60%,30%,0.25)] via-transparent to-[hsl(330,60%,40%,0.2)]" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[hsl(200,80%,50%,0.08)] to-transparent" />
+      {/* Refined gradient overlays — lighter, professional */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220,40%,20%,0.15)] via-transparent to-[hsl(280,30%,30%,0.1)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[hsl(200,60%,70%,0.06)] to-transparent" />
 
       {/* Floating particles overlay */}
       <div className="absolute inset-0 opacity-40 pointer-events-none">
