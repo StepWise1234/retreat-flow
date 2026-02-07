@@ -85,7 +85,7 @@ function TestimonialCard({
             loading="lazy"
           />
           {/* Dark overlay for legibility */}
-          <div className="absolute inset-0 bg-black/55" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/35 to-black/20" />
           {/* Content */}
           <div className="relative z-10 h-full flex flex-col justify-between p-2.5">
             <p className="text-[8px] leading-tight text-white font-medium line-clamp-3 drop-shadow-sm">
@@ -235,10 +235,7 @@ export default function ScrollMorphHero() {
               transition={{ duration: 1 }}
               className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-foreground"
             >
-              <span className="block">StepWise</span>
-              <span className="block bg-gradient-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent">
-                Training
-              </span>
+              StepWise
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
@@ -303,8 +300,8 @@ export default function ScrollMorphHero() {
 
                 // Bottom arc
                 const baseRadius = Math.min(containerSize.width, containerSize.height * 1.5);
-                const arcRadius = baseRadius * (isMobile ? 1.4 : 1.1);
-                const arcApexY = containerSize.height * (isMobile ? 0.35 : 0.25);
+                const arcRadius = baseRadius * (isMobile ? 1.0 : 0.8);
+                const arcApexY = containerSize.height * (isMobile ? 0.15 : 0.05);
                 const arcCenterY = arcApexY + arcRadius;
                 const spreadAngle = isMobile ? 100 : 130;
                 const startAngle = -90 - spreadAngle / 2;
