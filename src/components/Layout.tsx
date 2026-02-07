@@ -32,7 +32,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   className={cn(
                     'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-300',
                     isActive
-                      ? 'nav-active-cosmic text-primary-foreground shadow-lg'
+                      ? 'nav-active-cosmic text-muted-foreground'
                       : 'text-muted-foreground nav-hover hover:text-foreground'
                   )}
                 >
