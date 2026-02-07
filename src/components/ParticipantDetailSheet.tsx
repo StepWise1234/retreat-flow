@@ -1,5 +1,5 @@
 import { X, MessageCircle, Mail, AlertTriangle } from 'lucide-react';
-import { Registration, Participant, Retreat } from '@/lib/types';
+import { Registration, Participant, Retreat, isEnrolledStage } from '@/lib/types';
 import { useApp } from '@/contexts/AppContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
@@ -7,6 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import StageTracker from './StageTracker';
 import AutomationPanel from './AutomationPanel';
 import ActivityTimeline from './ActivityTimeline';
+import AccommodationSelector from './AccommodationSelector';
+import FinancialSummary from './FinancialSummary';
 import { useState, useEffect } from 'react';
 
 interface Props {
@@ -36,6 +38,9 @@ export default function ParticipantDetailSheet({ registrationId, onClose }: Prop
       </Sheet>
     );
   }
+
+  const showAccommodation = isEnrolledStage(registration.currentStage);
+  const showFinancial = isEnrolledStage(registration.currentStage) || registration.amountDue;
 
   return (
     <Sheet open={!!registrationId} onOpenChange={() => onClose()}>
@@ -91,6 +96,29 @@ export default function ParticipantDetailSheet({ registrationId, onClose }: Prop
         </div>
 
         <Separator />
+
+        {/* Financial Summary */}
+        {showFinancial && (
+          <>
+            <div className="py-4">
+              <FinancialSummary registration={registration} />
+            </div>
+            <Separator />
+          </>
+        )}
+
+        {/* Accommodation */}
+        {showAccommodation && (
+          <>
+            <div className="py-4">
+              <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Accommodation
+              </h4>
+              <AccommodationSelector registration={registration} retreat={retreat} />
+            </div>
+            <Separator />
+          </>
+        )}
 
         {/* Ops Notes */}
         <div className="py-4">

@@ -11,7 +11,15 @@ export const PIPELINE_STAGES = [
 
 export type PipelineStage = (typeof PIPELINE_STAGES)[number];
 
-export type RetreatStatus = 'Draft' | 'Open' | 'Closed';
+export type RetreatStatus = 'Draft' | 'Open' | 'Full' | 'Closed' | 'Archived';
+
+export type PaymentStatus = 'Unpaid' | 'Partial' | 'Paid' | 'Refunded';
+
+export interface AccommodationOption {
+  label: string;
+  description: string;
+  priceAdjustment?: number;
+}
 
 export interface Retreat {
   id: string;
@@ -22,6 +30,15 @@ export interface Retreat {
   cohortSizeTarget: number;
   status: RetreatStatus;
   notes: string;
+  capacityOverride: boolean;
+  autoMarkFull: boolean;
+  autoReopenWhenBelowCapacity: boolean;
+  chemistryCallLink: string;
+  applicationLink: string;
+  paymentLink: string;
+  accommodationSelectionLink: string;
+  onlineCourseLink: string;
+  accommodationOptions: AccommodationOption[];
 }
 
 export interface Participant {
@@ -58,6 +75,12 @@ export interface Registration {
   opsNotes: string;
   tags: string[];
   activities: ActivityEntry[];
+  accommodationChoice: string;
+  accommodationPriceAdjustment?: number;
+  accommodationNotes: string;
+  amountDue?: number;
+  amountPaid?: number;
+  paymentStatus: PaymentStatus;
 }
 
 export interface MessageTemplate {
@@ -145,3 +168,21 @@ export function getPrevStage(stage: PipelineStage): PipelineStage | null {
   if (idx > 0) return PIPELINE_STAGES[idx - 1];
   return null;
 }
+
+export function isEnrolledStage(stage: PipelineStage): boolean {
+  return getStageIndex(stage) >= getStageIndex('Payment');
+}
+
+export function getEnrolledCount(registrations: Registration[]): number {
+  return registrations.filter((r) => isEnrolledStage(r.currentStage)).length;
+}
+
+export const ENROLLED_STAGES: PipelineStage[] = ['Payment', 'Accommodation Selection', 'Online Course Link'];
+
+export const STATUS_STYLES: Record<RetreatStatus, string> = {
+  Draft: 'bg-secondary text-muted-foreground',
+  Open: 'bg-stage-approval-light text-stage-approval',
+  Full: 'bg-stage-payment-light text-stage-payment',
+  Closed: 'bg-stage-leads-light text-stage-leads',
+  Archived: 'bg-secondary text-muted-foreground',
+};

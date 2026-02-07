@@ -18,7 +18,7 @@ export default function ApplicationForm() {
   const [allergies, setAllergies] = useState('');
   const [specialRequests, setSpecialRequests] = useState('');
 
-  const activeRetreats = retreats.filter((r) => r.status !== 'Closed');
+  const activeRetreats = retreats.filter((r) => r.status === 'Open' || r.status === 'Full');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

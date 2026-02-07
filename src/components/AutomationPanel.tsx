@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Copy, ArrowRight, Check, FileText, Phone, Mail, CreditCard, Home, BookOpen, ClipboardCheck } from 'lucide-react';
-import { PipelineStage, getNextStage, Registration, Participant, Retreat } from '@/lib/types';
+import { PipelineStage, getNextStage, Registration, Participant, Retreat, isEnrolledStage, getStageIndex } from '@/lib/types';
 import { MessageTemplate } from '@/lib/types';
 import { fillTemplate } from '@/lib/templates';
 import { useApp } from '@/contexts/AppContext';
@@ -21,6 +21,8 @@ interface StageAction {
   icon: React.ComponentType<{ className?: string }>;
   activityLog: string;
   movesForward: boolean;
+  isPaymentAction?: boolean;
+  isRefundAction?: boolean;
 }
 
 const STAGE_ACTIONS: Record<PipelineStage, StageAction[]> = {
@@ -42,8 +44,9 @@ const STAGE_ACTIONS: Record<PipelineStage, StageAction[]> = {
     { label: 'Send Payment link', icon: CreditCard, activityLog: 'Payment link sent', movesForward: true },
   ],
   'Payment': [
-    { label: 'Mark Paid', icon: Check, activityLog: 'Payment confirmed', movesForward: false },
+    { label: 'Mark Paid', icon: Check, activityLog: 'Payment confirmed', movesForward: false, isPaymentAction: true },
     { label: 'Send Accommodation link', icon: Home, activityLog: 'Accommodation selection link sent', movesForward: true },
+    { label: 'Mark Refunded', icon: CreditCard, activityLog: 'Payment refunded', movesForward: false, isRefundAction: true },
   ],
   'Accommodation Selection': [
     { label: 'Record selection', icon: ClipboardCheck, activityLog: 'Accommodation selection recorded', movesForward: false },
@@ -56,7 +59,7 @@ const STAGE_ACTIONS: Record<PipelineStage, StageAction[]> = {
 };
 
 export default function AutomationPanel({ registration, participant, retreat }: Props) {
-  const { moveStage, addActivity, templates } = useApp();
+  const { moveStage, addActivity, templates, updatePaymentInfo } = useApp();
   const [moveToNext, setMoveToNext] = useState(true);
   const [actionNote, setActionNote] = useState('');
 
@@ -68,12 +71,30 @@ export default function AutomationPanel({ registration, participant, retreat }: 
   const filledTemplate = template ? fillTemplate(template, participant, retreat) : null;
 
   const handleAction = (action: StageAction) => {
-    addActivity(registration.id, action.activityLog, actionNote);
+    // Handle payment-specific actions
+    if (action.isPaymentAction) {
+      updatePaymentInfo(
+        registration.id,
+        'Paid',
+        registration.amountDue,
+        registration.amountDue ?? registration.amountPaid
+      );
+      toast.success('Payment marked as paid');
+    } else if (action.isRefundAction) {
+      if (!actionNote.trim()) {
+        toast.error('A note is required when refunding');
+        return;
+      }
+      updatePaymentInfo(registration.id, 'Refunded', registration.amountDue, 0);
+      toast.success('Payment marked as refunded');
+    } else {
+      addActivity(registration.id, action.activityLog, actionNote);
+    }
 
     if (action.movesForward && moveToNext && nextStage) {
       moveStage(registration.id, nextStage, actionNote || action.activityLog);
       toast.success(`Moved to ${nextStage}`);
-    } else {
+    } else if (!action.isPaymentAction && !action.isRefundAction) {
       toast.success(action.activityLog);
     }
 
@@ -87,9 +108,39 @@ export default function AutomationPanel({ registration, participant, retreat }: 
     toast.success('Message copied to clipboard');
   };
 
+  // Show retreat-specific links
+  const retreatLinks: { label: string; url: string }[] = [];
+  if (currentStage === 'Leads' && retreat.chemistryCallLink) {
+    retreatLinks.push({ label: 'Chemistry Call Link', url: retreat.chemistryCallLink });
+  }
+  if (currentStage === 'Chemistry Call' && retreat.applicationLink) {
+    retreatLinks.push({ label: 'Application Link', url: retreat.applicationLink });
+  }
+  if (currentStage === 'Approval' && retreat.paymentLink) {
+    retreatLinks.push({ label: 'Payment Link', url: retreat.paymentLink });
+  }
+  if (currentStage === 'Payment' && retreat.accommodationSelectionLink) {
+    retreatLinks.push({ label: 'Accommodation Link', url: retreat.accommodationSelectionLink });
+  }
+  if (currentStage === 'Accommodation Selection' && retreat.onlineCourseLink) {
+    retreatLinks.push({ label: 'Course Link', url: retreat.onlineCourseLink });
+  }
+
   return (
     <div className="space-y-4">
       <h4 className="text-sm font-semibold text-foreground">Next Steps</h4>
+
+      {/* Retreat-specific links */}
+      {retreatLinks.length > 0 && (
+        <div className="space-y-1">
+          {retreatLinks.map((link) => (
+            <div key={link.label} className="rounded-md bg-secondary p-2">
+              <p className="text-[10px] font-medium text-muted-foreground">{link.label}</p>
+              <p className="text-xs text-primary truncate">{link.url}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Actions */}
       <div className="space-y-2">

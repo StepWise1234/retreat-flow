@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Calendar, Users, ArrowRight } from 'lucide-react';
-import { Retreat, Registration, PIPELINE_STAGES, STAGE_STYLE_MAP, PipelineStage } from '@/lib/types';
+import { Retreat, Registration, PIPELINE_STAGES, STAGE_STYLE_MAP, PipelineStage, STATUS_STYLES, getEnrolledCount } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
@@ -9,16 +9,8 @@ interface Props {
   registrations: Registration[];
 }
 
-const statusStyles: Record<string, string> = {
-  Open: 'bg-stage-approval-light text-stage-approval',
-  Draft: 'bg-secondary text-muted-foreground',
-  Closed: 'bg-stage-leads-light text-stage-leads',
-};
-
 export default function RetreatCard({ retreat, registrations }: Props) {
-  const enrolled = registrations.filter(
-    (r) => PIPELINE_STAGES.indexOf(r.currentStage) >= PIPELINE_STAGES.indexOf('Payment')
-  ).length;
+  const enrolled = getEnrolledCount(registrations);
 
   const stageCounts = PIPELINE_STAGES.reduce(
     (acc, stage) => {
@@ -29,6 +21,7 @@ export default function RetreatCard({ retreat, registrations }: Props) {
   );
 
   const capacityPct = Math.min(100, Math.round((enrolled / retreat.cohortSizeTarget) * 100));
+  const isOver = enrolled > retreat.cohortSizeTarget;
 
   return (
     <Link
@@ -50,7 +43,7 @@ export default function RetreatCard({ retreat, registrations }: Props) {
             </span>
           </div>
         </div>
-        <Badge className={cn('text-xs', statusStyles[retreat.status])}>
+        <Badge className={cn('text-xs', STATUS_STYLES[retreat.status])}>
           {retreat.status}
         </Badge>
       </div>
@@ -61,13 +54,16 @@ export default function RetreatCard({ retreat, registrations }: Props) {
           <span className="flex items-center gap-1">
             <Users className="h-3 w-3" /> Enrolled
           </span>
-          <span className="font-medium text-card-foreground">
+          <span className={cn('font-medium', isOver ? 'text-destructive' : 'text-card-foreground')}>
             {enrolled}/{retreat.cohortSizeTarget}
           </span>
         </div>
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
           <div
-            className="h-full rounded-full bg-primary transition-all"
+            className={cn(
+              'h-full rounded-full transition-all',
+              isOver ? 'bg-destructive' : retreat.status === 'Full' ? 'bg-stage-payment' : 'bg-primary'
+            )}
             style={{ width: `${capacityPct}%` }}
           />
         </div>

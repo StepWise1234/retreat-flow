@@ -1,11 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Mountain, LayoutDashboard, FileText, MessageSquareText } from 'lucide-react';
+import { Mountain, LayoutDashboard, FileText, MessageSquareText, Archive } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/apply', label: 'Application Form', icon: FileText },
   { to: '/templates', label: 'Templates', icon: MessageSquareText },
+  { to: '/archive', label: 'Archive', icon: Archive },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {

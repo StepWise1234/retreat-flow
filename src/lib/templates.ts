@@ -1,4 +1,4 @@
-import { MessageTemplate, PipelineStage } from './types';
+import { MessageTemplate, PipelineStage, Retreat } from './types';
 
 export const defaultTemplates: MessageTemplate[] = [
   {
@@ -24,7 +24,7 @@ Retreat Team`,
 
 Great speaking with you! I'm excited about the possibility of having you join us in {{location}} ({{startDate}} – {{endDate}}).
 
-Please fill out the application when you're ready. Here's the link: [Application Link]
+Please fill out the application when you're ready. Here's the link: {{applicationLink}}
 
 Warmly,
 Retreat Team`,
@@ -119,8 +119,11 @@ Retreat Team`,
 export function fillTemplate(
   template: MessageTemplate,
   participant: { fullName: string; email: string },
-  retreat: { retreatName: string; startDate: string; endDate: string; location: string }
+  retreat: Retreat
 ): { subject: string; body: string } {
+  const fallback = (link: string, label: string) =>
+    link || `[${label} – configure in retreat settings]`;
+
   const vars: Record<string, string> = {
     '{{fullName}}': participant.fullName,
     '{{email}}': participant.email,
@@ -128,9 +131,11 @@ export function fillTemplate(
     '{{startDate}}': new Date(retreat.startDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
     '{{endDate}}': new Date(retreat.endDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
     '{{location}}': retreat.location,
-    '{{paymentLink}}': '[Payment Link – configure in settings]',
-    '{{accommodationLink}}': '[Accommodation Link – configure in settings]',
-    '{{courseLink}}': '[Course Link – configure in settings]',
+    '{{paymentLink}}': fallback(retreat.paymentLink, 'Payment Link'),
+    '{{accommodationLink}}': fallback(retreat.accommodationSelectionLink, 'Accommodation Link'),
+    '{{courseLink}}': fallback(retreat.onlineCourseLink, 'Course Link'),
+    '{{chemistryCallLink}}': fallback(retreat.chemistryCallLink, 'Chemistry Call Link'),
+    '{{applicationLink}}': fallback(retreat.applicationLink, 'Application Link'),
   };
 
   let subject = template.subject;
