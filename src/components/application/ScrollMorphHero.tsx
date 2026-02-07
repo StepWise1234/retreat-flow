@@ -260,9 +260,9 @@ export default function ScrollMorphHero() {
               Explore Our Vision
             </h2>
             <p className="text-sm md:text-base text-muted-foreground max-w-lg leading-relaxed">
-              Where deep growth meets surgical precision,
+              Where personal growth meets surgical precision,
               <br className="hidden md:block" />
-              at the pace of your unique system.
+              at the pace of your unique nervous system and psyche.
             </p>
           </motion.div>
 
