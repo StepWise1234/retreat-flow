@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Calendar, Users, ArrowRight } from 'lucide-react';
-import { Retreat, Registration, PIPELINE_STAGES, STAGE_STYLE_MAP, PipelineStage, STATUS_STYLES, getEnrolledCount } from '@/lib/types';
+import { Retreat, Registration, PIPELINE_STAGES, STAGE_STYLE_MAP, PipelineStage, STATUS_STYLES, getEnrolledCount, getRetreatColor } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 interface Props {
   retreat: Retreat;
   registrations: Registration[];
+  colorIndex?: number;
 }
 
-export default function RetreatCard({ retreat, registrations }: Props) {
+export default function RetreatCard({ retreat, registrations, colorIndex = 0 }: Props) {
   const enrolled = getEnrolledCount(registrations);
+  const retreatColor = getRetreatColor(colorIndex);
 
   const stageCounts = PIPELINE_STAGES.reduce(
     (acc, stage) => {
@@ -26,8 +28,14 @@ export default function RetreatCard({ retreat, registrations }: Props) {
   return (
     <Link
       to={`/retreat/${retreat.id}`}
-      className="group block animate-fade-in rounded-lg border bg-gradient-card p-5 shadow-sm hover-lift hover-border-glow hover-shimmer hover-rainbow-bar"
+      className="group relative block animate-fade-in rounded-lg border bg-gradient-card p-5 pt-6 shadow-sm hover-lift hover-border-glow hover-shimmer hover-rainbow-bar overflow-hidden"
+      style={{ '--retreat-accent-from': retreatColor.from, '--retreat-accent-to': retreatColor.to } as React.CSSProperties}
     >
+      {/* Gradient accent bar at top */}
+      <div
+        className="absolute top-0 left-0 right-0 h-1 opacity-80"
+        style={{ background: `linear-gradient(90deg, ${retreatColor.from}, ${retreatColor.to})` }}
+      />
       <div className="mb-3 flex items-start justify-between">
         <div>
           <h3 className="text-lg font-semibold text-card-foreground hover-rainbow-text transition-colors">

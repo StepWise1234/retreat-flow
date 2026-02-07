@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Copy, Mail, MessageCircle, Users, Filter, Check } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
-import { PIPELINE_STAGES, PipelineStage, STAGE_STYLE_MAP, PaymentStatus, RiskLevel } from '@/lib/types';
+import { PIPELINE_STAGES, PipelineStage, STAGE_STYLE_MAP, PaymentStatus, RiskLevel, getRetreatColorById } from '@/lib/types';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -59,18 +59,18 @@ export default function ContactGroups() {
   // Get unique participants from filtered registrations
   const contactList = useMemo(() => {
     const seen = new Set<string>();
-    const result: { id: string; fullName: string; email: string; signalHandle: string; retreatNames: string[] }[] = [];
+    const result: { id: string; fullName: string; email: string; signalHandle: string; retreatNames: string[]; retreatIds: string[] }[] = [];
 
     filteredRegs.forEach((reg) => {
       const p = getParticipant(reg.participantId);
       if (!p) return;
 
       if (seen.has(p.id)) {
-        // Add retreat name to existing entry
         const existing = result.find((c) => c.id === p.id);
         const retreat = retreats.find((r) => r.id === reg.retreatId);
         if (existing && retreat && !existing.retreatNames.includes(retreat.retreatName)) {
           existing.retreatNames.push(retreat.retreatName);
+          existing.retreatIds.push(retreat.id);
         }
         return;
       }
@@ -83,6 +83,7 @@ export default function ContactGroups() {
         email: p.email,
         signalHandle: p.signalHandle,
         retreatNames: retreat ? [retreat.retreatName] : [],
+        retreatIds: retreat ? [retreat.id] : [],
       });
     });
 
@@ -163,11 +164,20 @@ export default function ContactGroups() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All retreats</SelectItem>
-                {visibleRetreats.map((r) => (
-                  <SelectItem key={r.id} value={r.id}>
-                    {r.retreatName} ({r.status})
-                  </SelectItem>
-                ))}
+                {visibleRetreats.map((r) => {
+                  const color = getRetreatColorById(r.id, retreats);
+                  return (
+                    <SelectItem key={r.id} value={r.id}>
+                      <span className="flex items-center gap-2">
+                        <span
+                          className="h-2.5 w-2.5 rounded-full shrink-0"
+                          style={{ background: `linear-gradient(135deg, ${color.from}, ${color.to})` }}
+                        />
+                        {r.retreatName} ({r.status})
+                      </span>
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
@@ -189,11 +199,11 @@ export default function ContactGroups() {
                       'rounded-full px-2.5 py-1 text-xs font-medium transition-all duration-200 border hover-chip-rainbow',
                       isActive
                         ? `${style.bg} ${style.text} ${style.border} shadow-sm`
-                        : 'bg-secondary text-muted-foreground border-transparent'
+                        : `bg-transparent ${style.text} border-current opacity-50 hover:opacity-100`
                     )}
                   >
                     <span className="flex items-center gap-1.5">
-                      <span className={cn('h-2 w-2 rounded-full transition-colors', isActive ? style.dot : 'bg-muted-foreground/30')} />
+                      <span className={cn('h-2 w-2 rounded-full', style.dot)} />
                       {stage}
                     </span>
                   </button>
@@ -359,11 +369,18 @@ export default function ContactGroups() {
                       <td className="px-4 py-2.5 text-muted-foreground">{contact.signalHandle}</td>
                       <td className="px-4 py-2.5">
                         <div className="flex flex-wrap gap-1">
-                          {contact.retreatNames.map((name) => (
-                            <Badge key={name} variant="secondary" className="text-[10px]">
-                              {name}
-                            </Badge>
-                          ))}
+                          {contact.retreatNames.map((name, i) => {
+                            const color = getRetreatColorById(contact.retreatIds[i] || '', retreats);
+                            return (
+                              <span
+                                key={name}
+                                className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium text-white"
+                                style={{ background: `linear-gradient(135deg, ${color.from}, ${color.to})` }}
+                              >
+                                {name}
+                              </span>
+                            );
+                          })}
                         </div>
                       </td>
                       <td className="px-4 py-2.5">

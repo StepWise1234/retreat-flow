@@ -24,11 +24,12 @@ export default function Index() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
-        {activeRetreats.map((retreat) => (
+        {activeRetreats.map((retreat, index) => (
           <RetreatCard
             key={retreat.id}
             retreat={retreat}
             registrations={registrations.filter((r) => r.retreatId === retreat.id)}
+            colorIndex={index}
           />
         ))}
       </div>
@@ -46,11 +47,12 @@ export default function Index() {
         <div className="mt-8">
           <h2 className="mb-4 text-lg font-semibold text-foreground">Drafts</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
-            {draftRetreats.map((retreat) => (
+            {draftRetreats.map((retreat, index) => (
               <RetreatCard
                 key={retreat.id}
                 retreat={retreat}
                 registrations={registrations.filter((r) => r.retreatId === retreat.id)}
+                colorIndex={activeRetreats.length + index}
               />
             ))}
           </div>
