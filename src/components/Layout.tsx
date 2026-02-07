@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Mountain, LayoutDashboard, FileText, MessageSquareText, Archive, Users, LogOut } from 'lucide-react';
+import { Mountain, LayoutDashboard, FileText, MessageSquareText, Archive, Users, LogOut, Inbox } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/messages', label: 'Messages', icon: Inbox },
   { to: '/contact', label: 'Contact', icon: Users },
   { to: '/templates', label: 'Templates', icon: MessageSquareText },
   { to: '/archive', label: 'Archive', icon: Archive },
