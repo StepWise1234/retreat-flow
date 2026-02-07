@@ -62,12 +62,7 @@ export default function OrbitalTimeline({
     }
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === containerRef.current) {
-      setExpandedId(null);
-      setAutoRotate(true);
-    }
-  };
+  // handleBackdropClick removed — using overlay instead
 
   const getNodePosition = (index: number) => {
     const angle = ((index / items.length) * 360 + rotationAngle) % 360;
@@ -81,12 +76,24 @@ export default function OrbitalTimeline({
     return { x, y, depthScale, depthOpacity, zIndex, angle };
   };
 
+  const dismiss = () => {
+    setExpandedId(null);
+    setAutoRotate(true);
+  };
+
   return (
     <div
       ref={containerRef}
       className="absolute inset-0 z-20 pointer-events-none"
-      onClick={handleBackdropClick}
     >
+      {/* Full-screen dismiss overlay when a card is expanded */}
+      {expandedId !== null && (
+        <div
+          className="fixed inset-0 z-10 pointer-events-auto"
+          onClick={dismiss}
+        />
+      )}
+
       {/* Orbit ring — faint dashed circle */}
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed"
@@ -211,8 +218,7 @@ export default function OrbitalTimeline({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        setExpandedId(null);
-                        setAutoRotate(true);
+                        dismiss();
                       }}
                       className="absolute top-2.5 right-2.5 rounded-full p-1 transition-colors hover:bg-secondary"
                     >
