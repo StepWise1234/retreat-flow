@@ -11,6 +11,7 @@ import RetreatBoard from "./pages/RetreatBoard";
 import Templates from "./pages/Templates";
 import Archive from "./pages/Archive";
 import ContactGroups from "./pages/ContactGroups";
+import MessageCenter from "./pages/MessageCenter";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -30,6 +31,7 @@ const App = () => (
 
             {/* Protected: Admin-only routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/messages" element={<ProtectedRoute><MessageCenter /></ProtectedRoute>} />
             <Route path="/retreat/:id" element={<ProtectedRoute><RetreatBoard /></ProtectedRoute>} />
             <Route path="/templates" element={<ProtectedRoute><Templates /></ProtectedRoute>} />
             <Route path="/archive" element={<ProtectedRoute><Archive /></ProtectedRoute>} />

@@ -40,6 +40,23 @@ export function useMessagesForRegistration(registrationId: string | undefined) {
   });
 }
 
+export function useMessagesForConversation(conversationId: string | undefined) {
+  return useQuery({
+    queryKey: ['messages', 'conversation', conversationId],
+    queryFn: async () => {
+      if (!conversationId) return [];
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('conversation_id', conversationId)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data as Message[];
+    },
+    enabled: !!conversationId,
+  });
+}
+
 export function useMessageTemplates(channel?: 'Email' | 'Signal' | 'SMS') {
   return useQuery({
     queryKey: ['message_templates', channel],

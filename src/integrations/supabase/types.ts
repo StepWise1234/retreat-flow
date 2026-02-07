@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      conversations: {
+        Row: {
+          assigned_to: string | null
+          channels_enabled: string[]
+          created_at: string
+          id: string
+          is_archived: boolean
+          last_message_at: string | null
+          last_message_preview: string | null
+          participant_id: string
+          registration_id: string | null
+          retreat_id: string | null
+          unread_count: number
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          channels_enabled?: string[]
+          created_at?: string
+          id?: string
+          is_archived?: boolean
+          last_message_at?: string | null
+          last_message_preview?: string | null
+          participant_id: string
+          registration_id?: string | null
+          retreat_id?: string | null
+          unread_count?: number
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          channels_enabled?: string[]
+          created_at?: string
+          id?: string
+          is_archived?: boolean
+          last_message_at?: string | null
+          last_message_preview?: string | null
+          participant_id?: string
+          registration_id?: string | null
+          retreat_id?: string | null
+          unread_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_settings: {
         Row: {
           created_at: string
@@ -144,14 +189,20 @@ export type Database = {
         Row: {
           body: string
           channel: Database["public"]["Enums"]["message_channel"]
+          conversation_id: string | null
           created_at: string
           delivered_at: string | null
+          direction: string
           error_message: string | null
+          external_thread_id: string | null
           from_address: string | null
           id: string
           idempotency_key: string | null
           participant_id: string
+          provider: string | null
           provider_message_id: string | null
+          raw_payload: Json | null
+          read_status: string
           registration_id: string
           retreat_id: string
           sent_at: string | null
@@ -164,14 +215,20 @@ export type Database = {
         Insert: {
           body: string
           channel: Database["public"]["Enums"]["message_channel"]
+          conversation_id?: string | null
           created_at?: string
           delivered_at?: string | null
+          direction?: string
           error_message?: string | null
+          external_thread_id?: string | null
           from_address?: string | null
           id?: string
           idempotency_key?: string | null
           participant_id: string
+          provider?: string | null
           provider_message_id?: string | null
+          raw_payload?: Json | null
+          read_status?: string
           registration_id: string
           retreat_id: string
           sent_at?: string | null
@@ -184,14 +241,20 @@ export type Database = {
         Update: {
           body?: string
           channel?: Database["public"]["Enums"]["message_channel"]
+          conversation_id?: string | null
           created_at?: string
           delivered_at?: string | null
+          direction?: string
           error_message?: string | null
+          external_thread_id?: string | null
           from_address?: string | null
           id?: string
           idempotency_key?: string | null
           participant_id?: string
+          provider?: string | null
           provider_message_id?: string | null
+          raw_payload?: Json | null
+          read_status?: string
           registration_id?: string
           retreat_id?: string
           sent_at?: string | null
@@ -201,7 +264,15 @@ export type Database = {
           to_address?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       signal_settings: {
         Row: {
