@@ -122,6 +122,15 @@ export default {
           from: { opacity: "0", transform: "translateX(16px)" },
           to: { opacity: "1", transform: "translateX(0)" },
         },
+        kenburns: {
+          "0%": { transform: "scale(1.05) translate(0, 0)" },
+          "50%": { transform: "scale(1.15) translate(-1%, -1%)" },
+          "100%": { transform: "scale(1.05) translate(0, 0)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0) scale(1)", opacity: "0.4" },
+          "50%": { transform: "translateY(-12px) scale(1.3)", opacity: "0.8" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
