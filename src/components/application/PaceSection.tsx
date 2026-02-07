@@ -56,8 +56,8 @@ const TRAINING_FEATURES: OrbitalItem[] = [
 
 export default function PaceSection() {
   return (
-    <section className="relative overflow-hidden bg-background">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 py-24 md:py-32 min-h-[70vh]">
+    <section className="relative overflow-hidden bg-background pb-0">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-24 md:pt-32 pb-0 min-h-[80vh]">
 
         {/* Left text — small body copy */}
         <motion.p
@@ -74,17 +74,17 @@ export default function PaceSection() {
         <div className="relative flex items-center justify-center">
           {/* Celadon circle */}
           <div
-            className="absolute h-72 w-72 rounded-full sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
+            className="absolute h-80 w-80 rounded-full sm:h-96 sm:w-96 md:h-[34rem] md:w-[34rem]"
             style={{
-              left: '-10%',
-              top: '25px',
+              left: '-12%',
+              top: '10px',
               backgroundColor: 'hsl(160 30% 72%)',
             }}
           />
 
           {/* Silhouette — mix-blend-mode removes white bg */}
           <div
-            className="relative z-10 h-[22rem] w-[18rem] sm:h-[26rem] sm:w-[22rem] md:h-[32rem] md:w-[26rem]"
+            className="relative z-10 h-[28rem] w-[22rem] sm:h-[34rem] sm:w-[26rem] md:h-[42rem] md:w-[32rem] translate-y-8"
             style={{ mixBlendMode: 'multiply' }}
           >
             <img
@@ -95,11 +95,11 @@ export default function PaceSection() {
           </div>
 
         {/* Orbital timeline around the circle */}
-          <div className="absolute inset-0 z-20" style={{ transform: 'translate(-300px, -290px)' }}>
+          <div className="absolute inset-0 z-20" style={{ transform: 'translate(-340px, -320px)' }}>
             <OrbitalTimeline
               items={TRAINING_FEATURES}
-              radius={260}
-              mobileRadius={175}
+              radius={300}
+              mobileRadius={200}
             />
           </div>
         </div>
