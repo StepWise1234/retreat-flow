@@ -53,32 +53,8 @@ export default function FormHeader({ sections, progressColors, step, onStepChang
           />
         </div>
 
-        {/* Step progress buttons — above sparkles */}
-        <div className="relative z-10 mt-6 flex items-center justify-center gap-1 overflow-x-auto pb-1">
-          {sections.map((section, idx) => {
-            const color = progressColors[idx];
-            const isComplete = idx < step;
-            const isCurrent = idx === step;
-            return (
-              <button
-                key={idx}
-                onClick={() => onStepChange(idx)}
-                className={cn(
-                  'flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium transition-all border whitespace-nowrap shrink-0',
-                  isCurrent && `${color.bg} ${color.text} ${color.border}`,
-                  isComplete && `${color.dot} text-white border-transparent`,
-                  !isCurrent && !isComplete && 'bg-white/10 text-white/60 border-transparent'
-                )}
-              >
-                {isComplete ? <Check className="h-3 w-3" /> : <span>{idx + 1}</span>}
-                <span className="hidden sm:inline">{section.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Sparkles below the progress */}
-        <div className="relative w-full h-20 mt-0 z-0">
+        {/* Sparkles below the line */}
+        <div className="relative w-full h-24 mt-0 z-0">
           <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_80%)]">
             <SparklesCore
               background="transparent"
@@ -90,6 +66,45 @@ export default function FormHeader({ sections, progressColors, step, onStepChang
               speed={2}
             />
           </div>
+        </div>
+
+        {/* Step progress — positioned at bottom, over sparkles fade-out */}
+        <div className="relative z-10 -mt-4 mb-2 flex items-center justify-center gap-2 overflow-x-auto pb-1">
+          {sections.map((section, idx) => {
+            const isComplete = idx < step;
+            const isCurrent = idx === step;
+            return (
+              <button
+                key={idx}
+                onClick={() => onStepChange(idx)}
+                className={cn(
+                  'group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium tracking-wide uppercase transition-all duration-300 whitespace-nowrap shrink-0',
+                  isCurrent && 'bg-white/15 text-white border border-white/30 shadow-[0_0_12px_hsl(160_30%_72%/0.25)]',
+                  isComplete && 'bg-white/10 text-white/80 border border-white/15',
+                  !isCurrent && !isComplete && 'text-white/35 border border-transparent hover:text-white/55 hover:border-white/10'
+                )}
+              >
+                {isComplete ? (
+                  <span
+                    className="flex h-4 w-4 items-center justify-center rounded-full"
+                    style={{ background: 'hsl(160 30% 72%)' }}
+                  >
+                    <Check className="h-2.5 w-2.5 text-black" />
+                  </span>
+                ) : (
+                  <span
+                    className={cn(
+                      'flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold',
+                      isCurrent ? 'bg-white/25 text-white' : 'bg-white/10 text-white/40'
+                    )}
+                  >
+                    {idx + 1}
+                  </span>
+                )}
+                <span className="hidden sm:inline">{section.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>
