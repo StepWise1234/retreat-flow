@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ScrollMorphHero from '@/components/application/ScrollMorphHero';
+import PaceSection from '@/components/application/PaceSection';
 
 const TRAINING_DATES = [
   'March 13 - 16, 2026 (Boston, MA)',
@@ -272,6 +273,9 @@ export default function ApplicationForm() {
     <div className="min-h-screen" style={{ background: 'hsl(var(--background))' }}>
       {/* Scroll Morph Hero — replaces old hero + testimonials */}
       <ScrollMorphHero />
+
+      {/* Minimalist pace section */}
+      <PaceSection />
 
       <main className={cn(
         'mx-auto max-w-3xl px-4 py-6 sm:px-6 overflow-hidden bg-gradient-to-b transition-all duration-1000 ease-in-out',
