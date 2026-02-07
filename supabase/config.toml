@@ -5,3 +5,9 @@ verify_jwt = false
 
 [functions.send-signal]
 verify_jwt = false
+
+[functions.sync-email-inbound]
+verify_jwt = false
+
+[functions.signal-inbound]
+verify_jwt = false
