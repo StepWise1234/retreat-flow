@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { UserPlus, AlertTriangle } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
-import { getEnrolledCount } from '@/lib/types';
+import { getEnrolledCount, getEffectiveCapacity } from '@/lib/types';
 import {
   Dialog,
   DialogContent,
@@ -32,7 +32,7 @@ export default function QuickAddLeadDialog({ retreatId }: Props) {
   const enrolled = getEnrolledCount(regs);
 
   const isFull = retreat?.status === 'Full';
-  const isOverCapacity = retreat ? enrolled > retreat.cohortSizeTarget : false;
+  const isOverCapacity = retreat ? enrolled > getEffectiveCapacity(retreat) : false;
   const canAdd = !isFull || retreat?.capacityOverride;
   const isClosed = retreat?.status === 'Closed' || retreat?.status === 'Archived';
 
@@ -80,8 +80,8 @@ export default function QuickAddLeadDialog({ retreatId }: Props) {
             <div>
               <p className="font-medium">
                 {isOverCapacity
-                  ? `Over capacity (${enrolled}/${retreat?.cohortSizeTarget})`
-                  : `Retreat is Full (${enrolled}/${retreat?.cohortSizeTarget})`}
+                  ? `Over capacity (${enrolled}/${retreat ? getEffectiveCapacity(retreat) : '?'})`
+                  : `Retreat is Full (${enrolled}/${retreat ? getEffectiveCapacity(retreat) : '?'})`}
               </p>
               <p className="text-xs mt-0.5">A reason note is required to add participants.</p>
             </div>
