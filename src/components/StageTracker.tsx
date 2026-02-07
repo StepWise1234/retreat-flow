@@ -25,9 +25,10 @@ export default function StageTracker({ currentStage }: Props) {
                 className={cn(
                   'flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-bold transition-colors',
                   isComplete && `${style.dot} border-transparent text-card`,
-                  isCurrent && `border-primary bg-primary text-primary-foreground`,
+                  isCurrent && `${style.dot} border-transparent text-card ring-2 ring-offset-1 ring-offset-card`,
                   isFuture && 'border-border bg-card text-muted-foreground'
                 )}
+                style={isCurrent ? { boxShadow: `0 0 0 2px hsl(var(--stage-${style.key}) / 0.3)` } : undefined}
               >
                 {isComplete ? <Check className="h-3.5 w-3.5" /> : idx + 1}
               </div>
@@ -46,8 +47,8 @@ export default function StageTracker({ currentStage }: Props) {
               <p
                 className={cn(
                   'text-sm font-medium leading-tight',
-                  isCurrent && 'text-primary',
-                  isComplete && 'text-foreground',
+                  isCurrent && style.text,
+                  isComplete && style.text,
                   isFuture && 'text-muted-foreground'
                 )}
               >

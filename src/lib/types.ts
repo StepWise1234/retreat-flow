@@ -157,10 +157,10 @@ export interface MessageTemplate {
   body: string;
 }
 
-// Stage styling map — all classes reference design system tokens
+// Stage styling map — all classes reference design system tokens (rainbow progression)
 export const STAGE_STYLE_MAP: Record<
   PipelineStage,
-  { dot: string; bg: string; text: string; border: string; key: string }
+  { dot: string; bg: string; text: string; border: string; key: string; gradient: string }
 > = {
   'Leads': {
     key: 'leads',
@@ -168,6 +168,7 @@ export const STAGE_STYLE_MAP: Record<
     bg: 'bg-stage-leads-light',
     text: 'text-stage-leads',
     border: 'border-stage-leads',
+    gradient: 'from-stage-leads-light to-transparent',
   },
   'Chemistry Call': {
     key: 'chemistry',
@@ -175,6 +176,7 @@ export const STAGE_STYLE_MAP: Record<
     bg: 'bg-stage-chemistry-light',
     text: 'text-stage-chemistry',
     border: 'border-stage-chemistry',
+    gradient: 'from-stage-chemistry-light to-transparent',
   },
   'Application': {
     key: 'application',
@@ -182,6 +184,7 @@ export const STAGE_STYLE_MAP: Record<
     bg: 'bg-stage-application-light',
     text: 'text-stage-application',
     border: 'border-stage-application',
+    gradient: 'from-stage-application-light to-transparent',
   },
   'Interview': {
     key: 'interview',
@@ -189,6 +192,7 @@ export const STAGE_STYLE_MAP: Record<
     bg: 'bg-stage-interview-light',
     text: 'text-stage-interview',
     border: 'border-stage-interview',
+    gradient: 'from-stage-interview-light to-transparent',
   },
   'Approval': {
     key: 'approval',
@@ -196,6 +200,7 @@ export const STAGE_STYLE_MAP: Record<
     bg: 'bg-stage-approval-light',
     text: 'text-stage-approval',
     border: 'border-stage-approval',
+    gradient: 'from-stage-approval-light to-transparent',
   },
   'Payment': {
     key: 'payment',
@@ -203,6 +208,7 @@ export const STAGE_STYLE_MAP: Record<
     bg: 'bg-stage-payment-light',
     text: 'text-stage-payment',
     border: 'border-stage-payment',
+    gradient: 'from-stage-payment-light to-transparent',
   },
   'Accommodation Selection': {
     key: 'accommodation',
@@ -210,6 +216,7 @@ export const STAGE_STYLE_MAP: Record<
     bg: 'bg-stage-accommodation-light',
     text: 'text-stage-accommodation',
     border: 'border-stage-accommodation',
+    gradient: 'from-stage-accommodation-light to-transparent',
   },
   'Online Course Link': {
     key: 'course',
@@ -217,6 +224,7 @@ export const STAGE_STYLE_MAP: Record<
     bg: 'bg-stage-course-light',
     text: 'text-stage-course',
     border: 'border-stage-course',
+    gradient: 'from-stage-course-light to-transparent',
   },
 };
 
