@@ -42,11 +42,14 @@ export default function MessageComposer({ open, onClose, participant, registrati
     const tpl = templates.find((t) => t.id === selectedTemplateId);
     if (!tpl) return;
 
+    const firstName = participant.fullName.split(' ')[0] || participant.fullName;
     const interpolate = (text: string) =>
       text
+        .replace(/\{\{firstName\}\}/g, firstName)
         .replace(/\{\{fullName\}\}/g, participant.fullName)
         .replace(/\{\{retreatName\}\}/g, retreat.retreatName)
-        .replace(/\{\{paymentLink\}\}/g, retreat.paymentLink || '#');
+        .replace(/\{\{paymentLink\}\}/g, retreat.paymentLink || '#')
+        .replace(/\{\{scheduleLink\}\}/g, retreat.chemistryCallLink || '#');
 
     setSubject(tpl.subject ? interpolate(tpl.subject) : '');
     setBody(interpolate(tpl.body));
