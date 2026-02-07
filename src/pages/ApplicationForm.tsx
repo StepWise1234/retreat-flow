@@ -9,9 +9,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { toast } from 'sonner';
-import { FileText, ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Check, Plane } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { PIPELINE_STAGES, STAGE_STYLE_MAP } from '@/lib/types';
+import heroImage from '@/assets/flight-school-hero.png';
 
 const TRAINING_DATES = [
   'March 13 - 16, 2026 (Boston, MA)',
@@ -259,20 +259,29 @@ export default function ApplicationForm() {
   return (
     <Layout>
       <div className="mx-auto max-w-3xl">
-        {/* Header */}
-        <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <FileText className="h-6 w-6" />
+        {/* Hero header with image */}
+        <div className="relative mb-8 overflow-hidden rounded-2xl shadow-lg">
+          <img
+            src={heroImage}
+            alt="View from airplane window above pink clouds at sunset"
+            className="h-48 sm:h-56 w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+            <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/30">
+              <Plane className="h-5 w-5 text-white" />
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-white drop-shadow-lg tracking-tight">
+              Flight School Application
+            </h1>
+            <p className="mt-2 text-sm text-white/80 max-w-md drop-shadow">
+              We appreciate your interest! Please answer the questions as fully as you can.
+            </p>
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Flight School Application</h1>
-          <p className="mt-2 text-sm text-muted-foreground max-w-lg mx-auto">
-            We appreciate your interest in our Flight School Training! Please answer the questions as fully as you can.
-            Your personal information will be kept strictly confidential.
-          </p>
         </div>
 
         {/* Step progress */}
-        <div className="mb-6 flex items-center justify-center gap-1">
+        <div className="mb-6 flex items-center justify-center gap-1 flex-wrap">
           {SECTIONS.map((section, idx) => {
             const color = progressColors[idx];
             const isComplete = idx < step;
@@ -296,7 +305,7 @@ export default function ApplicationForm() {
         </div>
 
         {/* Form card */}
-        <div className="rounded-xl border bg-card p-6 sm:p-8 shadow-sm animate-fade-in">
+        <div className="rounded-2xl border bg-card/80 backdrop-blur-sm p-6 sm:p-8 shadow-sm animate-fade-in">
 
           {/* SECTION 0: Training & Personal Info */}
           {step === 0 && (
@@ -679,5 +688,5 @@ export default function ApplicationForm() {
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-sm font-semibold text-foreground">{children}</h3>;
+  return <h3 className="text-sm font-semibold text-foreground border-l-2 border-primary/40 pl-3">{children}</h3>;
 }
