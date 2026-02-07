@@ -1,31 +1,26 @@
-import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 import { SparklesCore } from '@/components/ui/sparkles';
+import MorphingPageDots from '@/components/ui/morphing-page-dots';
 
 interface StepSection {
   label: string;
   index: number;
 }
 
-interface StepColor {
-  bg: string;
-  text: string;
-  border: string;
-  dot: string;
-}
-
 interface FormHeaderProps {
   sections: StepSection[];
-  progressColors: StepColor[];
   step: number;
   onStepChange: (step: number) => void;
 }
 
-export default function FormHeader({ sections, progressColors, step, onStepChange }: FormHeaderProps) {
+export default function FormHeader({ sections, step, onStepChange }: FormHeaderProps) {
+  const prevLabel = step > 0 ? sections[step - 1].label : null;
+  const nextLabel = step < sections.length - 1 ? sections[step + 1].label : null;
+  const currentLabel = sections[step].label;
+
   return (
     <section className="relative overflow-hidden bg-black">
-      <div className="relative mx-auto max-w-4xl px-6 py-12 md:py-16 flex flex-col items-center justify-center">
+      <div className="relative mx-auto max-w-4xl px-6 py-10 md:py-14 flex flex-col items-center justify-center">
         {/* Title */}
         <motion.h2
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white text-center z-10"
@@ -53,8 +48,8 @@ export default function FormHeader({ sections, progressColors, step, onStepChang
           />
         </div>
 
-        {/* Sparkles below the line */}
-        <div className="relative w-full h-24 mt-0 z-0">
+        {/* Sparkles */}
+        <div className="relative w-full h-16 mt-0 z-0">
           <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_80%)]">
             <SparklesCore
               background="transparent"
@@ -68,43 +63,71 @@ export default function FormHeader({ sections, progressColors, step, onStepChang
           </div>
         </div>
 
-        {/* Step progress — positioned at bottom, over sparkles fade-out */}
-        <div className="relative z-10 -mt-4 mb-2 flex items-center justify-center gap-2 overflow-x-auto pb-1">
-          {sections.map((section, idx) => {
-            const isComplete = idx < step;
-            const isCurrent = idx === step;
-            return (
-              <button
-                key={idx}
-                onClick={() => onStepChange(idx)}
-                className={cn(
-                  'group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium tracking-wide uppercase transition-all duration-300 whitespace-nowrap shrink-0',
-                  isCurrent && 'bg-white/15 text-white border border-white/30 shadow-[0_0_12px_hsl(160_30%_72%/0.25)]',
-                  isComplete && 'bg-white/10 text-white/80 border border-white/15',
-                  !isCurrent && !isComplete && 'text-white/35 border border-transparent hover:text-white/55 hover:border-white/10'
-                )}
-              >
-                {isComplete ? (
-                  <span
-                    className="flex h-4 w-4 items-center justify-center rounded-full"
-                    style={{ background: 'hsl(160 30% 72%)' }}
+        {/* Step navigation: prev title · current title · next title */}
+        <div className="relative z-10 -mt-2 mb-1 w-full max-w-md">
+          {/* Prev / Current / Next labels */}
+          <div className="flex items-center justify-between mb-3">
+            {/* Previous label */}
+            <div className="flex-1 text-left min-w-0">
+              <AnimatePresence mode="wait">
+                {prevLabel && (
+                  <motion.button
+                    key={prevLabel}
+                    onClick={() => onStepChange(step - 1)}
+                    className="text-[11px] sm:text-xs font-medium tracking-wide uppercase text-white/35 hover:text-white/55 transition-colors truncate"
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -8 }}
+                    transition={{ duration: 0.25 }}
                   >
-                    <Check className="h-2.5 w-2.5 text-black" />
-                  </span>
-                ) : (
-                  <span
-                    className={cn(
-                      'flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold',
-                      isCurrent ? 'bg-white/25 text-white' : 'bg-white/10 text-white/40'
-                    )}
-                  >
-                    {idx + 1}
-                  </span>
+                    {prevLabel}
+                  </motion.button>
                 )}
-                <span className="hidden sm:inline">{section.label}</span>
-              </button>
-            );
-          })}
+              </AnimatePresence>
+            </div>
+
+            {/* Current label */}
+            <div className="flex-shrink-0 px-3">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={currentLabel}
+                  className="text-sm sm:text-base font-semibold tracking-wide uppercase text-white"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  {currentLabel}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+
+            {/* Next label */}
+            <div className="flex-1 text-right min-w-0">
+              <AnimatePresence mode="wait">
+                {nextLabel && (
+                  <motion.button
+                    key={nextLabel}
+                    onClick={() => onStepChange(step + 1)}
+                    className="text-[11px] sm:text-xs font-medium tracking-wide uppercase text-white/35 hover:text-white/55 transition-colors truncate"
+                    initial={{ opacity: 0, x: 8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 8 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    {nextLabel}
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Morphing dots */}
+          <MorphingPageDots
+            total={sections.length}
+            page={step}
+            onPageChange={onStepChange}
+          />
         </div>
       </div>
     </section>

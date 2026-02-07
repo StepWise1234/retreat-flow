@@ -281,7 +281,6 @@ export default function ApplicationForm() {
       {/* Bridging header into form with progress */}
       <FormHeader
         sections={SECTIONS}
-        progressColors={progressColors}
         step={step}
         onStepChange={setStep}
       />
