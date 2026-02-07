@@ -61,23 +61,23 @@
     --stage-course: 290 60% 50%;
     --stage-course-light: 290 100% 96%;
 
-    /* Retreat color palette — high-contrast gradient pairs */
-    --retreat-1-from: 198 65% 42%;
-    --retreat-1-to: 220 55% 52%;
-    --retreat-2-from: 340 72% 52%;
-    --retreat-2-to: 25 85% 55%;
-    --retreat-3-from: 155 60% 40%;
-    --retreat-3-to: 180 55% 48%;
-    --retreat-4-from: 265 55% 52%;
-    --retreat-4-to: 290 60% 55%;
-    --retreat-5-from: 30 80% 50%;
-    --retreat-5-to: 45 90% 55%;
-    --retreat-6-from: 0 70% 52%;
-    --retreat-6-to: 340 65% 48%;
-    --retreat-7-from: 195 80% 45%;
-    --retreat-7-to: 160 65% 42%;
-    --retreat-8-from: 280 50% 55%;
-    --retreat-8-to: 230 55% 52%;
+    /* Retreat color palette — high-contrast gradient pairs (min 40° hue spread) */
+    --retreat-1-from: 200 70% 45%;
+    --retreat-1-to: 240 60% 58%;
+    --retreat-2-from: 340 75% 55%;
+    --retreat-2-to: 20 90% 55%;
+    --retreat-3-from: 120 55% 38%;
+    --retreat-3-to: 175 65% 45%;
+    --retreat-4-from: 250 60% 58%;
+    --retreat-4-to: 310 65% 55%;
+    --retreat-5-from: 15 85% 52%;
+    --retreat-5-to: 50 90% 50%;
+    --retreat-6-from: 330 65% 50%;
+    --retreat-6-to: 280 55% 55%;
+    --retreat-7-from: 170 70% 38%;
+    --retreat-7-to: 210 75% 50%;
+    --retreat-8-from: 45 80% 48%;
+    --retreat-8-to: 0 70% 55%;
   }
 
   .dark {
