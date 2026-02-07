@@ -308,7 +308,7 @@ export default function ScrollMorphHero() {
                 const step = spreadAngle / (TOTAL_CARDS - 1);
 
                 const scrollProg = Math.min(Math.max(rotateVal / 360, 0), 1);
-                const maxRot = spreadAngle * 0.8;
+                const maxRot = spreadAngle * 1.5;
                 const boundedRot = -scrollProg * maxRot;
 
                 const arcAngle = startAngle + i * step + boundedRot;
