@@ -56,8 +56,8 @@ const TRAINING_FEATURES: OrbitalItem[] = [
 
 export default function PaceSection() {
   return (
-    <section className="relative overflow-hidden bg-background">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 py-24 md:py-32 min-h-[70vh]">
+    <section className="relative bg-background">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-24 md:pt-32 pb-0 min-h-[70vh]">
 
         {/* Left text — small body copy */}
         <motion.p
@@ -90,7 +90,7 @@ export default function PaceSection() {
             <img
               src={silhouetteImg}
               alt="Calm silhouette profile with eyes closed"
-              className="h-full w-full object-contain object-bottom"
+              className="h-full w-full object-contain object-bottom translate-y-8"
             />
           </div>
 
