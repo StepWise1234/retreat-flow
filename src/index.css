@@ -62,12 +62,12 @@
     --stage-course-light: 290 100% 96%;
 
     /* Retreat color palette — high-contrast gradient pairs (min 40° hue spread) */
-    --retreat-1-from: 200 70% 45%;
-    --retreat-1-to: 240 60% 58%;
+    --retreat-1-from: 195 85% 40%;
+    --retreat-1-to: 250 70% 62%;
     --retreat-2-from: 340 75% 55%;
     --retreat-2-to: 20 90% 55%;
-    --retreat-3-from: 120 55% 38%;
-    --retreat-3-to: 175 65% 45%;
+    --retreat-3-from: 110 65% 32%;
+    --retreat-3-to: 180 75% 42%;
     --retreat-4-from: 250 60% 58%;
     --retreat-4-to: 310 65% 55%;
     --retreat-5-from: 15 85% 52%;
