@@ -72,39 +72,23 @@ export default function PaceSection() {
 
         {/* Center composition — circle behind, silhouette overlapping, orbital around */}
         <div className="relative flex items-center justify-center">
-          {/* Celadon circle */}
+          {/* Sage circle + orbital — single container ensures shared center */}
           <div
-            className="absolute h-72 w-72 rounded-full sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
-            style={{
-              left: '-10%',
-              top: '25px',
-              backgroundColor: 'hsl(160 30% 72%)',
-            }}
-          />
-
-          {/* Silhouette — mix-blend-mode removes white bg */}
-          <div
-            className="relative z-10 h-[22rem] w-[18rem] sm:h-[26rem] sm:w-[22rem] md:h-[32rem] md:w-[26rem]"
-            style={{ mixBlendMode: 'multiply' }}
+            className="absolute h-72 w-72 sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
+            style={{ left: '-10%', top: '25px' }}
           >
-            <img
-              src={silhouetteImg}
-              alt="Calm silhouette profile with eyes closed"
-              className="h-full w-full object-contain object-bottom"
+            {/* Celadon circle */}
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{ backgroundColor: 'hsl(160 30% 72%)' }}
+            />
+            {/* Orbital ring */}
+            <OrbitalTimeline
+              items={TRAINING_FEATURES}
+              radius={260}
+              mobileRadius={175}
             />
           </div>
-
-        {/* Orbital timeline centered on the sage circle */}
-        <div
-          className="absolute h-72 w-72 sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
-          style={{ left: '-10%', top: '25px' }}
-        >
-          <OrbitalTimeline
-            items={TRAINING_FEATURES}
-            radius={260}
-            mobileRadius={175}
-          />
-        </div>
         </div>
 
         {/* Right text — bold, large "less is more" */}
