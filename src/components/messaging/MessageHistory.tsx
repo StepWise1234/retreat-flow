@@ -1,9 +1,12 @@
-import { Mail, MessageCircle, Clock, CheckCheck, XCircle, AlertTriangle, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { Mail, MessageCircle, Clock, CheckCheck, XCircle, AlertTriangle, Loader2, RotateCcw } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { useMessagesForRegistration } from '@/hooks/useMessages';
+import { useMessagesForRegistration, useRetrySendMessage } from '@/hooks/useMessages';
 import { cn } from '@/lib/utils';
 import type { Message } from '@/hooks/useMessages';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 interface Props {
   registrationId: string;
@@ -22,6 +25,23 @@ function MessageRow({ message }: { message: Message }) {
   const StatusIcon = config.icon;
   const isEmail = message.channel === 'Email';
   const ChannelIcon = isEmail ? Mail : MessageCircle;
+  const retryMutation = useRetrySendMessage();
+  const [retrying, setRetrying] = useState(false);
+
+  const canRetry = message.status === 'Failed' || message.status === 'Queued';
+
+  const handleRetry = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setRetrying(true);
+    try {
+      await retryMutation.mutateAsync(message);
+      toast.success(`Retrying ${message.channel} message…`);
+    } catch (err: any) {
+      toast.error(`Retry failed: ${err.message}`);
+    } finally {
+      setRetrying(false);
+    }
+  };
 
   return (
     <div className="flex items-start gap-2.5 rounded-md border bg-gradient-card p-2.5 hover-border-glow transition-all duration-200">
@@ -36,16 +56,40 @@ function MessageRow({ message }: { message: Message }) {
           {!isEmail && (
             <span className="text-xs font-medium text-foreground">Signal message</span>
           )}
-          <Badge variant="outline" className={cn('text-[9px] px-1 py-0 ml-auto shrink-0', config.color)}>
-            <StatusIcon className={cn('h-2 w-2 mr-0.5', message.status === 'Queued' && 'animate-spin')} />
-            {config.label}
-          </Badge>
+          <div className="ml-auto flex items-center gap-1 shrink-0">
+            {canRetry && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-5 w-5 p-0"
+                onClick={handleRetry}
+                disabled={retrying}
+                title="Retry send"
+              >
+                {retrying ? (
+                  <Loader2 className="h-2.5 w-2.5 animate-spin text-stage-chemistry" />
+                ) : (
+                  <RotateCcw className="h-2.5 w-2.5 text-muted-foreground" />
+                )}
+              </Button>
+            )}
+            <Badge variant="outline" className={cn('text-[9px] px-1 py-0', config.color)}>
+              <StatusIcon className={cn('h-2 w-2 mr-0.5', message.status === 'Queued' && 'animate-spin')} />
+              {config.label}
+            </Badge>
+          </div>
         </div>
         <p className="mt-0.5 text-[11px] text-muted-foreground line-clamp-2">{message.body}</p>
         <div className="mt-1 flex items-center gap-2 text-[10px] text-muted-foreground">
           <span>→ {message.to_address}</span>
           <span>·</span>
           <span>{formatDistanceToNow(new Date(message.created_at), { addSuffix: true })}</span>
+          {message.sent_at && (
+            <>
+              <span>·</span>
+              <span className="text-stage-approval">sent {formatDistanceToNow(new Date(message.sent_at), { addSuffix: true })}</span>
+            </>
+          )}
         </div>
         {message.error_message && (
           <div className="mt-1 flex items-start gap-1 rounded bg-destructive/10 px-1.5 py-1 text-[10px] text-destructive">

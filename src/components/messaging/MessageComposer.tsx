@@ -59,6 +59,8 @@ export default function MessageComposer({ open, onClose, participant, registrati
     setBody('');
   }, [channel]);
 
+  const canSendDirectly = channel === 'Email' ? emailConfigured : signalConfigured;
+
   const handleSend = async () => {
     if (!body.trim()) {
       toast.error('Message body cannot be empty');
@@ -85,10 +87,14 @@ export default function MessageComposer({ open, onClose, participant, registrati
         status: 'Queued',
         idempotency_key: crypto.randomUUID(),
       });
-      toast.success(`${channel} message queued for ${participant.fullName}`);
+      toast.success(
+        canSendDirectly
+          ? `${channel} message sent to ${participant.fullName}`
+          : `${channel} message queued for ${participant.fullName} (integration not configured)`
+      );
       onClose();
     } catch (err: any) {
-      toast.error(`Failed to queue message: ${err.message}`);
+      toast.error(`Failed to send message: ${err.message}`);
     }
   };
 
@@ -197,7 +203,7 @@ export default function MessageComposer({ open, onClose, participant, registrati
             ) : (
               <Send className="h-3.5 w-3.5" />
             )}
-            Queue {channel} message
+            {canSendDirectly ? `Send via ${channel === 'Email' ? 'Proton Mail' : 'Signal'}` : `Queue ${channel} message`}
           </Button>
         </DialogFooter>
       </DialogContent>
