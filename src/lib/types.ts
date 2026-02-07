@@ -274,3 +274,29 @@ export const TASK_PRIORITY_STYLES: Record<TaskPriority, string> = {
   Medium: 'bg-stage-payment-light text-stage-payment',
   High: 'bg-destructive/10 text-destructive',
 };
+
+// ── Retreat color system ──
+// 8 contrasting gradient palettes that cycle for unlimited retreats
+export const RETREAT_COLORS = [
+  { key: '1', from: 'hsl(var(--retreat-1-from))', to: 'hsl(var(--retreat-1-to))', text: 'text-white', label: 'Ocean' },
+  { key: '2', from: 'hsl(var(--retreat-2-from))', to: 'hsl(var(--retreat-2-to))', text: 'text-white', label: 'Sunset' },
+  { key: '3', from: 'hsl(var(--retreat-3-from))', to: 'hsl(var(--retreat-3-to))', text: 'text-white', label: 'Forest' },
+  { key: '4', from: 'hsl(var(--retreat-4-from))', to: 'hsl(var(--retreat-4-to))', text: 'text-white', label: 'Amethyst' },
+  { key: '5', from: 'hsl(var(--retreat-5-from))', to: 'hsl(var(--retreat-5-to))', text: 'text-white', label: 'Amber' },
+  { key: '6', from: 'hsl(var(--retreat-6-from))', to: 'hsl(var(--retreat-6-to))', text: 'text-white', label: 'Rose' },
+  { key: '7', from: 'hsl(var(--retreat-7-from))', to: 'hsl(var(--retreat-7-to))', text: 'text-white', label: 'Teal' },
+  { key: '8', from: 'hsl(var(--retreat-8-from))', to: 'hsl(var(--retreat-8-to))', text: 'text-white', label: 'Nebula' },
+] as const;
+
+export type RetreatColorKey = (typeof RETREAT_COLORS)[number]['key'];
+
+/** Get a deterministic color palette for a retreat based on its index */
+export function getRetreatColor(retreatIndex: number) {
+  return RETREAT_COLORS[retreatIndex % RETREAT_COLORS.length];
+}
+
+/** Get retreat color by retreat ID from a list of retreats */
+export function getRetreatColorById(retreatId: string, retreats: { id: string }[]) {
+  const idx = retreats.findIndex((r) => r.id === retreatId);
+  return getRetreatColor(idx >= 0 ? idx : 0);
+}
