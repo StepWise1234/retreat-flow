@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Mountain, Loader2, Lock } from 'lucide-react';
+import { Mountain, Loader2, Lock, UserPlus } from 'lucide-react';
 import { z } from 'zod';
 
 const loginSchema = z.object({
@@ -14,11 +14,12 @@ const loginSchema = z.object({
 });
 
 export default function Login() {
-  const { signIn, user, loading: authLoading } = useAuth();
+  const { signIn, signUp, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   // Redirect if already logged in
   if (!authLoading && user) {
@@ -36,22 +37,40 @@ export default function Login() {
     }
 
     setLoading(true);
-    const { error } = await signIn(email, password);
-    setLoading(false);
 
-    if (error) {
-      if (error.message.includes('Invalid login credentials')) {
-        toast.error('Invalid email or password. Please try again.');
-      } else if (error.message.includes('Email not confirmed')) {
-        toast.error('Please verify your email before signing in.');
-      } else {
-        toast.error(error.message);
+    if (isSignUp) {
+      const { error } = await signUp(email, password);
+      setLoading(false);
+
+      if (error) {
+        if (error.message.includes('already registered')) {
+          toast.error('This email is already registered. Please sign in instead.');
+        } else {
+          toast.error(error.message);
+        }
+        return;
       }
-      return;
-    }
 
-    toast.success('Welcome back!');
-    navigate('/dashboard', { replace: true });
+      toast.success('Account created! You are now signed in.');
+      navigate('/dashboard', { replace: true });
+    } else {
+      const { error } = await signIn(email, password);
+      setLoading(false);
+
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          toast.error('Invalid email or password. Please try again.');
+        } else if (error.message.includes('Email not confirmed')) {
+          toast.error('Please verify your email before signing in.');
+        } else {
+          toast.error(error.message);
+        }
+        return;
+      }
+
+      toast.success('Welcome back!');
+      navigate('/dashboard', { replace: true });
+    }
   };
 
   return (
@@ -62,13 +81,15 @@ export default function Login() {
             <Mountain className="h-6 w-6 text-primary" />
           </div>
           <h1 className="text-2xl font-bold text-foreground">Retreat Ops</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Sign in to access the admin dashboard</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {isSignUp ? 'Create your admin account' : 'Sign in to access the admin dashboard'}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="rounded-2xl border bg-card/80 backdrop-blur-sm p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-            <Lock className="h-4 w-4" />
-            <span>Admin Access Only</span>
+            {isSignUp ? <UserPlus className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
+            <span>{isSignUp ? 'One-Time Admin Setup' : 'Admin Access Only'}</span>
           </div>
 
           <div>
@@ -89,7 +110,7 @@ export default function Login() {
             <Input
               id="password"
               type="password"
-              autoComplete="current-password"
+              autoComplete={isSignUp ? 'new-password' : 'current-password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -99,8 +120,16 @@ export default function Login() {
 
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            Sign In
+            {isSignUp ? 'Create Account' : 'Sign In'}
           </Button>
+
+          <button
+            type="button"
+            onClick={() => setIsSignUp(!isSignUp)}
+            className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {isSignUp ? 'Already have an account? Sign in' : 'Need to create an admin account? Sign up'}
+          </button>
         </form>
       </div>
     </div>
