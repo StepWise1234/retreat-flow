@@ -13,6 +13,7 @@ import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ScrollMorphHero from '@/components/application/ScrollMorphHero';
 import PaceSection from '@/components/application/PaceSection';
+import FormHeader from '@/components/application/FormHeader';
 
 const TRAINING_DATES = [
   'March 13 - 16, 2026 (Boston, MA)',
@@ -276,6 +277,9 @@ export default function ApplicationForm() {
 
       {/* Minimalist pace section */}
       <PaceSection />
+
+      {/* Bridging header into form */}
+      <FormHeader />
 
       <main className={cn(
         'mx-auto max-w-3xl px-4 py-6 sm:px-6 overflow-hidden bg-gradient-to-b transition-all duration-1000 ease-in-out',
