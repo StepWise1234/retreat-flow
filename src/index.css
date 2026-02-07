@@ -673,55 +673,34 @@
     transform: translateY(-1px);
   }
 
-  /* ─── Dark form theme (application form) ─── */
+  /* ─── Frosted form theme (application form on dark bg) ─── */
   .form-dark input,
   .form-dark textarea,
   .form-dark [role="combobox"] {
-    background: hsl(0 0% 100% / 0.05) !important;
-    border-color: hsl(0 0% 100% / 0.12) !important;
-    color: hsl(0 0% 100% / 0.9) !important;
+    background: hsl(0 0% 100% / 0.6) !important;
+    border-color: hsl(0 0% 0% / 0.12) !important;
+    color: hsl(222 20% 14%) !important;
   }
   .form-dark input::placeholder,
   .form-dark textarea::placeholder {
-    color: hsl(0 0% 100% / 0.3) !important;
+    color: hsl(220 10% 46%) !important;
   }
   .form-dark input:focus,
   .form-dark textarea:focus,
   .form-dark [role="combobox"]:focus {
-    border-color: hsl(160 30% 72% / 0.4) !important;
-    box-shadow: 0 0 0 2px hsl(160 30% 72% / 0.1) !important;
-  }
-  .form-dark label {
-    color: hsl(0 0% 100% / 0.5);
-  }
-  .form-dark [data-slot="select-trigger"] span,
-  .form-dark [role="combobox"] span {
-    color: hsl(0 0% 100% / 0.7) !important;
-  }
-  .form-dark .text-muted-foreground {
-    color: hsl(0 0% 100% / 0.4) !important;
-  }
-  .form-dark .text-foreground {
-    color: hsl(0 0% 100% / 0.85) !important;
-  }
-  .form-dark .border {
-    border-color: hsl(0 0% 100% / 0.10);
-  }
-  .form-dark .bg-card {
-    background: hsl(0 0% 100% / 0.05);
-  }
-  .form-dark label.cursor-pointer:hover {
-    background: hsl(0 0% 100% / 0.08) !important;
+    border-color: hsl(160 30% 50% / 0.5) !important;
+    box-shadow: 0 0 0 2px hsl(160 30% 50% / 0.15) !important;
   }
   /* Slider track and thumb */
   .form-dark [role="slider"] {
-    background: hsl(160 30% 72%) !important;
-    border-color: hsl(160 30% 72%) !important;
+    background: hsl(160 30% 50%) !important;
+    border-color: hsl(160 30% 50%) !important;
   }
   .form-dark [data-orientation="horizontal"] > span:first-child {
-    background: hsl(0 0% 100% / 0.1) !important;
+    background: hsl(0 0% 0% / 0.1) !important;
   }
   .form-dark [data-orientation="horizontal"] > span:first-child > span {
-    background: hsl(160 30% 72% / 0.6) !important;
+    background: hsl(160 30% 55% / 0.7) !important;
   }
 }
+
