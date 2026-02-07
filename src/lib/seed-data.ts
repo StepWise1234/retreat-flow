@@ -103,6 +103,12 @@ export const seedParticipants: Participant[] = [
   { id: 'p-16', fullName: 'Omar Hassan', email: 'omar.h@example.com', signalHandle: '@omarh', allergies: '', specialRequests: '', createdAt: '2026-01-15T09:30:00Z' },
   { id: 'p-17', fullName: 'Zoe Mitchell', email: 'zoe.m@example.com', signalHandle: '@zoem', allergies: 'Sesame', specialRequests: 'Room with desk for work', createdAt: '2026-01-17T11:00:00Z' },
   { id: 'p-18', fullName: "Liam O'Brien", email: 'liam.ob@example.com', signalHandle: '@liamob', allergies: '', specialRequests: '', createdAt: '2026-01-19T13:00:00Z' },
+  { id: 'p-19', fullName: 'Yuki Nakamura', email: 'yuki.n@example.com', signalHandle: '@yuki_n', allergies: '', specialRequests: 'Japanese-speaking facilitator preferred', createdAt: '2026-01-21T10:00:00Z' },
+  { id: 'p-20', fullName: 'Amara Osei', email: 'amara.o@example.com', signalHandle: '@amarao', allergies: 'Latex', specialRequests: '', createdAt: '2026-01-23T14:00:00Z' },
+  { id: 'p-21', fullName: 'Finn Larsen', email: 'finn.l@example.com', signalHandle: '@finnl', allergies: '', specialRequests: 'Early riser — 5am yoga access', createdAt: '2026-01-24T09:00:00Z' },
+  { id: 'p-22', fullName: 'Camille Rossi', email: 'camille.r@example.com', signalHandle: '@camiller', allergies: 'Strawberries', specialRequests: '', createdAt: '2026-01-26T11:30:00Z' },
+  { id: 'p-23', fullName: 'Raj Kapoor', email: 'raj.k@example.com', signalHandle: '@rajk', allergies: '', specialRequests: 'Vegetarian meals', createdAt: '2026-01-27T08:00:00Z' },
+  { id: 'p-24', fullName: 'Natasha Volkov', email: 'natasha.v@example.com', signalHandle: '@natashav', allergies: '', specialRequests: 'Quiet room away from common areas', createdAt: '2026-01-29T16:00:00Z' },
 ];
 
 function makeActivity(action: string, date: string, notes = '') {
@@ -234,6 +240,77 @@ export const seedRegistrations: Registration[] = [
     activities: [
       makeActivity('Lead added', '2026-01-15T09:00:00Z'),
       makeActivity('Approved', '2026-02-04T10:00:00Z'),
+    ],
+  },
+
+  // 6 new participants for retreat-1 (Big Sur)
+  {
+    id: 'reg-bs9', retreatId: 'retreat-1', participantId: 'p-19',
+    currentStage: 'Leads',
+    stageHistory: makeHistory(['Leads'], '2026-02-05'),
+    lastTouchedAt: '2026-02-05T09:00:00Z', opsNotes: 'Referred by Priya.',
+    tags: ['referral'], ...defaultRegFields,
+    activities: [makeActivity('Lead added', '2026-02-05T09:00:00Z', 'Referral from Priya Sharma')],
+  },
+  {
+    id: 'reg-bs10', retreatId: 'retreat-1', participantId: 'p-20',
+    currentStage: 'Chemistry Call',
+    stageHistory: makeHistory(['Leads', 'Chemistry Call'], '2026-01-28'),
+    lastTouchedAt: '2026-02-04T11:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Proposed',
+    activities: [
+      makeActivity('Lead added', '2026-01-28T09:00:00Z'),
+      makeActivity('Chemistry call proposed', '2026-02-04T11:00:00Z'),
+    ],
+  },
+  {
+    id: 'reg-bs11', retreatId: 'retreat-1', participantId: 'p-21',
+    currentStage: 'Application',
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application'], '2026-01-22'),
+    lastTouchedAt: '2026-02-02T15:00:00Z', opsNotes: 'Very motivated.',
+    tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Completed',
+    activities: [
+      makeActivity('Lead added', '2026-01-22T09:00:00Z'),
+      makeActivity('Chemistry call completed', '2026-01-28T10:00:00Z'),
+      makeActivity('Application submitted', '2026-02-02T15:00:00Z'),
+    ],
+  },
+  {
+    id: 'reg-bs12', retreatId: 'retreat-1', participantId: 'p-22',
+    currentStage: 'Interview',
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview'], '2026-01-18'),
+    lastTouchedAt: '2026-02-03T10:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Scheduled',
+    riskLevel: 'Low', careFlags: ['Allergies'], careNotes: 'Strawberry allergy — check dessert menus.',
+    flaggedAt: '2026-01-25T10:00:00Z', flaggedBy: 'Admin',
+    activities: [
+      makeActivity('Lead added', '2026-01-18T09:00:00Z'),
+      makeActivity('Interview scheduled', '2026-02-03T10:00:00Z'),
+    ],
+  },
+  {
+    id: 'reg-bs13', retreatId: 'retreat-1', participantId: 'p-23',
+    currentStage: 'Approval',
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval'], '2026-01-12'),
+    lastTouchedAt: '2026-02-05T16:00:00Z', opsNotes: 'Excellent interview.',
+    tags: ['strong-fit'], ...defaultRegFields,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
+    activities: [
+      makeActivity('Lead added', '2026-01-12T09:00:00Z'),
+      makeActivity('Approved', '2026-02-05T16:00:00Z'),
+    ],
+  },
+  {
+    id: 'reg-bs14', retreatId: 'retreat-1', participantId: 'p-24',
+    currentStage: 'Payment',
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-08'),
+    lastTouchedAt: '2026-02-06T10:00:00Z', opsNotes: '',
+    tags: [], ...defaultRegFields, paymentStatus: 'Partial', amountDue: 3500, amountPaid: 1750,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
+    activities: [
+      makeActivity('Lead added', '2026-01-08T09:00:00Z'),
+      makeActivity('Partial payment received', '2026-02-06T10:00:00Z', '$1750 of $3500'),
     ],
   },
 
