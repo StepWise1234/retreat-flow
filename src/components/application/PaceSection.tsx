@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import heroImg from '@/assets/flight-school-hero.png';
+import breathImg from '@/assets/pace-breath.jpg';
 
 export default function PaceSection() {
   return (
@@ -13,7 +13,7 @@ export default function PaceSection() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8, delay: 1.2, ease: 'easeOut' }}
         >
-          follow the pace of your system as you metabolize nervous system shifts
+          Learn the pace of your system as you expand regulation capacity, metabolize shifts, and repair wholeness.
         </motion.p>
 
         {/* Center — circle + person */}
@@ -36,8 +36,8 @@ export default function PaceSection() {
             transition={{ duration: 0.9, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <img
-              src={heroImg}
-              alt="Retreat setting"
+              src={breathImg}
+              alt="Person breathing deeply with eyes closed"
               className="h-full w-full object-cover"
             />
           </motion.div>
@@ -72,7 +72,7 @@ export default function PaceSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 1.4 }}
           >
-            follow the pace of your system as you metabolize nervous system shifts
+            Learn the pace of your system as you expand regulation capacity, metabolize shifts, and repair wholeness.
           </motion.p>
         </div>
       </div>
