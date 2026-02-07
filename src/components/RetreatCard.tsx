@@ -26,11 +26,11 @@ export default function RetreatCard({ retreat, registrations }: Props) {
   return (
     <Link
       to={`/retreat/${retreat.id}`}
-      className="group block animate-fade-in rounded-lg border bg-gradient-card p-5 shadow-sm hover-lift hover-border-glow hover-shimmer"
+      className="group block animate-fade-in rounded-lg border bg-gradient-card p-5 shadow-sm hover-lift hover-border-glow hover-shimmer hover-rainbow-bar"
     >
       <div className="mb-3 flex items-start justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-card-foreground group-hover:text-primary transition-colors">
+          <h3 className="text-lg font-semibold text-card-foreground hover-rainbow-text transition-colors">
             {retreat.retreatName}
           </h3>
           <div className="mt-1 flex items-center gap-3 text-sm text-muted-foreground">
