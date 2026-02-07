@@ -263,9 +263,9 @@ export default function ScrollMorphHero() {
               Explore Our Vision
             </h2>
             <p className="text-sm md:text-base text-muted-foreground max-w-lg leading-relaxed">
-              Where surgical precision meets deep personal growth —
+              Where deep growth meets surgical precision,
               <br className="hidden md:block" />
-              grounded in safety, guided by harm reduction.
+              at the pace of your unique system.
             </p>
           </motion.div>
 
