@@ -74,10 +74,10 @@ export default function PaceSection() {
         <div className="relative flex items-center justify-center">
           {/* Celadon circle */}
           <div
-            className="absolute h-[29rem] w-[29rem] rounded-full sm:h-[32rem] sm:w-[32rem] md:h-[42rem] md:w-[42rem]"
+            className="absolute h-[23rem] w-[23rem] rounded-full sm:h-[26rem] sm:w-[26rem] md:h-[34rem] md:w-[34rem]"
             style={{
-              left: 'calc(-10% + 80px)',
-              top: '105px',
+              left: 'calc(-10% - 20px)',
+              top: '5px',
               backgroundColor: 'hsl(160 30% 72%)',
             }}
           />
