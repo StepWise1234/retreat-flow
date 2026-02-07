@@ -260,12 +260,12 @@ export default function ScrollMorphHero() {
             className="absolute top-[8%] z-20 flex flex-col items-center justify-center text-center pointer-events-none px-6"
           >
             <h2 className="text-2xl sm:text-3xl md:text-5xl font-semibold text-foreground tracking-tight mb-3">
-              Voices from Our Graduates
+              Explore Our Vision
             </h2>
             <p className="text-sm md:text-base text-muted-foreground max-w-lg leading-relaxed">
-              Clinicians and facilitators share how StepWise Training
+              Where surgical precision meets deep personal growth —
               <br className="hidden md:block" />
-              transformed their practice and perspective.
+              grounded in safety, guided by harm reduction.
             </p>
           </motion.div>
 
