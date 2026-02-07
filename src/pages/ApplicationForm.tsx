@@ -175,26 +175,26 @@ function CheckboxGroup({ items, selected, onChange, otherValue, onOtherChange }:
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
       {items.map((item) => (
-        <label key={item} className="flex items-center gap-2 rounded-md border bg-card px-3 py-2 text-sm cursor-pointer hover:bg-secondary/50 transition-colors">
+        <label key={item} className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm cursor-pointer hover:bg-white/10 transition-colors">
           <Checkbox checked={selected.includes(item)} onCheckedChange={() => toggle(item)} />
-          <span className="text-foreground">{item}</span>
+          <span className="text-white/80">{item}</span>
         </label>
       ))}
       {onOtherChange !== undefined && (
         <div className="sm:col-span-2">
-          <label className="flex items-start gap-2 rounded-md border bg-card px-3 py-2 text-sm cursor-pointer hover:bg-secondary/50 transition-colors">
+          <label className="flex items-start gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm cursor-pointer hover:bg-white/10 transition-colors">
             <Checkbox
               checked={!!otherValue?.trim()}
               onCheckedChange={(checked) => { if (!checked) onOtherChange(''); }}
               className="mt-0.5"
             />
             <div className="flex-1">
-              <span className="text-foreground">Other</span>
+              <span className="text-white/80">Other</span>
               <Input
                 placeholder="Please specify…"
                 value={otherValue || ''}
                 onChange={(e) => onOtherChange(e.target.value)}
-                className="mt-1 h-8 text-xs"
+                className="mt-1 h-8 text-xs bg-white/5 border-white/10 text-white placeholder:text-white/30"
               />
             </div>
           </label>
@@ -248,30 +248,8 @@ export default function ApplicationForm() {
     setStep(0);
   };
 
-  // Red → Orange → Amber → Yellow → Lime → Emerald → Green
-  const progressColors = [
-    { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-300', dot: 'bg-red-500' },
-    { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-300', dot: 'bg-orange-500' },
-    { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-300', dot: 'bg-amber-500' },
-    { bg: 'bg-yellow-100', text: 'text-yellow-700', border: 'border-yellow-300', dot: 'bg-yellow-500' },
-    { bg: 'bg-yellow-50', text: 'text-yellow-600', border: 'border-yellow-200', dot: 'bg-yellow-400' },
-    { bg: 'bg-teal-100', text: 'text-teal-700', border: 'border-teal-300', dot: 'bg-teal-400' },
-    { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-400', dot: 'bg-emerald-500' },
-  ];
-
-  // Subtle dusk gradient — professional, light base that warms gently across steps
-  const duskGradients = [
-    'from-[hsl(40,30%,97%)] via-[hsl(30,35%,95%)] to-[hsl(25,30%,93%)]',       // Step 0: warm white
-    'from-[hsl(30,35%,95%)] via-[hsl(25,30%,93%)] to-[hsl(20,28%,91%)]',       // Step 1: soft cream
-    'from-[hsl(25,28%,93%)] via-[hsl(20,25%,91%)] to-[hsl(15,25%,89%)]',       // Step 2: warm peach hint
-    'from-[hsl(20,25%,91%)] via-[hsl(330,18%,89%)] to-[hsl(320,15%,87%)]',     // Step 3: blush touch
-    'from-[hsl(330,18%,89%)] via-[hsl(300,12%,87%)] to-[hsl(280,14%,85%)]',    // Step 4: soft lavender
-    'from-[hsl(280,14%,85%)] via-[hsl(260,14%,83%)] to-[hsl(240,15%,81%)]',    // Step 5: twilight hint
-    'from-[hsl(250,16%,82%)] via-[hsl(235,18%,78%)] to-[hsl(225,20%,75%)]',    // Step 6: calm dusk
-  ];
-
   return (
-    <div className="min-h-screen" style={{ background: 'hsl(var(--background))' }}>
+    <div className="min-h-screen bg-black">
       {/* Scroll Morph Hero — replaces old hero + testimonials */}
       <ScrollMorphHero />
 
@@ -285,13 +263,10 @@ export default function ApplicationForm() {
         onStepChange={setStep}
       />
 
-      <main className={cn(
-        'mx-auto max-w-3xl px-4 py-6 sm:px-6 overflow-hidden bg-gradient-to-b transition-all duration-1000 ease-in-out',
-        duskGradients[step]
-      )}>
+      <main className="form-dark mx-auto max-w-3xl px-4 py-8 sm:px-6">
 
-        {/* Form card */}
-        <div className="rounded-2xl border bg-card/95 backdrop-blur-md p-6 sm:p-8 shadow-sm animate-fade-in">
+        {/* Form card — dark frosted glass */}
+        <div className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl p-6 sm:p-8 shadow-[0_0_40px_hsl(160_30%_72%/0.04)] animate-fade-in">
 
           {/* SECTION 0: Training & Personal Info */}
           {step === 0 && (
@@ -313,12 +288,12 @@ export default function ApplicationForm() {
               <SectionTitle>Interested Training Date(s)</SectionTitle>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {TRAINING_DATES.map((date) => (
-                  <label key={date} className="flex items-center gap-2 rounded-md border bg-card px-3 py-2.5 text-sm cursor-pointer hover:bg-secondary/50 transition-colors">
+                  <label key={date} className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm cursor-pointer hover:bg-white/10 transition-colors">
                     <Checkbox
                       checked={form.interestedDates.includes(date)}
                       onCheckedChange={() => toggleArrayItem('interestedDates', date)}
                     />
-                    <span className="text-foreground">{date}</span>
+                    <span className="text-white/80">{date}</span>
                   </label>
                 ))}
               </div>
@@ -617,30 +592,30 @@ export default function ApplicationForm() {
           {step === 6 && (
             <div className="space-y-6">
               <SectionTitle>Review</SectionTitle>
-              <div className="rounded-lg border bg-secondary/30 p-4 text-sm space-y-2">
-                <p><strong>Name:</strong> {form.preferredName || form.firstName} {form.lastName}</p>
-                <p><strong>Email:</strong> {form.email}</p>
-                <p><strong>Phone:</strong> {form.phone}</p>
+              <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-sm text-white/70 space-y-2">
+                <p><strong className="text-white/90">Name:</strong> {form.preferredName || form.firstName} {form.lastName}</p>
+                <p><strong className="text-white/90">Email:</strong> {form.email}</p>
+                <p><strong className="text-white/90">Phone:</strong> {form.phone}</p>
                 {form.interestedDates.length > 0 && (
-                  <p><strong>Interested Dates:</strong> {form.interestedDates.join(', ')}</p>
+                  <p><strong className="text-white/90">Interested Dates:</strong> {form.interestedDates.join(', ')}</p>
                 )}
-                {form.allergies && <p><strong>Allergies:</strong> {form.allergies}</p>}
+                {form.allergies && <p><strong className="text-white/90">Allergies:</strong> {form.allergies}</p>}
                 {form.dietaryPreferences.length > 0 && (
-                  <p><strong>Dietary:</strong> {form.dietaryPreferences.join(', ')}</p>
+                  <p><strong className="text-white/90">Dietary:</strong> {form.dietaryPreferences.join(', ')}</p>
                 )}
-                {form.signalHandle && <p><strong>Signal:</strong> {form.signalHandle}</p>}
+                {form.signalHandle && <p><strong className="text-white/90">Signal:</strong> {form.signalHandle}</p>}
                 {form.trainingGoals && (
-                  <p><strong>Goals:</strong> {form.trainingGoals.substring(0, 120)}{form.trainingGoals.length > 120 ? '…' : ''}</p>
+                  <p><strong className="text-white/90">Goals:</strong> {form.trainingGoals.substring(0, 120)}{form.trainingGoals.length > 120 ? '…' : ''}</p>
                 )}
               </div>
 
-              <label className="flex items-start gap-3 rounded-md border bg-card px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors">
+              <label className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3 cursor-pointer hover:bg-white/10 transition-colors">
                 <Checkbox
                   checked={form.agreeToTerms}
                   onCheckedChange={(v) => update('agreeToTerms', !!v)}
                   className="mt-0.5"
                 />
-                <span className="text-sm text-foreground">
+                <span className="text-sm text-white/80">
                   I confirm that the information provided is accurate and I consent to it being used for the purpose of supporting me during the training. I understand my personal information will be kept strictly confidential.
                 </span>
               </label>
@@ -648,27 +623,35 @@ export default function ApplicationForm() {
           )}
 
           {/* Navigation */}
-          <div className="mt-8 flex items-center justify-between border-t pt-6">
+          <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-6">
             <Button
               variant="outline"
               onClick={prev}
               disabled={step === 0}
-              className="gap-1"
+              className="gap-1 border-white/15 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
             >
               <ChevronLeft className="h-4 w-4" /> Previous
             </Button>
 
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-white/40">
               Step {step + 1} of {SECTIONS.length}
             </span>
 
             {step < SECTIONS.length - 1 ? (
-              <Button onClick={next} className="gap-1">
+              <Button
+                onClick={next}
+                className="gap-1 border border-white/20 text-white"
+                style={{ background: 'hsl(160 30% 72% / 0.15)' }}
+              >
                 Next <ChevronRight className="h-4 w-4" />
               </Button>
             ) : (
-              <Button onClick={handleSubmit} className="gap-1">
-                <Check className="h-4 w-4" /> Submit Application
+              <Button
+                onClick={handleSubmit}
+                className="gap-1 border border-white/20 text-white"
+                style={{ background: 'hsl(160 30% 72% / 0.2)' }}
+              >
+                <Check className="h-4 w-4" /> Submit
               </Button>
             )}
           </div>
@@ -679,5 +662,12 @@ export default function ApplicationForm() {
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-sm font-semibold text-foreground border-l-2 border-primary/40 pl-3">{children}</h3>;
+  return (
+    <h3
+      className="text-sm font-semibold text-white/90 border-l-2 pl-3"
+      style={{ borderColor: 'hsl(160 30% 72% / 0.5)' }}
+    >
+      {children}
+    </h3>
+  );
 }
