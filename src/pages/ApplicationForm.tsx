@@ -92,6 +92,7 @@ interface FormData {
   country: string;
   phone: string;
   email: string;
+  signalHandle: string;
   emergencyFirstName: string;
   emergencyLastName: string;
   emergencyPhone: string;
@@ -143,7 +144,7 @@ const initialFormData: FormData = {
   interestedDates: [], preferredName: '', firstName: '', lastName: '',
   birthMonth: '', birthDay: '', birthYear: '',
   streetAddress: '', streetAddress2: '', city: '', stateProvince: '', postalCode: '', country: '',
-  phone: '', email: '',
+  phone: '', email: '', signalHandle: '',
   emergencyFirstName: '', emergencyLastName: '', emergencyPhone: '',
   journeyWorkExperience: '', medicineExperience: '', servingExperience: '',
   lifeCircumstances: '', integrationSupport: '',
@@ -235,7 +236,7 @@ export default function ApplicationForm() {
     const participant = addParticipant({
       fullName,
       email: form.email.trim(),
-      signalHandle: '',
+      signalHandle: form.signalHandle.trim(),
       allergies: [form.allergies, form.dietaryPreferences.join(', '), form.dietaryOther].filter(Boolean).join('; '),
       specialRequests: [form.physicalHealthIssues, form.supplements].filter(Boolean).join('; '),
     });
@@ -411,6 +412,11 @@ export default function ApplicationForm() {
                 <div>
                   <Label className="text-xs text-muted-foreground">Email *</Label>
                   <Input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} className="mt-1" placeholder="you@example.com" />
+                </div>
+                <div className="sm:col-span-2">
+                  <Label className="text-xs text-muted-foreground">Signal Number / Handle</Label>
+                  <Input value={form.signalHandle} onChange={(e) => update('signalHandle', e.target.value)} className="mt-1" placeholder="+1 555 123 4567 or @handle" />
+                  <p className="mt-1 text-[11px] text-muted-foreground">We use Signal for secure group communication during retreats.</p>
                 </div>
               </div>
 
@@ -637,7 +643,7 @@ export default function ApplicationForm() {
                 {form.dietaryPreferences.length > 0 && (
                   <p><strong>Dietary:</strong> {form.dietaryPreferences.join(', ')}</p>
                 )}
-                <p><strong>Stress Level:</strong> {form.stressLevel[0]}/10</p>
+                {form.signalHandle && <p><strong>Signal:</strong> {form.signalHandle}</p>}
                 {form.trainingGoals && (
                   <p><strong>Goals:</strong> {form.trainingGoals.substring(0, 120)}{form.trainingGoals.length > 120 ? '…' : ''}</p>
                 )}
