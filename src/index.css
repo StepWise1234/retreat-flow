@@ -328,6 +328,16 @@
     );
   }
 
+  /* ─── Orbital timeline keyframes ─── */
+  @keyframes orbital-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes orbital-spin-reverse {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(-360deg); }
+  }
+
   /* ─── Rainbow keyframes ─── */
   @keyframes rainbow-border-spin {
     0%   { --rainbow-angle: 0deg; }
