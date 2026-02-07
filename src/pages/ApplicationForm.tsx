@@ -264,9 +264,9 @@ export default function ApplicationForm() {
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <FileText className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">StepWise Training Application</h1>
+          <h1 className="text-2xl font-bold text-foreground">Flight School Application</h1>
           <p className="mt-2 text-sm text-muted-foreground max-w-lg mx-auto">
-            We appreciate your interest in our StepWise Training! Please answer the questions as fully as you can.
+            We appreciate your interest in our Flight School Training! Please answer the questions as fully as you can.
             Your personal information will be kept strictly confidential.
           </p>
         </div>
