@@ -271,7 +271,7 @@ export default function ApplicationForm() {
             <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/30">
               <Plane className="h-5 w-5 text-white" />
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white drop-shadow-lg tracking-tight">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)] tracking-tight">
               Flight School Application
             </h1>
             <p className="mt-2 text-sm text-white/80 max-w-md drop-shadow">
