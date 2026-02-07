@@ -56,12 +56,12 @@ const TRAINING_FEATURES: OrbitalItem[] = [
 
 export default function PaceSection() {
   return (
-    <section className="relative overflow-hidden bg-background pb-0">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-24 md:pt-32 pb-0 min-h-[80vh]">
+    <section className="relative overflow-hidden bg-background">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 py-24 md:py-32 min-h-[70vh]">
 
         {/* Left text — small body copy */}
         <motion.p
-          className="hidden md:block absolute left-6 lg:left-12 top-[calc(45%+50px)] -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
+          className="hidden md:block absolute left-6 lg:left-12 top-[45%] -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-80px' }}
@@ -74,17 +74,17 @@ export default function PaceSection() {
         <div className="relative flex items-center justify-center">
           {/* Celadon circle */}
           <div
-            className="absolute h-80 w-80 rounded-full sm:h-96 sm:w-96 md:h-[34rem] md:w-[34rem]"
+            className="absolute h-72 w-72 rounded-full sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
             style={{
-              left: 'calc(-12% - 80px)',
-              top: '110px',
+              left: '-10%',
+              top: '25px',
               backgroundColor: 'hsl(160 30% 72%)',
             }}
           />
 
           {/* Silhouette — mix-blend-mode removes white bg */}
           <div
-            className="relative z-10 h-[32.2rem] w-[25.3rem] sm:h-[39.1rem] sm:w-[29.9rem] md:h-[48.3rem] md:w-[36.8rem] translate-y-8"
+            className="relative z-10 h-[22rem] w-[18rem] sm:h-[26rem] sm:w-[22rem] md:h-[32rem] md:w-[26rem]"
             style={{ mixBlendMode: 'multiply' }}
           >
             <img
@@ -95,18 +95,18 @@ export default function PaceSection() {
           </div>
 
         {/* Orbital timeline around the circle */}
-          <div className="absolute inset-0 z-20" style={{ transform: 'translate(-340px, -290px)' }}>
+          <div className="absolute inset-0 z-20" style={{ transform: 'translate(-300px, -290px)' }}>
             <OrbitalTimeline
               items={TRAINING_FEATURES}
-              radius={300}
-              mobileRadius={200}
+              radius={260}
+              mobileRadius={175}
             />
           </div>
         </div>
 
         {/* Right text — bold, large "less is more" */}
         <motion.p
-          className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] top-[calc(45%+50px)] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
+          className="hidden md:block absolute right-[12%] lg:right-[15%] top-[45%] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-80px' }}
@@ -118,7 +118,7 @@ export default function PaceSection() {
         </motion.p>
 
         {/* Mobile: text below */}
-        <div className="md:hidden absolute bottom-[-46px] left-0 right-0 px-6 text-center z-10">
+        <div className="md:hidden absolute bottom-4 left-0 right-0 px-6 text-center z-10">
           <motion.p
             className="text-3xl font-bold text-foreground mb-2 tracking-tight"
             initial={{ opacity: 0 }}

@@ -1,26 +1,10 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { SparklesCore } from '@/components/ui/sparkles';
-import MorphingPageDots from '@/components/ui/morphing-page-dots';
 
-interface StepSection {
-  label: string;
-  index: number;
-}
-
-interface FormHeaderProps {
-  sections: StepSection[];
-  step: number;
-  onStepChange: (step: number) => void;
-}
-
-export default function FormHeader({ sections, step, onStepChange }: FormHeaderProps) {
-  const prevLabel = step > 0 ? `${step}. ${sections[step - 1].label}` : null;
-  const nextLabel = step < sections.length - 1 ? `${step + 2}. ${sections[step + 1].label}` : null;
-  const currentLabel = `${step + 1}. ${sections[step].label}`;
-
+export default function FormHeader() {
   return (
     <section className="relative overflow-hidden bg-black">
-      <div className="relative mx-auto max-w-4xl px-6 py-10 md:py-14 flex flex-col items-center justify-center">
+      <div className="relative mx-auto max-w-4xl px-6 py-20 md:py-28 flex flex-col items-center justify-center">
         {/* Title */}
         <motion.h2
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white text-center z-10"
@@ -32,24 +16,17 @@ export default function FormHeader({ sections, step, onStepChange }: FormHeaderP
           Training Application
         </motion.h2>
 
-        {/* Sage-green glowing line beneath text */}
+        {/* Glowing line beneath text */}
         <div className="relative mt-4 w-full max-w-lg h-px z-10">
-          <div
-            className="absolute inset-0"
-            style={{
-              background: 'linear-gradient(to right, transparent, hsl(160 30% 72%), transparent)',
-            }}
-          />
-          <div
-            className="absolute inset-0 blur-sm"
-            style={{
-              background: 'linear-gradient(to right, transparent, hsl(160 30% 72%), transparent)',
-            }}
-          />
+          {/* Gradient line */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent" />
+          {/* Glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent blur-sm" />
         </div>
 
-        {/* Sparkles */}
-        <div className="relative w-full h-16 mt-0 z-0">
+        {/* Sparkles below the line */}
+        <div className="relative w-full h-40 mt-0 z-0">
+          {/* Radial fade mask */}
           <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_80%)]">
             <SparklesCore
               background="transparent"
@@ -61,73 +38,6 @@ export default function FormHeader({ sections, step, onStepChange }: FormHeaderP
               speed={2}
             />
           </div>
-        </div>
-
-        {/* Step navigation */}
-        <div className="relative z-10 -mt-2 mb-1 w-full max-w-lg">
-          {/* Prev / Current / Next labels */}
-          <div className="flex items-baseline justify-between mb-4 px-2">
-            {/* Previous label */}
-            <div className="flex-1 text-left min-w-0">
-              <AnimatePresence mode="wait">
-                {prevLabel && (
-                  <motion.button
-                    key={prevLabel}
-                    onClick={() => onStepChange(step - 1)}
-                    className="text-[10px] sm:text-xs font-medium tracking-wider uppercase text-white/30 hover:text-white/55 transition-colors truncate"
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -8 }}
-                    transition={{ duration: 0.25 }}
-                  >
-                    {prevLabel}
-                  </motion.button>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Current label */}
-            <div className="flex-shrink-0 px-4">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={currentLabel}
-                  className="text-sm sm:text-base font-semibold tracking-wide uppercase text-white"
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  {currentLabel}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-
-            {/* Next label */}
-            <div className="flex-1 text-right min-w-0">
-              <AnimatePresence mode="wait">
-                {nextLabel && (
-                  <motion.button
-                    key={nextLabel}
-                    onClick={() => onStepChange(step + 1)}
-                    className="text-[10px] sm:text-xs font-medium tracking-wider uppercase text-white/30 hover:text-white/55 transition-colors truncate"
-                    initial={{ opacity: 0, x: 8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 8 }}
-                    transition={{ duration: 0.25 }}
-                  >
-                    {nextLabel}
-                  </motion.button>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-
-          {/* Morphing dots with arrows */}
-          <MorphingPageDots
-            total={sections.length}
-            page={step}
-            onPageChange={onStepChange}
-          />
         </div>
       </div>
     </section>
