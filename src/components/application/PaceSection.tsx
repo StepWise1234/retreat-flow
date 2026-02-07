@@ -24,7 +24,7 @@ export default function PaceSection() {
             className="absolute h-72 w-72 rounded-full sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
             style={{
               left: '-10%',
-              top: '-5%',
+              top: '25px',
               backgroundColor: 'hsl(160 30% 72%)',
             }}
             initial={{ opacity: 0, scale: 0.5 }}
