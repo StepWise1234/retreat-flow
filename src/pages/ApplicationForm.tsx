@@ -11,8 +11,7 @@ import { Slider } from '@/components/ui/slider';
 import { toast } from 'sonner';
 import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import HeroSection from '@/components/application/HeroSection';
-import WhyJoinSection from '@/components/application/WhyJoinSection';
+import ScrollMorphHero from '@/components/application/ScrollMorphHero';
 
 const TRAINING_DATES = [
   'March 13 - 16, 2026 (Boston, MA)',
@@ -270,17 +269,14 @@ export default function ApplicationForm() {
   ];
 
   return (
-    <div className={cn(
-      'min-h-screen bg-gradient-to-b transition-all duration-1000 ease-in-out',
-      duskGradients[step]
-    )}>
-      <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6 overflow-hidden">
-        {/* Cinematic hero */}
-        <HeroSection />
+    <div className="min-h-screen" style={{ background: 'hsl(var(--background))' }}>
+      {/* Scroll Morph Hero — replaces old hero + testimonials */}
+      <ScrollMorphHero />
 
-        {/* Social proof & value proposition */}
-        <WhyJoinSection />
-
+      <main className={cn(
+        'mx-auto max-w-3xl px-4 py-6 sm:px-6 overflow-hidden bg-gradient-to-b transition-all duration-1000 ease-in-out',
+        duskGradients[step]
+      )}>
         {/* Step progress */}
         <div className="mb-6 flex items-center justify-center gap-1 overflow-x-auto pb-1">
           {SECTIONS.map((section, idx) => {
