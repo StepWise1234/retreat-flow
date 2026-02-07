@@ -21,8 +21,10 @@ export default function PaceSection() {
         <div className="relative flex items-center justify-center">
           {/* Celadon circle — fades in and expands first */}
           <motion.div
-            className="absolute h-64 w-64 rounded-full sm:h-72 sm:w-72 md:h-[22rem] md:w-[22rem] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            className="absolute h-72 w-72 rounded-full sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
             style={{
+              left: '-10%',
+              top: '-5%',
               backgroundColor: 'hsl(160 30% 72%)',
             }}
             initial={{ opacity: 0, scale: 0.5 }}
