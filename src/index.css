@@ -541,16 +541,21 @@
     position: relative;
     overflow: hidden;
     background: linear-gradient(
-      135deg,
-      hsl(var(--card) / 0.7) 0%,
-      hsl(var(--secondary) / 0.5) 100%
+      105deg,
+      hsl(0 80% 65% / 0.08) 0%,
+      hsl(35 90% 60% / 0.08) 16%,
+      hsl(55 85% 55% / 0.08) 32%,
+      hsl(140 60% 45% / 0.08) 48%,
+      hsl(210 70% 55% / 0.08) 64%,
+      hsl(270 60% 60% / 0.08) 80%,
+      hsl(320 70% 55% / 0.08) 100%
     );
     backdrop-filter: blur(12px) saturate(1.4);
     -webkit-backdrop-filter: blur(12px) saturate(1.4);
-    border: 1px solid hsl(var(--border) / 0.6);
+    border: 1px solid hsl(0 0% 100% / 0.15);
     box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.15),
-      0 1px 3px 0 hsl(var(--foreground) / 0.06);
+      inset 0 1px 0 0 hsl(0 0% 100% / 0.12),
+      0 1px 3px 0 hsl(var(--foreground) / 0.04);
   }
 
   /* Starfield specks via radial gradients */
