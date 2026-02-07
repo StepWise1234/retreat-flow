@@ -303,7 +303,7 @@ export default function ScrollMorphHero() {
                 const arcRadius = baseRadius * (isMobile ? 1.0 : 0.8);
                 const arcApexY = containerSize.height * (isMobile ? 0.15 : 0.05);
                 const arcCenterY = arcApexY + arcRadius;
-                const spreadAngle = isMobile ? 100 : 130;
+                const spreadAngle = isMobile ? 150 : 200;
                 const startAngle = -90 - spreadAngle / 2;
                 const step = spreadAngle / (TOTAL_CARDS - 1);
 
