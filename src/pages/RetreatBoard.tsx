@@ -218,25 +218,25 @@ export default function RetreatBoard() {
       {/* Kanban */}
       {view === 'kanban' && (
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin">
+          <div className="flex flex-col gap-4 pb-4">
             {columns.map(({ stage, regs }) => {
               const style = STAGE_STYLE_MAP[stage];
               return (
-                <div key={stage} className="flex w-64 min-w-[240px] flex-shrink-0 flex-col rounded-lg bg-secondary/50">
-                  <div className={cn('flex items-center gap-2 rounded-t-lg border-t-2 px-3 py-2.5', style.border)}>
+                <div key={stage} className="rounded-lg bg-secondary/50">
+                  <div className={cn('flex items-center gap-2 rounded-t-lg border-l-4 px-4 py-2.5', style.border)}>
                     <span className={cn('h-2 w-2 rounded-full', style.dot)} />
-                    <h3 className="text-xs font-semibold text-foreground">{stage}</h3>
-                    <span className="ml-auto rounded-full bg-card px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                    <h3 className="text-sm font-semibold text-foreground">{stage}</h3>
+                    <span className="rounded-full bg-card px-2 py-0.5 text-xs font-medium text-muted-foreground">
                       {regs.length}
                     </span>
                   </div>
-                  <Droppable droppableId={stage} isDropDisabled={isReadOnly}>
+                  <Droppable droppableId={stage} isDropDisabled={isReadOnly} direction="horizontal">
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                         className={cn(
-                          'flex-1 space-y-2 p-2 transition-colors min-h-[80px]',
+                          'flex flex-wrap gap-3 p-3 transition-colors min-h-[60px]',
                           snapshot.isDraggingOver && 'bg-primary/5 rounded-b-lg'
                         )}
                       >
@@ -246,7 +246,12 @@ export default function RetreatBoard() {
                           return (
                             <Draggable key={reg.id} draggableId={reg.id} index={index} isDragDisabled={isReadOnly}>
                               {(provided, snapshot) => (
-                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className="w-64 flex-shrink-0"
+                                >
                                   <ParticipantCard
                                     registration={reg}
                                     participant={participant}
@@ -262,6 +267,9 @@ export default function RetreatBoard() {
                           );
                         })}
                         {provided.placeholder}
+                        {regs.length === 0 && (
+                          <p className="text-xs text-muted-foreground italic py-2">No participants in this stage</p>
+                        )}
                       </div>
                     )}
                   </Droppable>
