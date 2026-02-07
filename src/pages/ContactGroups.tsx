@@ -363,23 +363,23 @@ export default function ContactGroups() {
               </p>
             </div>
           ) : (
-            <div className="rounded-lg border bg-gradient-card overflow-hidden">
-              <table className="w-full text-sm">
+            <div className="rounded-lg border bg-gradient-card overflow-hidden overflow-x-auto">
+              <table className="w-full text-sm table-fixed min-w-[640px]">
                 <thead>
                   <tr className="border-b bg-secondary/50">
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground">Name</th>
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground">Email</th>
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground">Signal</th>
-                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground">Retreat(s)</th>
-                    <th className="px-4 py-2.5 w-20"></th>
+                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground w-[18%]">Name</th>
+                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground w-[25%]">Email</th>
+                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground w-[17%]">Signal</th>
+                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground w-[28%]">Retreat(s)</th>
+                    <th className="px-4 py-2.5 w-[12%]"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {contactList.map((contact) => (
                     <tr key={contact.id} className="border-b last:border-0 hover-row-rainbow transition-colors duration-200">
-                      <td className="px-4 py-2.5 font-medium text-foreground">{contact.fullName}</td>
-                      <td className="px-4 py-2.5 text-muted-foreground">{contact.email}</td>
-                      <td className="px-4 py-2.5 text-muted-foreground">{contact.signalHandle}</td>
+                      <td className="px-4 py-2.5 font-medium text-foreground truncate">{contact.fullName}</td>
+                      <td className="px-4 py-2.5 text-muted-foreground truncate">{contact.email}</td>
+                      <td className="px-4 py-2.5 text-muted-foreground truncate">{contact.signalHandle || '—'}</td>
                       <td className="px-4 py-2.5">
                         <div className="flex flex-wrap gap-1">
                           {contact.retreatNames.map((name, i) => {
@@ -387,7 +387,7 @@ export default function ContactGroups() {
                             return (
                               <span
                                 key={name}
-                                className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium text-white"
+                                className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium text-white whitespace-nowrap"
                                 style={{ background: `linear-gradient(135deg, ${color.from}, ${color.to})` }}
                               >
                                 {name}
@@ -397,7 +397,7 @@ export default function ContactGroups() {
                         </div>
                       </td>
                       <td className="px-4 py-2.5">
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1 justify-end">
                           <button
                             onClick={() => handleCopySingle(contact.email, 'email')}
                             className="rounded p-1.5 hover-chip-rainbow transition-all"
