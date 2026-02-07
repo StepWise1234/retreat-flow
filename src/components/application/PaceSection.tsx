@@ -84,7 +84,7 @@ export default function PaceSection() {
 
           {/* Silhouette — mix-blend-mode removes white bg */}
           <div
-            className="relative z-10 h-[28rem] w-[22rem] sm:h-[34rem] sm:w-[26rem] md:h-[42rem] md:w-[32rem] translate-y-8"
+            className="relative z-10 h-[32.2rem] w-[25.3rem] sm:h-[39.1rem] sm:w-[29.9rem] md:h-[48.3rem] md:w-[36.8rem] translate-y-8"
             style={{ mixBlendMode: 'multiply' }}
           >
             <img
