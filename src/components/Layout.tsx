@@ -14,10 +14,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-30 border-b bg-card">
+    <div className="min-h-screen bg-gradient-page">
+      <header className="sticky top-0 z-30 border-b bg-gradient-header backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-screen-2xl items-center gap-6 px-4 sm:px-6">
-          <Link to="/" className="flex items-center gap-2 font-semibold text-primary">
+          <Link to="/" className="flex items-center gap-2 font-semibold text-primary hover-lift">
             <Mountain className="h-5 w-5" />
             <span className="hidden sm:inline">Retreat Ops</span>
           </Link>
@@ -30,10 +30,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   key={to}
                   to={to}
                   className={cn(
-                    'flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                    'flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all duration-200',
                     isActive
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'text-muted-foreground nav-hover hover:text-foreground'
                   )}
                 >
                   <Icon className="h-4 w-4" />

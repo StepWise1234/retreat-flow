@@ -153,7 +153,7 @@ export default function ContactGroups() {
         {/* Filters sidebar */}
         <div className="space-y-5">
           {/* Retreat selector */}
-          <div className="rounded-lg border bg-card p-4 space-y-3">
+          <div className="rounded-lg border bg-gradient-card p-4 space-y-3 hover-border-glow">
             <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Retreat
             </Label>
@@ -173,7 +173,7 @@ export default function ContactGroups() {
           </div>
 
           {/* Stage filters */}
-          <div className="rounded-lg border bg-card p-4 space-y-3">
+          <div className="rounded-lg border bg-gradient-card p-4 space-y-3 hover-border-glow">
             <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Pipeline Stage
             </Label>
@@ -186,13 +186,17 @@ export default function ContactGroups() {
                     key={stage}
                     onClick={() => toggleStage(stage)}
                     className={cn(
-                      'rounded-full px-2.5 py-1 text-xs font-medium transition-all border',
+                      'rounded-full px-2.5 py-1 text-xs font-medium transition-all duration-200 border hover-lift',
                       isActive
-                        ? `${style.bg} ${style.text} ${style.border}`
-                        : 'bg-secondary text-muted-foreground border-transparent hover:bg-secondary/80'
+                        ? `${style.bg} ${style.text} ${style.border} shadow-sm`
+                        : `border-transparent hover:${style.bg} hover:${style.text}`,
+                      !isActive && 'bg-secondary text-muted-foreground'
                     )}
                   >
-                    {stage}
+                    <span className="flex items-center gap-1.5">
+                      <span className={cn('h-2 w-2 rounded-full transition-colors', isActive ? style.dot : 'bg-muted-foreground/30')} />
+                      {stage}
+                    </span>
                   </button>
                 );
               })}
@@ -200,7 +204,7 @@ export default function ContactGroups() {
           </div>
 
           {/* Payment status */}
-          <div className="rounded-lg border bg-card p-4 space-y-3">
+          <div className="rounded-lg border bg-gradient-card p-4 space-y-3 hover-border-glow">
             <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Payment Status
             </Label>
@@ -226,7 +230,7 @@ export default function ContactGroups() {
           </div>
 
           {/* Risk level */}
-          <div className="rounded-lg border bg-card p-4 space-y-3">
+          <div className="rounded-lg border bg-gradient-card p-4 space-y-3 hover-border-glow">
             <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Risk Level
             </Label>
@@ -253,7 +257,7 @@ export default function ContactGroups() {
 
           {/* Tags */}
           {allTags.length > 0 && (
-            <div className="rounded-lg border bg-card p-4 space-y-3">
+            <div className="rounded-lg border bg-gradient-card p-4 space-y-3 hover-border-glow">
               <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Tags
               </Label>
@@ -289,7 +293,7 @@ export default function ContactGroups() {
         {/* Results */}
         <div className="space-y-4">
           {/* Summary + copy actions */}
-          <div className="rounded-lg border bg-card p-4">
+          <div className="rounded-lg border bg-gradient-card p-4 hover-border-glow">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-muted-foreground" />
@@ -330,14 +334,14 @@ export default function ContactGroups() {
 
           {/* Contact list */}
           {contactList.length === 0 ? (
-            <div className="rounded-lg border bg-card p-8 text-center">
+            <div className="rounded-lg border bg-gradient-card p-8 text-center">
               <Users className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" />
               <p className="text-sm text-muted-foreground">
                 No participants match your filters. Adjust your selection above.
               </p>
             </div>
           ) : (
-            <div className="rounded-lg border bg-card overflow-hidden">
+            <div className="rounded-lg border bg-gradient-card overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b bg-secondary/50">
@@ -350,7 +354,7 @@ export default function ContactGroups() {
                 </thead>
                 <tbody>
                   {contactList.map((contact) => (
-                    <tr key={contact.id} className="border-b last:border-0 hover:bg-secondary/30 transition-colors">
+                    <tr key={contact.id} className="border-b last:border-0 hover:bg-primary/[0.03] transition-colors duration-200">
                       <td className="px-4 py-2.5 font-medium text-foreground">{contact.fullName}</td>
                       <td className="px-4 py-2.5 text-muted-foreground">{contact.email}</td>
                       <td className="px-4 py-2.5 text-muted-foreground">{contact.signalHandle}</td>
