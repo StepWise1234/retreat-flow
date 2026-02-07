@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Copy, Mail, MessageCircle, Users, Filter, Check } from 'lucide-react';
+import { Copy, Mail, MessageCircle, Users, Filter, Check, Send, Settings2 } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { PIPELINE_STAGES, PipelineStage, STAGE_STYLE_MAP, PaymentStatus, RiskLevel, getRetreatColorById } from '@/lib/types';
 import Layout from '@/components/Layout';
@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import IntegrationStatusBadge from '@/components/messaging/IntegrationStatusBadge';
+import IntegrationSettingsDialog from '@/components/messaging/IntegrationSettingsDialog';
 
 type ContactType = 'email' | 'signal';
 
@@ -25,6 +27,7 @@ export default function ContactGroups() {
   const [selectedRisk, setSelectedRisk] = useState<RiskLevel[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [copiedType, setCopiedType] = useState<ContactType | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Get all unique tags
   const allTags = useMemo(() => {
@@ -143,11 +146,21 @@ export default function ContactGroups() {
 
   return (
     <Layout>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Contact Groups</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Build contact lists by retreat, pipeline stage, and filters. Copy emails or Signal handles.
-        </p>
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Contact Groups</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Build contact lists by retreat, pipeline stage, and filters. Copy emails or Signal handles.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <IntegrationStatusBadge type="email" />
+          <IntegrationStatusBadge type="signal" />
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => setSettingsOpen(true)}>
+            <Settings2 className="h-3.5 w-3.5" />
+            Settings
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
@@ -409,6 +422,8 @@ export default function ContactGroups() {
           )}
         </div>
       </div>
+
+      <IntegrationSettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </Layout>
   );
 }

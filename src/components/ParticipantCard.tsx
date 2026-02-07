@@ -1,10 +1,11 @@
-import { AlertTriangle, MessageCircle, CreditCard, Shield, CalendarDays, Phone, Video } from 'lucide-react';
+import { AlertTriangle, MessageCircle, CreditCard, Shield, CalendarDays, Phone, Video, Send } from 'lucide-react';
 import { Registration, Participant, PaymentStatus, RISK_LEVEL_STYLES } from '@/lib/types';
 import { formatDistanceToNow, format, parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { useApp } from '@/contexts/AppContext';
+import IntegrationStatusBadge from './messaging/IntegrationStatusBadge';
 
 interface Props {
   registration: Registration;
@@ -93,6 +94,8 @@ export default function ParticipantCard({ registration, participant, onClick, is
             </span>
           </div>
           <div className="flex items-center gap-1">
+            <IntegrationStatusBadge type="email" compact />
+            <IntegrationStatusBadge type="signal" compact />
             {showPayment && (
               <span className={cn('rounded px-1 py-0.5 text-[10px] font-medium', paymentBadgeStyles[registration.paymentStatus])}>
                 {registration.paymentStatus}
