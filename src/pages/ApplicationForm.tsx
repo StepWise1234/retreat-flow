@@ -9,9 +9,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { toast } from 'sonner';
-import { ChevronRight, ChevronLeft, Check, Plane } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import heroImage from '@/assets/flight-school-hero.png';
+import HeroSection from '@/components/application/HeroSection';
+import WhyJoinSection from '@/components/application/WhyJoinSection';
 
 const TRAINING_DATES = [
   'March 13 - 16, 2026 (Boston, MA)',
@@ -259,26 +260,11 @@ export default function ApplicationForm() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[hsl(330,60%,92%)] via-[hsl(20,80%,90%)] via-60% to-[hsl(210,50%,87%)]">
       <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
-        {/* Hero header with image */}
-        <div className="relative mb-8 overflow-hidden rounded-2xl shadow-lg">
-          <img
-            src={heroImage}
-            alt="View from airplane window above pink clouds at sunset"
-            className="h-48 sm:h-56 w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-            <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/30">
-              <Plane className="h-5 w-5 text-white" />
-            </div>
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)] tracking-tight">
-              Flight School Application
-            </h1>
-            <p className="mt-2 text-sm text-white/80 max-w-md drop-shadow">
-              We appreciate your interest! Please answer the questions as fully as you can.
-            </p>
-          </div>
-        </div>
+        {/* Cinematic hero */}
+        <HeroSection />
+
+        {/* Social proof & value proposition */}
+        <WhyJoinSection />
 
         {/* Step progress */}
         <div className="mb-6 flex items-center justify-center gap-1 overflow-x-auto pb-1">
