@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
-import Layout from '@/components/Layout';
+
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -257,8 +257,8 @@ export default function ApplicationForm() {
   ];
 
   return (
-    <Layout>
-      <div className="mx-auto max-w-3xl">
+    <div className="min-h-screen bg-gradient-page">
+      <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
         {/* Hero header with image */}
         <div className="relative mb-8 overflow-hidden rounded-2xl shadow-lg">
           <img
@@ -682,8 +682,8 @@ export default function ApplicationForm() {
             )}
           </div>
         </div>
-      </div>
-    </Layout>
+      </main>
+    </div>
   );
 }
 
