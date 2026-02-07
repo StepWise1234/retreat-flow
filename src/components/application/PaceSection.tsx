@@ -52,7 +52,7 @@ export default function PaceSection() {
 
         {/* Right text — bold, large "less is more" */}
         <motion.p
-          className="hidden md:block absolute right-[12%] lg:right-[15%] top-1/2 -translate-y-1/3 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
+          className="hidden md:block absolute right-[12%] lg:right-[15%] top-[45%] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-80px' }}
