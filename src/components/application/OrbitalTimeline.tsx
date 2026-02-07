@@ -43,7 +43,7 @@ export default function OrbitalTimeline({
   useEffect(() => {
     if (!autoRotate) return;
     const timer = setInterval(() => {
-      setRotationAngle((prev) => (prev + 0.15) % 360);
+      setRotationAngle((prev) => (prev + 0.04) % 360);
     }, 50);
     return () => clearInterval(timer);
   }, [autoRotate]);
