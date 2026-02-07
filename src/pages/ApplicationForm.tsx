@@ -245,14 +245,15 @@ export default function ApplicationForm() {
     setStep(0);
   };
 
-  const sectionColors = [
-    STAGE_STYLE_MAP['Leads'],
-    STAGE_STYLE_MAP['Chemistry Call'],
-    STAGE_STYLE_MAP['Application'],
-    STAGE_STYLE_MAP['Interview'],
-    STAGE_STYLE_MAP['Approval'],
-    STAGE_STYLE_MAP['Payment'],
-    STAGE_STYLE_MAP['Accommodation Selection'],
+  // Red → Orange → Amber → Yellow → Lime → Emerald → Green
+  const progressColors = [
+    { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-300', dot: 'bg-red-500' },
+    { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-300', dot: 'bg-orange-500' },
+    { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-300', dot: 'bg-amber-500' },
+    { bg: 'bg-yellow-100', text: 'text-yellow-700', border: 'border-yellow-300', dot: 'bg-yellow-500' },
+    { bg: 'bg-lime-100', text: 'text-lime-700', border: 'border-lime-300', dot: 'bg-lime-500' },
+    { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-300', dot: 'bg-emerald-500' },
+    { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-300', dot: 'bg-green-500' },
   ];
 
   return (
@@ -273,7 +274,7 @@ export default function ApplicationForm() {
         {/* Step progress */}
         <div className="mb-6 flex items-center justify-center gap-1">
           {SECTIONS.map((section, idx) => {
-            const color = sectionColors[idx];
+            const color = progressColors[idx];
             const isComplete = idx < step;
             const isCurrent = idx === step;
             return (
@@ -283,7 +284,7 @@ export default function ApplicationForm() {
                 className={cn(
                   'flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium transition-all border',
                   isCurrent && `${color.bg} ${color.text} ${color.border}`,
-                  isComplete && `${color.dot} text-card border-transparent`,
+                  isComplete && `${color.dot} text-white border-transparent`,
                   !isCurrent && !isComplete && 'bg-secondary text-muted-foreground border-transparent'
                 )}
               >
