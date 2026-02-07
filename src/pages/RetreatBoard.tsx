@@ -222,11 +222,11 @@ export default function RetreatBoard() {
             {columns.map(({ stage, regs }) => {
               const style = STAGE_STYLE_MAP[stage];
               return (
-                <div key={stage} className="rounded-lg bg-secondary/50">
+                <div key={stage} className={cn('rounded-lg bg-gradient-to-r', style.gradient)}>
                   <div className={cn('flex items-center gap-2 rounded-t-lg border-l-4 px-4 py-2.5', style.border)}>
-                    <span className={cn('h-2 w-2 rounded-full', style.dot)} />
-                    <h3 className="text-sm font-semibold text-foreground">{stage}</h3>
-                    <span className="rounded-full bg-card px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                    <span className={cn('h-2.5 w-2.5 rounded-full shadow-sm', style.dot)} />
+                    <h3 className={cn('text-sm font-semibold', style.text)}>{stage}</h3>
+                    <span className={cn('rounded-full px-2 py-0.5 text-xs font-bold', style.bg, style.text)}>
                       {regs.length}
                     </span>
                   </div>

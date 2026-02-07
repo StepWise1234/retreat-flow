@@ -43,23 +43,23 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Pipeline stage colors */
-    --stage-leads: 220 13% 46%;
-    --stage-leads-light: 220 14% 96%;
-    --stage-chemistry: 210 80% 52%;
-    --stage-chemistry-light: 210 100% 95%;
-    --stage-application: 245 58% 56%;
-    --stage-application-light: 245 100% 96%;
-    --stage-interview: 270 50% 55%;
-    --stage-interview-light: 270 100% 97%;
-    --stage-approval: 152 60% 40%;
-    --stage-approval-light: 152 76% 94%;
-    --stage-payment: 35 92% 50%;
-    --stage-payment-light: 42 100% 94%;
-    --stage-accommodation: 180 55% 40%;
-    --stage-accommodation-light: 180 76% 94%;
-    --stage-course: 160 72% 36%;
-    --stage-course-light: 155 76% 94%;
+    /* Pipeline stage colors — rainbow progression */
+    --stage-leads: 0 72% 51%;
+    --stage-leads-light: 0 85% 97%;
+    --stage-chemistry: 25 95% 53%;
+    --stage-chemistry-light: 25 100% 95%;
+    --stage-application: 45 96% 50%;
+    --stage-application-light: 46 100% 94%;
+    --stage-interview: 142 64% 40%;
+    --stage-interview-light: 142 76% 94%;
+    --stage-approval: 200 80% 50%;
+    --stage-approval-light: 200 100% 95%;
+    --stage-payment: 230 70% 56%;
+    --stage-payment-light: 230 100% 96%;
+    --stage-accommodation: 265 60% 55%;
+    --stage-accommodation-light: 265 100% 96%;
+    --stage-course: 290 60% 50%;
+    --stage-course-light: 290 100% 96%;
   }
 
   .dark {
