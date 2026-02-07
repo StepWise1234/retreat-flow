@@ -14,9 +14,9 @@ interface FormHeaderProps {
 }
 
 export default function FormHeader({ sections, step, onStepChange }: FormHeaderProps) {
-  const prevLabel = step > 0 ? sections[step - 1].label : null;
-  const nextLabel = step < sections.length - 1 ? sections[step + 1].label : null;
-  const currentLabel = sections[step].label;
+  const prevLabel = step > 0 ? `${step}. ${sections[step - 1].label}` : null;
+  const nextLabel = step < sections.length - 1 ? `${step + 2}. ${sections[step + 1].label}` : null;
+  const currentLabel = `${step + 1}. ${sections[step].label}`;
 
   return (
     <section className="relative overflow-hidden bg-black">
@@ -63,10 +63,10 @@ export default function FormHeader({ sections, step, onStepChange }: FormHeaderP
           </div>
         </div>
 
-        {/* Step navigation: prev title · current title · next title */}
-        <div className="relative z-10 -mt-2 mb-1 w-full max-w-md">
+        {/* Step navigation */}
+        <div className="relative z-10 -mt-2 mb-1 w-full max-w-lg">
           {/* Prev / Current / Next labels */}
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-baseline justify-between mb-4 px-2">
             {/* Previous label */}
             <div className="flex-1 text-left min-w-0">
               <AnimatePresence mode="wait">
@@ -74,7 +74,7 @@ export default function FormHeader({ sections, step, onStepChange }: FormHeaderP
                   <motion.button
                     key={prevLabel}
                     onClick={() => onStepChange(step - 1)}
-                    className="text-[11px] sm:text-xs font-medium tracking-wide uppercase text-white/35 hover:text-white/55 transition-colors truncate"
+                    className="text-[10px] sm:text-xs font-medium tracking-wider uppercase text-white/30 hover:text-white/55 transition-colors truncate"
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -8 }}
@@ -87,7 +87,7 @@ export default function FormHeader({ sections, step, onStepChange }: FormHeaderP
             </div>
 
             {/* Current label */}
-            <div className="flex-shrink-0 px-3">
+            <div className="flex-shrink-0 px-4">
               <AnimatePresence mode="wait">
                 <motion.span
                   key={currentLabel}
@@ -109,7 +109,7 @@ export default function FormHeader({ sections, step, onStepChange }: FormHeaderP
                   <motion.button
                     key={nextLabel}
                     onClick={() => onStepChange(step + 1)}
-                    className="text-[11px] sm:text-xs font-medium tracking-wide uppercase text-white/35 hover:text-white/55 transition-colors truncate"
+                    className="text-[10px] sm:text-xs font-medium tracking-wider uppercase text-white/30 hover:text-white/55 transition-colors truncate"
                     initial={{ opacity: 0, x: 8 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 8 }}
@@ -122,7 +122,7 @@ export default function FormHeader({ sections, step, onStepChange }: FormHeaderP
             </div>
           </div>
 
-          {/* Morphing dots */}
+          {/* Morphing dots with arrows */}
           <MorphingPageDots
             total={sections.length}
             page={step}
