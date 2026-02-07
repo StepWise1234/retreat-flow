@@ -8,7 +8,7 @@ export default function PaceSection() {
 
         {/* Left text — small body copy */}
         <motion.p
-          className="hidden md:block absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 max-w-[11rem] text-sm leading-relaxed text-muted-foreground text-right z-10"
+          className="hidden md:block absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-80px' }}
@@ -75,7 +75,7 @@ export default function PaceSection() {
             less is more
           </motion.p>
           <motion.p
-            className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto"
+            className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xs mx-auto"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
