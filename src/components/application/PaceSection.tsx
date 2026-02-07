@@ -41,7 +41,7 @@ const TRAINING_FEATURES: OrbitalItem[] = [
     title: 'Facilitation',
     subtitle: 'Mastery-level skills',
     content:
-      'Develop advanced facilitation techniques including dosing protocols, music curation, and holding space through challenging material.',
+      'Develop advanced facilitation techniques including nervous system attunement, touch and energy interventions, and integrating challenging material.',
     icon: Sparkles,
   },
   {
