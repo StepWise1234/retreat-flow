@@ -70,7 +70,7 @@ const SECTIONS = [
   { label: 'Physical Health', index: 2 },
   { label: 'Mental Health', index: 3 },
   { label: 'Wellbeing', index: 4 },
-  { label: 'Self-Care & Goals', index: 5 },
+  { label: 'Self-Care', index: 5 },
   { label: 'Confirmation', index: 6 },
 ];
 
