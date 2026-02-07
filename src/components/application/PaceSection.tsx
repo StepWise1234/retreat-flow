@@ -19,19 +19,24 @@ export default function PaceSection() {
 
         {/* Center composition — circle behind, silhouette overlapping */}
         <div className="relative flex items-center justify-center">
-          {/* Colored circle — fades in and expands first */}
+          {/* Celadon circle — fades in and expands first */}
           <motion.div
-            className="absolute h-72 w-72 rounded-full sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem] bg-accent/80"
-            style={{ left: '-10%', top: '-5%' }}
+            className="absolute h-72 w-72 rounded-full sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
+            style={{
+              left: '-10%',
+              top: '-5%',
+              backgroundColor: 'hsl(160 30% 72%)',
+            }}
             initial={{ opacity: 0, scale: 0.5 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           />
 
-          {/* Silhouette — fades in and slides up second, overlaps circle */}
+          {/* Silhouette — mix-blend-mode removes white bg */}
           <motion.div
             className="relative z-10 h-[22rem] w-[18rem] sm:h-[26rem] sm:w-[22rem] md:h-[32rem] md:w-[26rem]"
+            style={{ mixBlendMode: 'multiply' }}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
