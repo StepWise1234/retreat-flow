@@ -61,7 +61,7 @@ export default function PaceSection() {
 
         {/* Left text — small body copy */}
         <motion.p
-          className="hidden md:block absolute left-6 lg:left-12 top-[45%] -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
+          className="hidden md:block absolute left-6 lg:left-12 top-[calc(45%+50px)] -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-80px' }}
@@ -77,7 +77,7 @@ export default function PaceSection() {
             className="absolute h-80 w-80 rounded-full sm:h-96 sm:w-96 md:h-[34rem] md:w-[34rem]"
             style={{
               left: '-12%',
-              top: '10px',
+              top: '60px',
               backgroundColor: 'hsl(160 30% 72%)',
             }}
           />
@@ -95,7 +95,7 @@ export default function PaceSection() {
           </div>
 
         {/* Orbital timeline around the circle */}
-          <div className="absolute inset-0 z-20" style={{ transform: 'translate(-340px, -340px)' }}>
+          <div className="absolute inset-0 z-20" style={{ transform: 'translate(-340px, -290px)' }}>
             <OrbitalTimeline
               items={TRAINING_FEATURES}
               radius={300}
@@ -106,7 +106,7 @@ export default function PaceSection() {
 
         {/* Right text — bold, large "less is more" */}
         <motion.p
-          className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] top-[45%] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
+          className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] top-[calc(45%+50px)] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-80px' }}
@@ -118,7 +118,7 @@ export default function PaceSection() {
         </motion.p>
 
         {/* Mobile: text below */}
-        <div className="md:hidden absolute bottom-4 left-0 right-0 px-6 text-center z-10">
+        <div className="md:hidden absolute bottom-[-46px] left-0 right-0 px-6 text-center z-10">
           <motion.p
             className="text-3xl font-bold text-foreground mb-2 tracking-tight"
             initial={{ opacity: 0 }}
