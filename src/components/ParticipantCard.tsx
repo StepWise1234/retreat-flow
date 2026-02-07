@@ -50,7 +50,7 @@ export default function ParticipantCard({ registration, participant, onClick, is
         type="button"
         onClick={onClick}
         className={cn(
-          'w-full rounded-md border bg-gradient-card p-3 text-left hover-lift hover-border-glow',
+          'w-full rounded-md border bg-gradient-card p-3 text-left hover-lift hover-border-glow hover-rainbow-bar',
           isDragging && 'shadow-lg ring-2 ring-primary',
           selected && 'ring-2 ring-primary/50',
           selectable && 'pl-8'

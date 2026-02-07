@@ -186,11 +186,10 @@ export default function ContactGroups() {
                     key={stage}
                     onClick={() => toggleStage(stage)}
                     className={cn(
-                      'rounded-full px-2.5 py-1 text-xs font-medium transition-all duration-200 border hover-lift',
+                      'rounded-full px-2.5 py-1 text-xs font-medium transition-all duration-200 border hover-chip-rainbow',
                       isActive
                         ? `${style.bg} ${style.text} ${style.border} shadow-sm`
-                        : `border-transparent hover:${style.bg} hover:${style.text}`,
-                      !isActive && 'bg-secondary text-muted-foreground'
+                        : 'bg-secondary text-muted-foreground border-transparent'
                     )}
                   >
                     <span className="flex items-center gap-1.5">
@@ -216,10 +215,10 @@ export default function ContactGroups() {
                     key={status}
                     onClick={() => togglePayment(status)}
                     className={cn(
-                      'rounded-full px-2.5 py-1 text-xs font-medium transition-all border',
+                      'rounded-full px-2.5 py-1 text-xs font-medium transition-all border hover-chip-rainbow',
                       isActive
                         ? 'bg-primary text-primary-foreground border-primary'
-                        : 'bg-secondary text-muted-foreground border-transparent hover:bg-secondary/80'
+                        : 'bg-secondary text-muted-foreground border-transparent'
                     )}
                   >
                     {status}
@@ -242,10 +241,10 @@ export default function ContactGroups() {
                     key={level}
                     onClick={() => toggleRisk(level)}
                     className={cn(
-                      'rounded-full px-2.5 py-1 text-xs font-medium transition-all border',
+                      'rounded-full px-2.5 py-1 text-xs font-medium transition-all border hover-chip-rainbow',
                       isActive
                         ? 'bg-primary text-primary-foreground border-primary'
-                        : 'bg-secondary text-muted-foreground border-transparent hover:bg-secondary/80'
+                        : 'bg-secondary text-muted-foreground border-transparent'
                     )}
                   >
                     {level}
@@ -269,10 +268,10 @@ export default function ContactGroups() {
                       key={tag}
                       onClick={() => toggleTag(tag)}
                       className={cn(
-                        'rounded-full px-2.5 py-1 text-xs font-medium transition-all border',
+                        'rounded-full px-2.5 py-1 text-xs font-medium transition-all border hover-chip-rainbow',
                         isActive
                           ? 'bg-primary text-primary-foreground border-primary'
-                          : 'bg-secondary text-muted-foreground border-transparent hover:bg-secondary/80'
+                          : 'bg-secondary text-muted-foreground border-transparent'
                       )}
                     >
                       {tag}
@@ -311,7 +310,7 @@ export default function ContactGroups() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="gap-1.5 text-xs"
+                  className="gap-1.5 text-xs hover-chip-rainbow"
                   onClick={() => handleCopyAll('email')}
                   disabled={contactList.length === 0}
                 >
@@ -321,7 +320,7 @@ export default function ContactGroups() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="gap-1.5 text-xs"
+                  className="gap-1.5 text-xs hover-chip-rainbow"
                   onClick={() => handleCopyAll('signal')}
                   disabled={contactList.length === 0}
                 >
@@ -354,7 +353,7 @@ export default function ContactGroups() {
                 </thead>
                 <tbody>
                   {contactList.map((contact) => (
-                    <tr key={contact.id} className="border-b last:border-0 hover:bg-primary/[0.03] transition-colors duration-200">
+                    <tr key={contact.id} className="border-b last:border-0 hover-row-rainbow transition-colors duration-200">
                       <td className="px-4 py-2.5 font-medium text-foreground">{contact.fullName}</td>
                       <td className="px-4 py-2.5 text-muted-foreground">{contact.email}</td>
                       <td className="px-4 py-2.5 text-muted-foreground">{contact.signalHandle}</td>
@@ -371,14 +370,14 @@ export default function ContactGroups() {
                         <div className="flex items-center gap-1">
                           <button
                             onClick={() => handleCopySingle(contact.email, 'email')}
-                            className="rounded p-1 hover:bg-secondary transition-colors"
+                            className="rounded p-1.5 hover-chip-rainbow transition-all"
                             title="Copy email"
                           >
                             <Mail className="h-3.5 w-3.5 text-muted-foreground" />
                           </button>
                           <button
                             onClick={() => handleCopySingle(contact.signalHandle, 'signal')}
-                            className="rounded p-1 hover:bg-secondary transition-colors"
+                            className="rounded p-1.5 hover-chip-rainbow transition-all"
                             title="Copy Signal handle"
                           >
                             <MessageCircle className="h-3.5 w-3.5 text-muted-foreground" />
