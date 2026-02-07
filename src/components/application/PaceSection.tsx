@@ -7,13 +7,13 @@ export default function PaceSection() {
       <div className="mx-auto flex max-w-6xl items-center justify-center px-6 py-24 md:py-32">
         {/* Left text — small */}
         <motion.p
-          className="hidden md:block flex-shrink-0 max-w-[10rem] text-xs leading-relaxed text-muted-foreground text-right mr-10"
+          className="hidden md:block flex-shrink-0 max-w-[12rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right mr-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8, delay: 1.2, ease: 'easeOut' }}
         >
-          Follow the pace of your system as you metabolize nervous system shifts
+          follow the pace of your system as you metabolize nervous system shifts
         </motion.p>
 
         {/* Center — circle + person */}
@@ -51,7 +51,7 @@ export default function PaceSection() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8, delay: 1.2, ease: 'easeOut' }}
         >
-          Less is more.
+          less is more
         </motion.p>
 
         {/* Mobile: text below circle */}
@@ -63,16 +63,16 @@ export default function PaceSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 1.2 }}
           >
-            Less is more.
+            less is more
           </motion.p>
           <motion.p
-            className="text-center text-xs text-muted-foreground"
+            className="text-center text-sm text-muted-foreground leading-relaxed"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 1.4 }}
           >
-            Follow the pace of your system as you metabolize nervous system shifts
+            follow the pace of your system as you metabolize nervous system shifts
           </motion.p>
         </div>
       </div>
