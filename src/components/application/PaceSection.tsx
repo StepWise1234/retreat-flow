@@ -94,14 +94,17 @@ export default function PaceSection() {
             />
           </div>
 
-          {/* Orbital timeline around the circle */}
-          <div className="absolute inset-0">
-            <OrbitalTimeline
-              items={TRAINING_FEATURES}
-              radius={260}
-              mobileRadius={175}
-            />
-          </div>
+        {/* Orbital timeline centered on the sage circle */}
+        <div
+          className="absolute h-72 w-72 sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
+          style={{ left: '-10%', top: '25px' }}
+        >
+          <OrbitalTimeline
+            items={TRAINING_FEATURES}
+            radius={260}
+            mobileRadius={175}
+          />
+        </div>
         </div>
 
         {/* Right text — bold, large "less is more" */}
