@@ -257,9 +257,23 @@ export default function ApplicationForm() {
     { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-400', dot: 'bg-emerald-500' },
   ];
 
+  // Dusk gradient backgrounds — progressively darker at each step
+  const duskGradients = [
+    'from-[hsl(330,60%,92%)] via-[hsl(20,80%,88%)] to-[hsl(30,70%,85%)]',     // Step 0: golden hour
+    'from-[hsl(20,70%,85%)] via-[hsl(15,60%,78%)] to-[hsl(350,50%,75%)]',      // Step 1: late golden
+    'from-[hsl(350,50%,75%)] via-[hsl(330,45%,68%)] to-[hsl(310,40%,62%)]',    // Step 2: pink dusk
+    'from-[hsl(310,40%,62%)] via-[hsl(280,35%,52%)] to-[hsl(260,40%,45%)]',    // Step 3: purple twilight
+    'from-[hsl(260,40%,45%)] via-[hsl(240,35%,38%)] to-[hsl(230,40%,32%)]',    // Step 4: deep blue
+    'from-[hsl(230,40%,32%)] via-[hsl(225,38%,25%)] to-[hsl(220,40%,20%)]',    // Step 5: near night
+    'from-[hsl(220,40%,20%)] via-[hsl(215,45%,15%)] to-[hsl(210,50%,10%)]',    // Step 6: night sky
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[hsl(330,60%,92%)] via-[hsl(20,80%,90%)] via-60% to-[hsl(210,50%,87%)]">
-      <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
+    <div className={cn(
+      'min-h-screen bg-gradient-to-b transition-all duration-1000 ease-in-out',
+      duskGradients[step]
+    )}>
+      <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6 overflow-hidden">
         {/* Cinematic hero */}
         <HeroSection />
 
@@ -290,8 +304,10 @@ export default function ApplicationForm() {
           })}
         </div>
 
-        {/* Form card */}
-        <div className="rounded-2xl border bg-card/80 backdrop-blur-sm p-6 sm:p-8 shadow-sm animate-fade-in">
+        {/* Form card — stays light & readable against darkening background */}
+        <div className="rounded-2xl border bg-card/90 backdrop-blur-md p-6 sm:p-8 shadow-lg animate-fade-in transition-shadow duration-1000"
+          style={{ boxShadow: step > 3 ? '0 8px 40px rgba(0,0,0,0.3)' : undefined }}
+        >
 
           {/* SECTION 0: Training & Personal Info */}
           {step === 0 && (
