@@ -116,10 +116,71 @@ Retreat Team`,
   },
 ];
 
+// Scheduling-specific templates (not tied to a pipeline stage)
+export interface SchedulingTemplate {
+  id: string;
+  type: 'chemistry-invite' | 'interview-invite' | 'reminder';
+  subject: string;
+  body: string;
+}
+
+export const schedulingTemplates: SchedulingTemplate[] = [
+  {
+    id: 'sched-tpl-1',
+    type: 'chemistry-invite',
+    subject: 'Chemistry Call Invitation – {{retreatName}}',
+    body: `Hi {{fullName}},
+
+I'd love to schedule a chemistry call with you to discuss {{retreatName}} in {{location}}.
+
+Here are some available times:
+{{proposedTimes}}
+
+Scheduling link: {{chemistryCallLink}}
+
+Duration: ~20 minutes
+
+Looking forward to connecting!
+Retreat Team`,
+  },
+  {
+    id: 'sched-tpl-2',
+    type: 'interview-invite',
+    subject: 'Interview Invitation – {{retreatName}}',
+    body: `Hi {{fullName}},
+
+We'd love to schedule your interview for {{retreatName}}.
+
+Date/Time: {{appointmentDateTime}}
+Duration: ~30 minutes
+Link: {{appointmentLink}}
+
+Please let us know if this works for you or if you'd prefer a different time.
+
+Best,
+Retreat Team`,
+  },
+  {
+    id: 'sched-tpl-3',
+    type: 'reminder',
+    subject: 'Reminder: {{appointmentType}} Tomorrow – {{retreatName}}',
+    body: `Hi {{fullName}},
+
+Just a friendly reminder that your {{appointmentType}} for {{retreatName}} is scheduled for tomorrow.
+
+Date/Time: {{appointmentDateTime}}
+Link: {{appointmentLink}}
+
+See you there!
+Retreat Team`,
+  },
+];
+
 export function fillTemplate(
-  template: MessageTemplate,
+  template: MessageTemplate | { subject: string; body: string },
   participant: { fullName: string; email: string },
-  retreat: Retreat
+  retreat: Retreat,
+  extraVars?: Record<string, string>
 ): { subject: string; body: string } {
   const fallback = (link: string, label: string) =>
     link || `[${label} – configure in retreat settings]`;
@@ -136,6 +197,7 @@ export function fillTemplate(
     '{{courseLink}}': fallback(retreat.onlineCourseLink, 'Course Link'),
     '{{chemistryCallLink}}': fallback(retreat.chemistryCallLink, 'Chemistry Call Link'),
     '{{applicationLink}}': fallback(retreat.applicationLink, 'Application Link'),
+    ...extraVars,
   };
 
   let subject = template.subject;

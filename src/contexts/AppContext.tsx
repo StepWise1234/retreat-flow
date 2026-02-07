@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import {
-  Retreat, Participant, Registration, MessageTemplate,
-  PipelineStage, PIPELINE_STAGES, RetreatStatus, PaymentStatus,
+  Retreat, Participant, Registration, MessageTemplate, Appointment, Task,
+  PipelineStage, PIPELINE_STAGES, RetreatStatus, PaymentStatus, SchedulingStatus,
+  AppointmentType, AppointmentStatus, RiskLevel, CareFlag, TaskStatus, TaskPriority,
   isEnrolledStage, getEnrolledCount, getStageIndex,
 } from '@/lib/types';
-import { seedRetreats, seedParticipants, seedRegistrations } from '@/lib/seed-data';
+import { seedRetreats, seedParticipants, seedRegistrations, seedAppointments, seedTasks } from '@/lib/seed-data';
 import { defaultTemplates } from '@/lib/templates';
 import { toast } from 'sonner';
 
@@ -13,7 +14,10 @@ interface AppContextType {
   participants: Participant[];
   registrations: Registration[];
   templates: MessageTemplate[];
+  appointments: Appointment[];
+  tasks: Task[];
   moveStage: (registrationId: string, newStage: PipelineStage, note?: string) => void;
+  bulkMoveStage: (registrationIds: string[], newStage: PipelineStage, note?: string) => void;
   addParticipant: (p: Omit<Participant, 'id' | 'createdAt'>) => Participant;
   addRegistration: (retreatId: string, participantId: string, initialStage?: PipelineStage) => Registration;
   addActivity: (registrationId: string, action: string, notes?: string) => void;
@@ -28,6 +32,21 @@ interface AppContextType {
   updateAccommodation: (regId: string, choice: string, priceAdj?: number, notes?: string) => void;
   updatePaymentInfo: (regId: string, paymentStatus: PaymentStatus, amountDue?: number, amountPaid?: number) => void;
   getRegistrationsForParticipant: (participantId: string) => Registration[];
+  // Scheduling
+  createAppointment: (apt: Omit<Appointment, 'id' | 'createdAt' | 'updatedAt'>) => Appointment;
+  updateAppointment: (id: string, updates: Partial<Appointment>) => void;
+  getAppointmentsForRetreat: (retreatId: string) => Appointment[];
+  getAppointmentsForRegistration: (registrationId: string) => Appointment[];
+  // Risk & Care
+  updateRiskCare: (regId: string, riskLevel: RiskLevel, careFlags: CareFlag[], careNotes: string, careFlagOtherText: string) => void;
+  // Tasks
+  createTask: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => Task;
+  updateTask: (id: string, updates: Partial<Task>) => void;
+  getTasksForRetreat: (retreatId: string) => Task[];
+  getTasksForRegistration: (registrationId: string) => Task[];
+  // Bulk
+  bulkAddTag: (registrationIds: string[], tag: string) => void;
+  bulkRemoveTag: (registrationIds: string[], tag: string) => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -43,6 +62,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [participants, setParticipants] = useState<Participant[]>(seedParticipants);
   const [registrations, setRegistrations] = useState<Registration[]>(seedRegistrations);
   const [templates, setTemplates] = useState<MessageTemplate[]>(defaultTemplates);
+  const [appointments, setAppointments] = useState<Appointment[]>(seedAppointments);
+  const [tasks, setTasks] = useState<Task[]>(seedTasks);
 
   const getParticipant = useCallback(
     (id: string) => participants.find((p) => p.id === id),
@@ -64,6 +85,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [registrations]
   );
 
+  const getAppointmentsForRetreat = useCallback(
+    (retreatId: string) => appointments.filter((a) => a.retreatId === retreatId),
+    [appointments]
+  );
+
+  const getAppointmentsForRegistration = useCallback(
+    (registrationId: string) => appointments.filter((a) => a.registrationId === registrationId),
+    [appointments]
+  );
+
+  const getTasksForRetreat = useCallback(
+    (retreatId: string) => tasks.filter((t) => t.retreatId === retreatId),
+    [tasks]
+  );
+
+  const getTasksForRegistration = useCallback(
+    (registrationId: string) => tasks.filter((t) => t.registrationId === registrationId),
+    [tasks]
+  );
+
   const updateRetreat = useCallback(
     (id: string, updates: Partial<Retreat>) => {
       setRetreats((prev) => prev.map((r) => (r.id === id ? { ...r, ...updates } : r)));
@@ -83,7 +124,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  // Capacity check helper (uses latest registrations from state setter)
   const checkCapacityAfterMove = useCallback(
     (retreatId: string, updatedRegistrations: Registration[]) => {
       const retreatRegs = updatedRegistrations.filter((r) => r.retreatId === retreatId);
@@ -93,7 +133,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         const retreat = prevRetreats.find((r) => r.id === retreatId);
         if (!retreat) return prevRetreats;
 
-        // Auto-mark Full
         if (enrolled >= retreat.cohortSizeTarget && retreat.status === 'Open' && retreat.autoMarkFull) {
           toast.success('🎉 Retreat is now Full!');
           return prevRetreats.map((r) =>
@@ -101,7 +140,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           );
         }
 
-        // Auto-reopen
         if (enrolled < retreat.cohortSizeTarget && retreat.status === 'Full' && retreat.autoReopenWhenBelowCapacity) {
           toast.info('Retreat reopened: enrolled below capacity.');
           return prevRetreats.map((r) =>
@@ -147,10 +185,47 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           };
         });
 
-        // Run capacity check after state update
         if (retreatId) {
           setTimeout(() => checkCapacityAfterMove(retreatId, updated), 0);
         }
+
+        return updated;
+      });
+    },
+    [checkCapacityAfterMove]
+  );
+
+  const bulkMoveStage = useCallback(
+    (registrationIds: string[], newStage: PipelineStage, note = '') => {
+      const now = new Date().toISOString();
+      const retreatIds = new Set<string>();
+
+      setRegistrations((prev) => {
+        const updated = prev.map((r) => {
+          if (!registrationIds.includes(r.id)) return r;
+          retreatIds.add(r.retreatId);
+
+          return {
+            ...r,
+            currentStage: newStage,
+            lastTouchedAt: now,
+            stageHistory: [...r.stageHistory, { stage: newStage, date: now, note }],
+            activities: [
+              ...r.activities,
+              {
+                id: crypto.randomUUID(),
+                date: now,
+                action: `Bulk moved to ${newStage}`,
+                notes: note,
+                performedBy: 'Admin',
+              },
+            ],
+          };
+        });
+
+        retreatIds.forEach((rId) => {
+          setTimeout(() => checkCapacityAfterMove(rId, updated), 0);
+        });
 
         return updated;
       });
@@ -195,6 +270,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         accommodationChoice: '',
         accommodationNotes: '',
         paymentStatus: 'Unpaid',
+        chemistryCallStatus: 'NotScheduled',
+        interviewStatus: 'NotScheduled',
+        riskLevel: 'None',
+        careFlags: [],
+        careNotes: '',
+        careFlagOtherText: '',
       };
       setRegistrations((prev) => [...prev, newReg]);
       return newReg;
@@ -290,7 +371,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           };
         });
 
-        // Check capacity after payment status changes
         const reg = updated.find((r) => r.id === regId);
         if (reg) {
           setTimeout(() => checkCapacityAfterMove(reg.retreatId, updated), 0);
@@ -302,15 +382,183 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [checkCapacityAfterMove]
   );
 
+  // Scheduling
+  const createAppointment = useCallback(
+    (apt: Omit<Appointment, 'id' | 'createdAt' | 'updatedAt'>): Appointment => {
+      const now = new Date().toISOString();
+      const newApt: Appointment = {
+        ...apt,
+        id: `apt-${crypto.randomUUID().slice(0, 8)}`,
+        createdAt: now,
+        updatedAt: now,
+      };
+      setAppointments((prev) => [...prev, newApt]);
+
+      // Update registration scheduling status
+      const statusField = apt.type === 'ChemistryCall' ? 'chemistryCallStatus' : 'interviewStatus';
+      const aptIdField = apt.type === 'ChemistryCall' ? 'chemistryCallAppointmentId' : 'interviewAppointmentId';
+      const statusValue: SchedulingStatus = apt.status === 'Proposed' ? 'Proposed' : 'Scheduled';
+
+      setRegistrations((prev) =>
+        prev.map((r) => {
+          if (r.id !== apt.registrationId) return r;
+          return {
+            ...r,
+            [statusField]: statusValue,
+            [aptIdField]: newApt.id,
+            lastTouchedAt: now,
+            activities: [
+              ...r.activities,
+              { id: crypto.randomUUID(), date: now, action: `${apt.type === 'ChemistryCall' ? 'Chemistry Call' : 'Interview'} ${statusValue.toLowerCase()}`, notes: '', performedBy: 'Admin' },
+            ],
+          };
+        })
+      );
+
+      return newApt;
+    },
+    []
+  );
+
+  const updateAppointment = useCallback(
+    (id: string, updates: Partial<Appointment>) => {
+      const now = new Date().toISOString();
+      setAppointments((prev) =>
+        prev.map((a) => (a.id === id ? { ...a, ...updates, updatedAt: now } : a))
+      );
+
+      // If status changed, update registration
+      if (updates.status) {
+        const apt = appointments.find((a) => a.id === id);
+        if (apt) {
+          const statusField = apt.type === 'ChemistryCall' ? 'chemistryCallStatus' : 'interviewStatus';
+          let regStatus: SchedulingStatus = 'Scheduled';
+          if (updates.status === 'Completed') regStatus = 'Completed';
+          else if (updates.status === 'NoShow') regStatus = 'NoShow';
+          else if (updates.status === 'Canceled') regStatus = 'NotScheduled';
+          else if (updates.status === 'Proposed') regStatus = 'Proposed';
+
+          setRegistrations((prev) =>
+            prev.map((r) => {
+              if (r.id !== apt.registrationId) return r;
+              return {
+                ...r,
+                [statusField]: regStatus,
+                lastTouchedAt: now,
+                activities: [
+                  ...r.activities,
+                  { id: crypto.randomUUID(), date: now, action: `${apt.type === 'ChemistryCall' ? 'Chemistry Call' : 'Interview'} marked ${updates.status}`, notes: '', performedBy: 'Admin' },
+                ],
+              };
+            })
+          );
+        }
+      }
+    },
+    [appointments]
+  );
+
+  // Risk & Care
+  const updateRiskCare = useCallback(
+    (regId: string, riskLevel: RiskLevel, careFlags: CareFlag[], careNotes: string, careFlagOtherText: string) => {
+      const now = new Date().toISOString();
+      setRegistrations((prev) =>
+        prev.map((r) => {
+          if (r.id !== regId) return r;
+          const wasNone = r.riskLevel === 'None';
+          return {
+            ...r,
+            riskLevel,
+            careFlags,
+            careNotes,
+            careFlagOtherText,
+            flaggedAt: wasNone && riskLevel !== 'None' ? now : r.flaggedAt,
+            flaggedBy: wasNone && riskLevel !== 'None' ? 'Admin' : r.flaggedBy,
+            lastTouchedAt: now,
+            activities: [
+              ...r.activities,
+              { id: crypto.randomUUID(), date: now, action: `Risk level set to ${riskLevel}`, notes: careNotes ? 'Care notes updated' : '', performedBy: 'Admin' },
+            ],
+          };
+        })
+      );
+    },
+    []
+  );
+
+  // Tasks
+  const createTask = useCallback(
+    (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Task => {
+      const now = new Date().toISOString();
+      const newTask: Task = {
+        ...task,
+        id: `task-${crypto.randomUUID().slice(0, 8)}`,
+        createdAt: now,
+        updatedAt: now,
+      };
+      setTasks((prev) => [...prev, newTask]);
+      return newTask;
+    },
+    []
+  );
+
+  const updateTask = useCallback(
+    (id: string, updates: Partial<Task>) => {
+      const now = new Date().toISOString();
+      setTasks((prev) =>
+        prev.map((t) => {
+          if (t.id !== id) return t;
+          return {
+            ...t,
+            ...updates,
+            updatedAt: now,
+            completedAt: updates.status === 'Done' ? now : t.completedAt,
+          };
+        })
+      );
+    },
+    []
+  );
+
+  // Bulk tagging
+  const bulkAddTag = useCallback(
+    (registrationIds: string[], tag: string) => {
+      setRegistrations((prev) =>
+        prev.map((r) => {
+          if (!registrationIds.includes(r.id)) return r;
+          if (r.tags.includes(tag)) return r;
+          return { ...r, tags: [...r.tags, tag] };
+        })
+      );
+    },
+    []
+  );
+
+  const bulkRemoveTag = useCallback(
+    (registrationIds: string[], tag: string) => {
+      setRegistrations((prev) =>
+        prev.map((r) => {
+          if (!registrationIds.includes(r.id)) return r;
+          return { ...r, tags: r.tags.filter((t) => t !== tag) };
+        })
+      );
+    },
+    []
+  );
+
   return (
     <AppContext.Provider
       value={{
-        retreats, participants, registrations, templates,
-        moveStage, addParticipant, addRegistration, addActivity,
+        retreats, participants, registrations, templates, appointments, tasks,
+        moveStage, bulkMoveStage, addParticipant, addRegistration, addActivity,
         updateTemplate, addQuickLead, updateOpsNotes,
         getParticipant, getRetreat, getRegistrationsForRetreat,
         updateRetreat, createRetreat, updateAccommodation,
         updatePaymentInfo, getRegistrationsForParticipant,
+        createAppointment, updateAppointment, getAppointmentsForRetreat, getAppointmentsForRegistration,
+        updateRiskCare,
+        createTask, updateTask, getTasksForRetreat, getTasksForRegistration,
+        bulkAddTag, bulkRemoveTag,
       }}
     >
       {children}

@@ -1,35 +1,46 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { Search, ChevronLeft, Users } from 'lucide-react';
+import { Search, ChevronLeft, Users, LayoutGrid, List, CalendarDays, CheckSquare } from 'lucide-react';
+import { isPast, parseISO } from 'date-fns';
 import { useApp } from '@/contexts/AppContext';
-import { PIPELINE_STAGES, PipelineStage, STAGE_STYLE_MAP, STATUS_STYLES, getEnrolledCount, getStageIndex, isEnrolledStage } from '@/lib/types';
+import { PIPELINE_STAGES, PipelineStage, STAGE_STYLE_MAP, STATUS_STYLES, getEnrolledCount, isEnrolledStage } from '@/lib/types';
 import Layout from '@/components/Layout';
 import ParticipantCard from '@/components/ParticipantCard';
 import ParticipantDetailSheet from '@/components/ParticipantDetailSheet';
 import QuickAddLeadDialog from '@/components/QuickAddLeadDialog';
 import CapacityBanner from '@/components/CapacityBanner';
 import BoardFilters, { BoardFilter, BoardSort } from '@/components/BoardFilters';
+import BulkActionBar from '@/components/bulk/BulkActionBar';
+import ListView from '@/components/ListView';
+import RetreatCalendar from '@/components/scheduling/RetreatCalendar';
+import RetreatTasksView from '@/components/risk/RetreatTasksView';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+
+type BoardView = 'kanban' | 'list' | 'calendar' | 'tasks';
 
 export default function RetreatBoard() {
   const { id } = useParams<{ id: string }>();
-  const { getRetreat, getRegistrationsForRetreat, getParticipant, moveStage } = useApp();
+  const { getRetreat, getRegistrationsForRetreat, getParticipant, moveStage, tasks: allTasks } = useApp();
   const [search, setSearch] = useState('');
   const [selectedReg, setSelectedReg] = useState<string | null>(null);
   const [filters, setFilters] = useState<BoardFilter[]>([]);
   const [sort, setSort] = useState<BoardSort>('stage');
+  const [view, setView] = useState<BoardView>('kanban');
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectMode, setSelectMode] = useState(false);
 
   const retreat = getRetreat(id!);
   const allRegs = getRegistrationsForRetreat(id!);
   const enrolled = getEnrolledCount(allRegs);
+  const retreatTasks = allTasks.filter((t) => t.retreatId === id);
 
   const filteredRegs = useMemo(() => {
     let regs = allRegs;
 
-    // Text search
     if (search.trim()) {
       const q = search.toLowerCase();
       regs = regs.filter((reg) => {
@@ -44,7 +55,6 @@ export default function RetreatBoard() {
       });
     }
 
-    // Quick filters
     if (filters.includes('needs-action')) {
       const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
       regs = regs.filter((r) => new Date(r.lastTouchedAt).getTime() < sevenDaysAgo);
@@ -63,8 +73,21 @@ export default function RetreatBoard() {
     if (filters.includes('interview-week')) {
       regs = regs.filter((r) => r.currentStage === 'Interview');
     }
+    if (filters.includes('high-risk')) {
+      regs = regs.filter((r) => r.riskLevel === 'High');
+    }
+    if (filters.includes('has-flags')) {
+      regs = regs.filter((r) => r.careFlags.length > 0);
+    }
+    if (filters.includes('overdue-tasks')) {
+      const regIdsWithOverdue = new Set(
+        retreatTasks
+          .filter((t) => t.status !== 'Done' && isPast(parseISO(t.dueDate)))
+          .map((t) => t.registrationId)
+      );
+      regs = regs.filter((r) => regIdsWithOverdue.has(r.id));
+    }
 
-    // Sorting (applied within each column, but also global for list reference)
     if (sort === 'lastTouched') {
       regs = [...regs].sort((a, b) => new Date(b.lastTouchedAt).getTime() - new Date(a.lastTouchedAt).getTime());
     } else if (sort === 'name') {
@@ -76,7 +99,7 @@ export default function RetreatBoard() {
     }
 
     return regs;
-  }, [search, allRegs, getParticipant, filters, sort]);
+  }, [search, allRegs, getParticipant, filters, sort, retreatTasks]);
 
   const columns = useMemo(() => {
     return PIPELINE_STAGES.map((stage) => ({
@@ -89,8 +112,6 @@ export default function RetreatBoard() {
     if (!result.destination) return;
     const newStage = result.destination.droppableId as PipelineStage;
     const regId = result.draggableId;
-
-    // Check backward movement from Payment+ requiring note
     const reg = allRegs.find((r) => r.id === regId);
     if (reg && isEnrolledStage(reg.currentStage) && !isEnrolledStage(newStage)) {
       moveStage(regId, newStage, 'Drag-and-drop (moved backward from enrolled stage)');
@@ -98,6 +119,20 @@ export default function RetreatBoard() {
       moveStage(regId, newStage, 'Drag-and-drop');
     }
   };
+
+  const toggleSelect = useCallback((regId: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(regId) ? prev.filter((id) => id !== regId) : [...prev, regId]
+    );
+  }, []);
+
+  const selectAll = useCallback(() => {
+    if (selectedIds.length === filteredRegs.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredRegs.map((r) => r.id));
+    }
+  }, [filteredRegs, selectedIds.length]);
 
   const isReadOnly = retreat?.status === 'Closed' || retreat?.status === 'Archived';
 
@@ -149,6 +184,27 @@ export default function RetreatBoard() {
         </div>
       </div>
 
+      {/* View tabs */}
+      <div className="mb-4 flex items-center gap-1 rounded-md border bg-secondary/50 p-0.5 w-fit">
+        {([
+          { key: 'kanban', icon: LayoutGrid, label: 'Board' },
+          { key: 'list', icon: List, label: 'List' },
+          { key: 'calendar', icon: CalendarDays, label: 'Calendar' },
+          { key: 'tasks', icon: CheckSquare, label: 'Tasks' },
+        ] as const).map(({ key, icon: Icon, label }) => (
+          <Button
+            key={key}
+            variant={view === key ? 'default' : 'ghost'}
+            size="sm"
+            className="h-8 gap-1.5 text-xs"
+            onClick={() => { setView(key); setSelectMode(key === 'list'); }}
+          >
+            <Icon className="h-3.5 w-3.5" />
+            {label}
+          </Button>
+        ))}
+      </div>
+
       {/* Capacity Banner */}
       <CapacityBanner retreat={retreat} registrations={allRegs} />
 
@@ -160,66 +216,89 @@ export default function RetreatBoard() {
       )}
 
       {/* Kanban */}
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin">
-          {columns.map(({ stage, regs }) => {
-            const style = STAGE_STYLE_MAP[stage];
-            return (
-              <div
-                key={stage}
-                className="flex w-64 min-w-[240px] flex-shrink-0 flex-col rounded-lg bg-secondary/50"
-              >
-                {/* Column header */}
-                <div className={cn('flex items-center gap-2 rounded-t-lg border-t-2 px-3 py-2.5', style.border)}>
-                  <span className={cn('h-2 w-2 rounded-full', style.dot)} />
-                  <h3 className="text-xs font-semibold text-foreground">{stage}</h3>
-                  <span className="ml-auto rounded-full bg-card px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-                    {regs.length}
-                  </span>
+      {view === 'kanban' && (
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin">
+            {columns.map(({ stage, regs }) => {
+              const style = STAGE_STYLE_MAP[stage];
+              return (
+                <div key={stage} className="flex w-64 min-w-[240px] flex-shrink-0 flex-col rounded-lg bg-secondary/50">
+                  <div className={cn('flex items-center gap-2 rounded-t-lg border-t-2 px-3 py-2.5', style.border)}>
+                    <span className={cn('h-2 w-2 rounded-full', style.dot)} />
+                    <h3 className="text-xs font-semibold text-foreground">{stage}</h3>
+                    <span className="ml-auto rounded-full bg-card px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                      {regs.length}
+                    </span>
+                  </div>
+                  <Droppable droppableId={stage} isDropDisabled={isReadOnly}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className={cn(
+                          'flex-1 space-y-2 p-2 transition-colors min-h-[80px]',
+                          snapshot.isDraggingOver && 'bg-primary/5 rounded-b-lg'
+                        )}
+                      >
+                        {regs.map((reg, index) => {
+                          const participant = getParticipant(reg.participantId);
+                          if (!participant) return null;
+                          return (
+                            <Draggable key={reg.id} draggableId={reg.id} index={index} isDragDisabled={isReadOnly}>
+                              {(provided, snapshot) => (
+                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                  <ParticipantCard
+                                    registration={reg}
+                                    participant={participant}
+                                    onClick={() => setSelectedReg(reg.id)}
+                                    isDragging={snapshot.isDragging}
+                                    selectable={selectMode}
+                                    selected={selectedIds.includes(reg.id)}
+                                    onToggleSelect={() => toggleSelect(reg.id)}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          );
+                        })}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
                 </div>
+              );
+            })}
+          </div>
+        </DragDropContext>
+      )}
 
-                {/* Cards */}
-                <Droppable droppableId={stage} isDropDisabled={isReadOnly}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className={cn(
-                        'flex-1 space-y-2 p-2 transition-colors min-h-[80px]',
-                        snapshot.isDraggingOver && 'bg-primary/5 rounded-b-lg'
-                      )}
-                    >
-                      {regs.map((reg, index) => {
-                        const participant = getParticipant(reg.participantId);
-                        if (!participant) return null;
-                        return (
-                          <Draggable key={reg.id} draggableId={reg.id} index={index} isDragDisabled={isReadOnly}>
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                <ParticipantCard
-                                  registration={reg}
-                                  participant={participant}
-                                  onClick={() => setSelectedReg(reg.id)}
-                                  isDragging={snapshot.isDragging}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </div>
-            );
-          })}
-        </div>
-      </DragDropContext>
+      {/* List view */}
+      {view === 'list' && (
+        <ListView
+          registrations={filteredRegs}
+          selectedIds={selectedIds}
+          onToggleSelect={toggleSelect}
+          onSelectAll={selectAll}
+          onOpenDetail={(regId) => setSelectedReg(regId)}
+        />
+      )}
+
+      {/* Calendar view */}
+      {view === 'calendar' && (
+        <RetreatCalendar retreatId={retreat.id} />
+      )}
+
+      {/* Tasks view */}
+      {view === 'tasks' && (
+        <RetreatTasksView retreatId={retreat.id} />
+      )}
+
+      {/* Bulk action bar */}
+      <BulkActionBar
+        selectedIds={selectedIds}
+        retreatId={retreat.id}
+        onClear={() => setSelectedIds([])}
+      />
 
       {/* Detail Sheet */}
       <ParticipantDetailSheet

@@ -1,4 +1,7 @@
-import { Retreat, Participant, Registration, PipelineStage, PaymentStatus } from './types';
+import {
+  Retreat, Participant, Registration, Appointment, Task,
+  PipelineStage, PaymentStatus, SchedulingStatus, RiskLevel, CareFlag,
+} from './types';
 
 const defaultRetreatFields = {
   capacityOverride: false,
@@ -99,7 +102,7 @@ export const seedParticipants: Participant[] = [
   { id: 'p-15', fullName: 'Clara Johansson', email: 'clara.j@example.com', signalHandle: '@claraj', allergies: '', specialRequests: 'Needs wheelchair access', createdAt: '2026-01-13T16:00:00Z' },
   { id: 'p-16', fullName: 'Omar Hassan', email: 'omar.h@example.com', signalHandle: '@omarh', allergies: '', specialRequests: '', createdAt: '2026-01-15T09:30:00Z' },
   { id: 'p-17', fullName: 'Zoe Mitchell', email: 'zoe.m@example.com', signalHandle: '@zoem', allergies: 'Sesame', specialRequests: 'Room with desk for work', createdAt: '2026-01-17T11:00:00Z' },
-  { id: 'p-18', fullName: 'Liam O\'Brien', email: 'liam.ob@example.com', signalHandle: '@liamob', allergies: '', specialRequests: '', createdAt: '2026-01-19T13:00:00Z' },
+  { id: 'p-18', fullName: "Liam O'Brien", email: 'liam.ob@example.com', signalHandle: '@liamob', allergies: '', specialRequests: '', createdAt: '2026-01-19T13:00:00Z' },
 ];
 
 function makeActivity(action: string, date: string, notes = '') {
@@ -118,6 +121,12 @@ const defaultRegFields = {
   accommodationChoice: '',
   accommodationNotes: '',
   paymentStatus: 'Unpaid' as PaymentStatus,
+  chemistryCallStatus: 'NotScheduled' as SchedulingStatus,
+  interviewStatus: 'NotScheduled' as SchedulingStatus,
+  riskLevel: 'None' as RiskLevel,
+  careFlags: [] as CareFlag[],
+  careNotes: '',
+  careFlagOtherText: '',
 };
 
 export const seedRegistrations: Registration[] = [
@@ -128,6 +137,10 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-10'),
     lastTouchedAt: '2026-02-05T10:00:00Z', opsNotes: 'Very enthusiastic about the program.',
     tags: ['priority'], ...defaultRegFields, paymentStatus: 'Unpaid', amountDue: 3500,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
+    chemistryCallAppointmentId: 'apt-1', interviewAppointmentId: 'apt-2',
+    riskLevel: 'Low', careFlags: ['Allergies'], careNotes: 'Tree nut allergy — ensure kitchen is notified.',
+    flaggedAt: '2026-01-15T14:00:00Z', flaggedBy: 'Admin',
     activities: [
       makeActivity('Lead added', '2026-01-10T09:00:00Z'),
       makeActivity('Chemistry call completed', '2026-01-15T14:00:00Z', 'Great conversation'),
@@ -143,6 +156,7 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment', 'Accommodation Selection'], '2026-01-12'),
     lastTouchedAt: '2026-02-04T16:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 3500, amountPaid: 3500,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [
       makeActivity('Lead added', '2026-01-12T14:30:00Z'),
       makeActivity('Paid in full', '2026-02-02T09:00:00Z'),
@@ -155,6 +169,11 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview'], '2026-01-14'),
     lastTouchedAt: '2026-02-01T11:00:00Z', opsNotes: 'Needs dietary accommodations confirmed.',
     tags: ['dietary'], ...defaultRegFields,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Scheduled',
+    interviewAppointmentId: 'apt-3',
+    riskLevel: 'High', careFlags: ['Allergies', 'Dietary restrictions', 'Trauma-informed considerations'],
+    careNotes: 'Multiple food allergies (gluten, dairy). Has mentioned past trauma — needs trauma-informed facilitation. Please review care plan before advancing.',
+    flaggedAt: '2026-01-20T11:00:00Z', flaggedBy: 'Admin',
     activities: [
       makeActivity('Lead added', '2026-01-14T10:15:00Z'),
       makeActivity('Interview scheduled', '2026-02-01T11:00:00Z'),
@@ -174,6 +193,7 @@ export const seedRegistrations: Registration[] = [
     lastTouchedAt: '2026-02-06T08:00:00Z', opsNotes: 'Fully onboarded.',
     tags: ['complete'], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 3500, amountPaid: 3500,
     accommodationChoice: 'Ocean View Cabin', accommodationPriceAdjustment: 500,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [
       makeActivity('Lead added', '2026-01-02T09:00:00Z'),
       makeActivity('Payment confirmed', '2026-01-28T10:00:00Z'),
@@ -185,6 +205,7 @@ export const seedRegistrations: Registration[] = [
     currentStage: 'Chemistry Call',
     stageHistory: makeHistory(['Leads', 'Chemistry Call'], '2026-02-01'),
     lastTouchedAt: '2026-02-05T14:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Scheduled', chemistryCallAppointmentId: 'apt-4',
     activities: [
       makeActivity('Lead added', '2026-02-01T09:00:00Z'),
       makeActivity('Chemistry call scheduled', '2026-02-05T14:00:00Z'),
@@ -195,6 +216,10 @@ export const seedRegistrations: Registration[] = [
     currentStage: 'Application',
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application'], '2026-01-20'),
     lastTouchedAt: '2026-02-03T16:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Completed',
+    riskLevel: 'Medium', careFlags: ['Accessibility needs', 'Mobility concerns'],
+    careNotes: 'Uses wheelchair — confirm venue accessibility.',
+    flaggedAt: '2026-01-25T10:00:00Z', flaggedBy: 'Admin',
     activities: [
       makeActivity('Lead added', '2026-01-20T09:00:00Z'),
       makeActivity('Application submitted', '2026-02-03T16:00:00Z'),
@@ -205,6 +230,7 @@ export const seedRegistrations: Registration[] = [
     currentStage: 'Approval',
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval'], '2026-01-15'),
     lastTouchedAt: '2026-02-04T10:00:00Z', opsNotes: 'Strong candidate', tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [
       makeActivity('Lead added', '2026-01-15T09:00:00Z'),
       makeActivity('Approved', '2026-02-04T10:00:00Z'),
@@ -219,6 +245,8 @@ export const seedRegistrations: Registration[] = [
     lastTouchedAt: '2026-02-06T09:00:00Z', opsNotes: 'Fully onboarded.',
     tags: ['complete'], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 4000, amountPaid: 4000,
     accommodationChoice: 'Beachfront Palapa', accommodationPriceAdjustment: 400,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
+    riskLevel: 'Low', careFlags: ['Allergies'], careNotes: 'Shellfish allergy.',
     activities: [
       makeActivity('Lead added', '2026-01-05T09:00:00Z'),
       makeActivity('Course link sent', '2026-02-06T09:00:00Z'),
@@ -230,6 +258,7 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-10'),
     lastTouchedAt: '2026-02-03T14:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Unpaid', amountDue: 4000,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [
       makeActivity('Lead added', '2026-01-10T11:30:00Z'),
       makeActivity('Payment link sent', '2026-02-03T14:00:00Z'),
@@ -241,6 +270,7 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-08'),
     lastTouchedAt: '2026-02-03T10:00:00Z', opsNotes: 'Waiting for payment.',
     tags: [], ...defaultRegFields, paymentStatus: 'Partial', amountDue: 4000, amountPaid: 2000,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [
       makeActivity('Lead added', '2026-01-08T09:00:00Z'),
       makeActivity('Partial payment received', '2026-02-03T10:00:00Z', '$2000 of $4000'),
@@ -253,6 +283,7 @@ export const seedRegistrations: Registration[] = [
     lastTouchedAt: '2026-02-05T12:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 4000, amountPaid: 4000,
     accommodationChoice: 'Jungle Casita', accommodationPriceAdjustment: 200,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [
       makeActivity('Lead added', '2026-01-03T09:00:00Z'),
       makeActivity('Accommodation selected', '2026-02-05T12:00:00Z'),
@@ -265,6 +296,7 @@ export const seedRegistrations: Registration[] = [
     lastTouchedAt: '2026-02-06T10:00:00Z', opsNotes: '',
     tags: ['complete'], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 4000, amountPaid: 4000,
     accommodationChoice: 'Cenote Suite', accommodationPriceAdjustment: 300,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [
       makeActivity('Lead added', '2026-01-02T09:00:00Z'),
       makeActivity('Course link sent', '2026-02-06T10:00:00Z'),
@@ -276,6 +308,10 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment', 'Accommodation Selection'], '2026-01-04'),
     lastTouchedAt: '2026-02-04T09:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 4000, amountPaid: 4000,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
+    riskLevel: 'Medium', careFlags: ['Rooming sensitivity', 'Interpersonal boundary needs'],
+    careNotes: 'Prefers single room. Has specific boundary needs around group activities.',
+    flaggedAt: '2026-01-20T10:00:00Z', flaggedBy: 'Admin',
     activities: [
       makeActivity('Lead added', '2026-01-04T09:00:00Z'),
       makeActivity('Payment confirmed', '2026-02-01T10:00:00Z'),
@@ -287,6 +323,10 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-06'),
     lastTouchedAt: '2026-02-02T14:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Unpaid', amountDue: 4000,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
+    riskLevel: 'High', careFlags: ['Medical considerations', 'Dietary restrictions'],
+    careNotes: 'Egg allergy (severe). Carries EpiPen. Ensure medical supplies nearby during retreat.',
+    flaggedAt: '2026-01-12T08:00:00Z', flaggedBy: 'Admin',
     activities: [
       makeActivity('Lead added', '2026-01-06T09:00:00Z'),
       makeActivity('Payment link sent', '2026-02-02T14:00:00Z'),
@@ -298,6 +338,7 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval'], '2026-01-12'),
     lastTouchedAt: '2026-02-04T10:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [makeActivity('Lead added', '2026-01-12T10:00:00Z')],
   },
   {
@@ -306,6 +347,8 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview'], '2026-01-15'),
     lastTouchedAt: '2026-02-01T10:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Scheduled',
+    interviewAppointmentId: 'apt-5',
     activities: [makeActivity('Lead added', '2026-01-15T09:00:00Z')],
   },
 
@@ -315,6 +358,7 @@ export const seedRegistrations: Registration[] = [
     currentStage: 'Application',
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application'], '2026-01-28'),
     lastTouchedAt: '2026-02-04T13:20:00Z', opsNotes: '', tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Completed',
     activities: [
       makeActivity('Lead added', '2026-01-28T13:20:00Z'),
       makeActivity('Application submitted', '2026-02-04T13:20:00Z'),
@@ -332,6 +376,7 @@ export const seedRegistrations: Registration[] = [
     currentStage: 'Chemistry Call',
     stageHistory: makeHistory(['Leads', 'Chemistry Call'], '2026-01-25'),
     lastTouchedAt: '2026-02-03T10:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Scheduled', chemistryCallAppointmentId: 'apt-6',
     activities: [makeActivity('Lead added', '2026-01-25T09:00:00Z')],
   },
   {
@@ -339,6 +384,9 @@ export const seedRegistrations: Registration[] = [
     currentStage: 'Interview',
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview'], '2026-01-20'),
     lastTouchedAt: '2026-02-04T15:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Scheduled',
+    interviewAppointmentId: 'apt-7',
+    riskLevel: 'Low', careFlags: ['Dietary restrictions'], careNotes: 'Sesame allergy.',
     activities: [makeActivity('Lead added', '2026-01-20T09:00:00Z')],
   },
   {
@@ -346,6 +394,7 @@ export const seedRegistrations: Registration[] = [
     currentStage: 'Approval',
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval'], '2026-01-15'),
     lastTouchedAt: '2026-02-05T10:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [makeActivity('Lead added', '2026-01-15T09:00:00Z')],
   },
   {
@@ -354,6 +403,7 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-10'),
     lastTouchedAt: '2026-02-06T12:00:00Z', opsNotes: 'Returning from Big Sur.',
     tags: ['returning'], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 5000, amountPaid: 5000,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [makeActivity('Lead added', '2026-01-10T09:00:00Z')],
   },
   {
@@ -363,6 +413,7 @@ export const seedRegistrations: Registration[] = [
     lastTouchedAt: '2026-02-06T14:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 5000, amountPaid: 5000,
     accommodationChoice: 'Rice Terrace Room', accommodationPriceAdjustment: 300,
+    chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [makeActivity('Lead added', '2026-01-08T09:00:00Z')],
   },
   {
@@ -377,6 +428,7 @@ export const seedRegistrations: Registration[] = [
     currentStage: 'Chemistry Call',
     stageHistory: makeHistory(['Leads', 'Chemistry Call'], '2026-02-02'),
     lastTouchedAt: '2026-02-06T09:00:00Z', opsNotes: '', tags: ['dietary'], ...defaultRegFields,
+    chemistryCallStatus: 'Proposed',
     activities: [makeActivity('Lead added', '2026-02-02T09:00:00Z')],
   },
   {
@@ -448,5 +500,98 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads'], '2026-02-06'),
     lastTouchedAt: '2026-02-06T15:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
     activities: [makeActivity('Lead added', '2026-02-06T15:00:00Z')],
+  },
+];
+
+// Seed appointments
+export const seedAppointments: Appointment[] = [
+  {
+    id: 'apt-1', retreatId: 'retreat-1', registrationId: 'reg-1', type: 'ChemistryCall',
+    startDateTime: '2026-01-15T14:00:00Z', endDateTime: '2026-01-15T14:30:00Z',
+    timezone: 'America/Los_Angeles', status: 'Completed',
+    locationOrLink: 'https://zoom.us/j/1234567890', notes: 'Great conversation, strong fit.',
+    createdAt: '2026-01-13T10:00:00Z', updatedAt: '2026-01-15T14:30:00Z',
+  },
+  {
+    id: 'apt-2', retreatId: 'retreat-1', registrationId: 'reg-1', type: 'Interview',
+    startDateTime: '2026-01-22T11:00:00Z', endDateTime: '2026-01-22T11:30:00Z',
+    timezone: 'America/Los_Angeles', status: 'Completed',
+    locationOrLink: 'https://zoom.us/j/9876543210', notes: 'Approved for retreat.',
+    createdAt: '2026-01-18T10:00:00Z', updatedAt: '2026-01-22T11:30:00Z',
+  },
+  {
+    id: 'apt-3', retreatId: 'retreat-1', registrationId: 'reg-3', type: 'Interview',
+    startDateTime: '2026-02-10T15:00:00Z', endDateTime: '2026-02-10T15:30:00Z',
+    timezone: 'America/Los_Angeles', status: 'Scheduled',
+    locationOrLink: 'https://zoom.us/j/1112223333', notes: 'Review dietary needs during interview.',
+    createdAt: '2026-02-01T11:00:00Z', updatedAt: '2026-02-01T11:00:00Z',
+  },
+  {
+    id: 'apt-4', retreatId: 'retreat-1', registrationId: 'reg-bs6', type: 'ChemistryCall',
+    startDateTime: '2026-02-08T10:00:00Z', endDateTime: '2026-02-08T10:30:00Z',
+    timezone: 'America/Los_Angeles', status: 'Scheduled',
+    locationOrLink: 'https://calendly.com/retreat-ops/chemistry-bigsur', notes: '',
+    createdAt: '2026-02-05T14:00:00Z', updatedAt: '2026-02-05T14:00:00Z',
+  },
+  {
+    id: 'apt-5', retreatId: 'retreat-2', registrationId: 'reg-t9', type: 'Interview',
+    startDateTime: '2026-02-09T16:00:00Z', endDateTime: '2026-02-09T16:30:00Z',
+    timezone: 'America/Los_Angeles', status: 'Scheduled',
+    locationOrLink: 'https://zoom.us/j/4445556666', notes: '',
+    createdAt: '2026-02-01T10:00:00Z', updatedAt: '2026-02-01T10:00:00Z',
+  },
+  {
+    id: 'apt-6', retreatId: 'retreat-3', registrationId: 'reg-b3', type: 'ChemistryCall',
+    startDateTime: '2026-02-11T09:00:00Z', endDateTime: '2026-02-11T09:30:00Z',
+    timezone: 'America/Los_Angeles', status: 'Scheduled',
+    locationOrLink: 'https://zoom.us/j/7778889999', notes: '',
+    createdAt: '2026-02-03T10:00:00Z', updatedAt: '2026-02-03T10:00:00Z',
+  },
+  {
+    id: 'apt-7', retreatId: 'retreat-3', registrationId: 'reg-b4', type: 'Interview',
+    startDateTime: '2026-02-12T14:00:00Z', endDateTime: '2026-02-12T14:30:00Z',
+    timezone: 'America/Los_Angeles', status: 'Scheduled',
+    locationOrLink: 'https://zoom.us/j/0001112222', notes: 'Check sesame allergy accommodations.',
+    createdAt: '2026-02-04T15:00:00Z', updatedAt: '2026-02-04T15:00:00Z',
+  },
+];
+
+// Seed tasks
+export const seedTasks: Task[] = [
+  {
+    id: 'task-1', retreatId: 'retreat-1', registrationId: 'reg-3',
+    title: 'Risk & Care review — Anika Patel',
+    description: 'Review care plan for trauma-informed facilitation before advancing to Approval.',
+    dueDate: '2026-02-09', status: 'Open', priority: 'High',
+    createdAt: '2026-01-20T11:00:00Z', updatedAt: '2026-01-20T11:00:00Z',
+  },
+  {
+    id: 'task-2', retreatId: 'retreat-1', registrationId: 'reg-bs7',
+    title: 'Confirm wheelchair accessibility',
+    description: 'Verify Big Sur venue can accommodate wheelchair needs. Contact venue manager.',
+    dueDate: '2026-02-15', status: 'Open', priority: 'High',
+    createdAt: '2026-01-25T10:00:00Z', updatedAt: '2026-01-25T10:00:00Z',
+  },
+  {
+    id: 'task-3', retreatId: 'retreat-2', registrationId: 'reg-t6',
+    title: 'Rooming sensitivity review',
+    description: 'Ensure Isabelle has a single room and review boundary accommodations.',
+    dueDate: '2026-02-20', status: 'Open', priority: 'Medium',
+    createdAt: '2026-01-20T10:00:00Z', updatedAt: '2026-01-20T10:00:00Z',
+  },
+  {
+    id: 'task-4', retreatId: 'retreat-2', registrationId: 'reg-t7',
+    title: 'Medical supplies prep — Kenji',
+    description: 'Confirm EpiPen availability and brief staff on egg allergy emergency protocol.',
+    dueDate: '2026-03-01', status: 'Open', priority: 'High',
+    createdAt: '2026-01-12T08:00:00Z', updatedAt: '2026-01-12T08:00:00Z',
+  },
+  {
+    id: 'task-5', retreatId: 'retreat-1', registrationId: 'reg-1',
+    title: 'Follow up on payment — Elena',
+    description: 'Elena has not completed payment. Send a reminder.',
+    dueDate: '2026-02-08', status: 'Done', priority: 'Medium',
+    createdAt: '2026-02-05T10:00:00Z', updatedAt: '2026-02-06T09:00:00Z',
+    completedAt: '2026-02-06T09:00:00Z',
   },
 ];
