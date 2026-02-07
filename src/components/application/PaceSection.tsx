@@ -72,50 +72,36 @@ export default function PaceSection() {
 
         {/* Center composition — circle behind, silhouette overlapping, orbital around */}
         <div className="relative flex items-center justify-center">
-          {/* Celadon circle — fades in and expands first */}
-          <motion.div
+          {/* Celadon circle */}
+          <div
             className="absolute h-72 w-72 rounded-full sm:h-80 sm:w-80 md:h-[26rem] md:w-[26rem]"
             style={{
               left: '-10%',
               top: '25px',
               backgroundColor: 'hsl(160 30% 72%)',
             }}
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           />
 
           {/* Silhouette — mix-blend-mode removes white bg */}
-          <motion.div
+          <div
             className="relative z-10 h-[22rem] w-[18rem] sm:h-[26rem] sm:w-[22rem] md:h-[32rem] md:w-[26rem]"
             style={{ mixBlendMode: 'multiply' }}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.9, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
             <img
               src={silhouetteImg}
               alt="Calm silhouette profile with eyes closed"
               className="h-full w-full object-contain object-bottom"
             />
-          </motion.div>
+          </div>
 
           {/* Orbital timeline around the circle */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 1, delay: 1.4, ease: 'easeOut' }}
-            className="absolute inset-0"
-          >
+          <div className="absolute inset-0">
             <OrbitalTimeline
               items={TRAINING_FEATURES}
               radius={260}
               mobileRadius={175}
             />
-          </motion.div>
+          </div>
         </div>
 
         {/* Right text — bold, large "less is more" */}
