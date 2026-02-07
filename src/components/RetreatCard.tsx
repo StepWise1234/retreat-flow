@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Calendar, Users, ArrowRight } from 'lucide-react';
-import { Retreat, Registration, PIPELINE_STAGES, STAGE_STYLE_MAP, PipelineStage, STATUS_STYLES, getEnrolledCount, getRetreatColor } from '@/lib/types';
+import { Retreat, Registration, PIPELINE_STAGES, STAGE_STYLE_MAP, PipelineStage, STATUS_STYLES, getEnrolledCount, getRetreatColor, getEffectiveCapacity, getAvailableSpots } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
@@ -12,6 +12,8 @@ interface Props {
 
 export default function RetreatCard({ retreat, registrations, colorIndex = 0 }: Props) {
   const enrolled = getEnrolledCount(registrations);
+  const capacity = getEffectiveCapacity(retreat);
+  const spotsLeft = getAvailableSpots(retreat, registrations);
   const retreatColor = getRetreatColor(colorIndex);
 
   const stageCounts = PIPELINE_STAGES.reduce(
@@ -22,8 +24,8 @@ export default function RetreatCard({ retreat, registrations, colorIndex = 0 }: 
     {} as Record<PipelineStage, number>
   );
 
-  const capacityPct = Math.min(100, Math.round((enrolled / retreat.cohortSizeTarget) * 100));
-  const isOver = enrolled > retreat.cohortSizeTarget;
+  const capacityPct = Math.min(100, Math.round((enrolled / capacity) * 100));
+  const isOver = enrolled > capacity;
 
   return (
     <Link
@@ -62,8 +64,8 @@ export default function RetreatCard({ retreat, registrations, colorIndex = 0 }: 
           <span className="flex items-center gap-1">
             <Users className="h-3 w-3" /> Enrolled
           </span>
-          <span className={cn('font-medium', isOver ? 'text-destructive' : 'text-card-foreground')}>
-            {enrolled}/{retreat.cohortSizeTarget}
+          <span className={cn('font-medium', isOver ? 'text-destructive' : spotsLeft <= 2 ? 'text-stage-chemistry' : 'text-card-foreground')}>
+            {enrolled}/{capacity}{retreat.capacityOverride && <span className="ml-0.5 text-[10px] text-muted-foreground">(+3)</span>}
           </span>
         </div>
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">

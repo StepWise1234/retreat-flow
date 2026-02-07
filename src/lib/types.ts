@@ -244,12 +244,29 @@ export function getPrevStage(stage: PipelineStage): PipelineStage | null {
   return null;
 }
 
+export const DEFAULT_CAPACITY = 6;
+export const OVERRIDE_CAPACITY = 9;
+
+export function getEffectiveCapacity(retreat: Retreat): number {
+  return retreat.capacityOverride ? OVERRIDE_CAPACITY : DEFAULT_CAPACITY;
+}
+
 export function isEnrolledStage(stage: PipelineStage): boolean {
   return getStageIndex(stage) >= getStageIndex('Payment');
 }
 
 export function getEnrolledCount(registrations: Registration[]): number {
   return registrations.filter((r) => isEnrolledStage(r.currentStage)).length;
+}
+
+export function getInProgressRegistrations(registrations: Registration[]): Registration[] {
+  return registrations.filter((r) => !isEnrolledStage(r.currentStage));
+}
+
+export function getAvailableSpots(retreat: Retreat, registrations: Registration[]): number {
+  const capacity = getEffectiveCapacity(retreat);
+  const enrolled = getEnrolledCount(registrations);
+  return Math.max(0, capacity - enrolled);
 }
 
 export const ENROLLED_STAGES: PipelineStage[] = ['Payment', 'Accommodation Selection', 'Online Course Link'];

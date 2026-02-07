@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Plus, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
-import { Retreat, RetreatStatus, AccommodationOption } from '@/lib/types';
+import { Retreat, RetreatStatus, AccommodationOption, DEFAULT_CAPACITY, OVERRIDE_CAPACITY } from '@/lib/types';
 import {
   Dialog,
   DialogContent,
@@ -32,7 +32,7 @@ export default function CreateRetreatWizard() {
   const [month, setMonth] = useState(nextMonth > 11 ? 0 : nextMonth);
   const [year, setYear] = useState(nextMonth > 11 ? now.getFullYear() + 1 : now.getFullYear());
   const [location, setLocation] = useState('');
-  const [target, setTarget] = useState(9);
+  const [target, setTarget] = useState(DEFAULT_CAPACITY);
 
   // Step 2
   const [startDate, setStartDate] = useState('');
@@ -87,7 +87,7 @@ export default function CreateRetreatWizard() {
     setOpen(false);
     setStep(1);
     setLocation('');
-    setTarget(9);
+    setTarget(DEFAULT_CAPACITY);
     setStartDate('');
     setEndDate('');
     setStatus('Draft');
@@ -161,9 +161,9 @@ export default function CreateRetreatWizard() {
                 onChange={(e) => setTarget(Number(e.target.value))}
                 className="mt-1"
                 min={1}
-                max={20}
+                max={OVERRIDE_CAPACITY}
               />
-              <p className="mt-1 text-xs text-muted-foreground">Recommended: 6–9 participants</p>
+              <p className="mt-1 text-xs text-muted-foreground">Default: {DEFAULT_CAPACITY} · Max (with override): {OVERRIDE_CAPACITY}</p>
             </div>
             <p className="text-sm text-muted-foreground">
               Name preview: <span className="font-medium text-foreground">{retreatName}</span>

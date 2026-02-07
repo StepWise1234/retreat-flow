@@ -4,7 +4,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import { Search, ChevronLeft, Users, LayoutGrid, List, CalendarDays, CheckSquare } from 'lucide-react';
 import { isPast, parseISO } from 'date-fns';
 import { useApp } from '@/contexts/AppContext';
-import { PIPELINE_STAGES, PipelineStage, STAGE_STYLE_MAP, STATUS_STYLES, getEnrolledCount, isEnrolledStage } from '@/lib/types';
+import { PIPELINE_STAGES, PipelineStage, STAGE_STYLE_MAP, STATUS_STYLES, getEnrolledCount, getEffectiveCapacity, isEnrolledStage } from '@/lib/types';
 import Layout from '@/components/Layout';
 import ParticipantCard from '@/components/ParticipantCard';
 import ParticipantDetailSheet from '@/components/ParticipantDetailSheet';
@@ -36,6 +36,7 @@ export default function RetreatBoard() {
   const retreat = getRetreat(id!);
   const allRegs = getRegistrationsForRetreat(id!);
   const enrolled = getEnrolledCount(allRegs);
+  const capacity = getEffectiveCapacity(retreat!);
   const retreatTasks = allTasks.filter((t) => t.retreatId === id);
 
   const filteredRegs = useMemo(() => {
@@ -160,7 +161,7 @@ export default function RetreatBoard() {
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground">
-              {retreat.location} · <Users className="inline h-3 w-3" /> {enrolled}/{retreat.cohortSizeTarget} enrolled · {allRegs.length} total
+              {retreat.location} · <Users className="inline h-3 w-3" /> {enrolled}/{capacity} enrolled · {allRegs.length} total
             </p>
           </div>
         </div>

@@ -3,7 +3,7 @@ import {
   Retreat, Participant, Registration, MessageTemplate, Appointment, Task,
   PipelineStage, PIPELINE_STAGES, RetreatStatus, PaymentStatus, SchedulingStatus,
   AppointmentType, AppointmentStatus, RiskLevel, CareFlag, TaskStatus, TaskPriority,
-  isEnrolledStage, getEnrolledCount, getStageIndex,
+  isEnrolledStage, getEnrolledCount, getStageIndex, getEffectiveCapacity,
 } from '@/lib/types';
 import { seedRetreats, seedParticipants, seedRegistrations, seedAppointments, seedTasks } from '@/lib/seed-data';
 import { defaultTemplates } from '@/lib/templates';
@@ -138,14 +138,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         const retreat = prevRetreats.find((r) => r.id === retreatId);
         if (!retreat) return prevRetreats;
 
-        if (enrolled >= retreat.cohortSizeTarget && retreat.status === 'Open' && retreat.autoMarkFull) {
+        if (enrolled >= getEffectiveCapacity(retreat) && retreat.status === 'Open' && retreat.autoMarkFull) {
           toast.success('🎉 Retreat is now Full!');
           return prevRetreats.map((r) =>
             r.id === retreatId ? { ...r, status: 'Full' as RetreatStatus } : r
           );
         }
 
-        if (enrolled < retreat.cohortSizeTarget && retreat.status === 'Full' && retreat.autoReopenWhenBelowCapacity) {
+        if (enrolled < getEffectiveCapacity(retreat) && retreat.status === 'Full' && retreat.autoReopenWhenBelowCapacity) {
           toast.info('Retreat reopened: enrolled below capacity.');
           return prevRetreats.map((r) =>
             r.id === retreatId ? { ...r, status: 'Open' as RetreatStatus, capacityOverride: false } : r
