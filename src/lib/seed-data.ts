@@ -18,68 +18,79 @@ const defaultRetreatFields = {
 export const seedRetreats: Retreat[] = [
   {
     id: 'retreat-1',
-    retreatName: 'April 2026 – Big Sur',
-    startDate: '2026-04-15',
-    endDate: '2026-04-22',
-    location: 'Big Sur, California',
+    retreatName: 'March 13–16 – Boston',
+    startDate: '2026-03-13',
+    endDate: '2026-03-16',
+    location: 'Boston, MA',
     cohortSizeTarget: 8,
     status: 'Open',
-    notes: 'Coastal retreat with ocean-view cabins.',
+    notes: 'East-coast kickoff retreat.',
     ...defaultRetreatFields,
-    chemistryCallLink: 'https://calendly.com/retreat-ops/chemistry-bigsur',
-    applicationLink: 'https://forms.example.com/bigsur-apply',
-    paymentLink: 'https://pay.example.com/bigsur-2026',
-    accommodationSelectionLink: 'https://forms.example.com/bigsur-accom',
-    onlineCourseLink: 'https://course.example.com/bigsur-prep',
+    chemistryCallLink: 'https://calendly.com/retreat-ops/chemistry-boston',
+    applicationLink: 'https://forms.example.com/boston-apply',
+    paymentLink: 'https://pay.example.com/boston-2026',
+    accommodationSelectionLink: 'https://forms.example.com/boston-accom',
+    onlineCourseLink: 'https://course.example.com/boston-prep',
     accommodationOptions: [
-      { label: 'Ocean View Cabin', description: 'Private cabin with ocean views', priceAdjustment: 500 },
-      { label: 'Garden Suite', description: 'Ground-floor suite near gardens', priceAdjustment: 200 },
+      { label: 'Harbor View Suite', description: 'Private suite with harbor views', priceAdjustment: 500 },
+      { label: 'Brownstone Room', description: 'Classic brownstone-style room', priceAdjustment: 200 },
       { label: 'Shared Room', description: 'Shared room with one other participant', priceAdjustment: 0 },
     ],
   },
   {
     id: 'retreat-2',
-    retreatName: 'May 2026 – Tulum',
-    startDate: '2026-05-10',
-    endDate: '2026-05-17',
-    location: 'Tulum, Mexico',
+    retreatName: 'March 30 – April 2 – Half Moon Bay',
+    startDate: '2026-03-30',
+    endDate: '2026-04-02',
+    location: 'Half Moon Bay, CA',
     cohortSizeTarget: 7,
     status: 'Full',
-    notes: 'Beachfront eco-resort. Cohort is full!',
+    notes: 'Coastal retreat at the Ritz. Cohort is full!',
     ...defaultRetreatFields,
-    chemistryCallLink: 'https://calendly.com/retreat-ops/chemistry-tulum',
-    paymentLink: 'https://pay.example.com/tulum-2026',
+    chemistryCallLink: 'https://calendly.com/retreat-ops/chemistry-hmb-spring',
+    paymentLink: 'https://pay.example.com/hmb-spring-2026',
     accommodationOptions: [
-      { label: 'Beachfront Palapa', description: 'Open-air beachfront room', priceAdjustment: 400 },
-      { label: 'Jungle Casita', description: 'Private casita surrounded by jungle', priceAdjustment: 200 },
-      { label: 'Cenote Suite', description: 'Suite near the cenote', priceAdjustment: 300 },
+      { label: 'Ocean Terrace Suite', description: 'Suite with private ocean-view terrace', priceAdjustment: 400 },
+      { label: 'Garden Room', description: 'Ground-floor room near gardens', priceAdjustment: 200 },
+      { label: 'Coastal Room', description: 'Standard room with coastal views', priceAdjustment: 0 },
     ],
   },
   {
     id: 'retreat-3',
-    retreatName: 'June 2026 – Bali',
-    startDate: '2026-06-08',
-    endDate: '2026-06-15',
-    location: 'Ubud, Bali',
+    retreatName: 'June 1–4 – Half Moon Bay',
+    startDate: '2026-06-01',
+    endDate: '2026-06-04',
+    location: 'Half Moon Bay, CA',
     cohortSizeTarget: 9,
     status: 'Open',
-    notes: 'Rice terrace villa compound.',
+    notes: 'Early-summer cohort at the Ritz.',
     ...defaultRetreatFields,
     accommodationOptions: [
-      { label: 'Villa with Pool', description: 'Private villa with plunge pool', priceAdjustment: 600 },
-      { label: 'Rice Terrace Room', description: 'Room overlooking terraces', priceAdjustment: 300 },
-      { label: 'Garden Bungalow', description: 'Cozy bungalow in tropical garden', priceAdjustment: 0 },
+      { label: 'Ocean Terrace Suite', description: 'Suite with private ocean-view terrace', priceAdjustment: 600 },
+      { label: 'Garden Room', description: 'Ground-floor room near gardens', priceAdjustment: 300 },
+      { label: 'Coastal Room', description: 'Standard room with coastal views', priceAdjustment: 0 },
     ],
   },
   {
     id: 'retreat-4',
-    retreatName: 'July 2026 – Sedona',
-    startDate: '2026-07-12',
-    endDate: '2026-07-19',
-    location: 'Sedona, Arizona',
+    retreatName: 'July 20–23 – Half Moon Bay',
+    startDate: '2026-07-20',
+    endDate: '2026-07-23',
+    location: 'Half Moon Bay, CA',
     cohortSizeTarget: 6,
     status: 'Draft',
-    notes: 'Desert wellness center. Still planning.',
+    notes: 'Midsummer cohort. Still planning.',
+    ...defaultRetreatFields,
+  },
+  {
+    id: 'retreat-5',
+    retreatName: 'August 24–27 – Half Moon Bay',
+    startDate: '2026-08-24',
+    endDate: '2026-08-27',
+    location: 'Half Moon Bay, CA',
+    cohortSizeTarget: 8,
+    status: 'Draft',
+    notes: 'Late-summer cohort. Planning phase.',
     ...defaultRetreatFields,
   },
 ];
@@ -136,7 +147,7 @@ const defaultRegFields = {
 };
 
 export const seedRegistrations: Registration[] = [
-  // ── Retreat 1 — Big Sur (Open, target 8, enrolled 3) ──
+  // ── Retreat 1 — Boston (Open, target 8, enrolled 3) ──
   {
     id: 'reg-1', retreatId: 'retreat-1', participantId: 'p-1',
     currentStage: 'Payment',
@@ -314,7 +325,7 @@ export const seedRegistrations: Registration[] = [
     ],
   },
 
-  // ── Retreat 2 — Tulum (Full, target 7, enrolled 7) ──
+  // ── Retreat 2 — Half Moon Bay Spring (Full, target 7, enrolled 7) ──
   {
     id: 'reg-5', retreatId: 'retreat-2', participantId: 'p-5',
     currentStage: 'Online Course Link',
@@ -429,7 +440,7 @@ export const seedRegistrations: Registration[] = [
     activities: [makeActivity('Lead added', '2026-01-15T09:00:00Z')],
   },
 
-  // ── Retreat 3 — Bali (Open, target 9, enrolled 2) ──
+  // ── Retreat 3 — Half Moon Bay June (Open, target 9, enrolled 2) ──
   {
     id: 'reg-8', retreatId: 'retreat-3', participantId: 'p-8',
     currentStage: 'Application',
@@ -516,7 +527,7 @@ export const seedRegistrations: Registration[] = [
     activities: [makeActivity('Lead added', '2026-02-06T16:00:00Z')],
   },
 
-  // ── Retreat 4 — Sedona (Draft, target 6) ──
+  // ── Retreat 4 — Half Moon Bay July (Draft, target 6) ──
   {
     id: 'reg-10', retreatId: 'retreat-4', participantId: 'p-10',
     currentStage: 'Chemistry Call',
@@ -534,7 +545,7 @@ export const seedRegistrations: Registration[] = [
     stageHistory: makeHistory(['Leads'], '2026-02-05'),
     lastTouchedAt: '2026-02-05T12:00:00Z', opsNotes: 'Returning participant.',
     tags: ['returning'], ...defaultRegFields,
-    activities: [makeActivity('Lead added', '2026-02-05T12:00:00Z', 'Previous Big Sur attendee')],
+    activities: [makeActivity('Lead added', '2026-02-05T12:00:00Z', 'Previous Boston attendee')],
   },
   {
     id: 'reg-s3', retreatId: 'retreat-4', participantId: 'p-3',
@@ -550,29 +561,31 @@ export const seedRegistrations: Registration[] = [
     lastTouchedAt: '2026-02-05T10:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
     activities: [makeActivity('Lead added', '2026-02-05T10:00:00Z')],
   },
+
+  // ── Retreat 5 — Half Moon Bay August (Draft, target 8) ──
   {
-    id: 'reg-s5', retreatId: 'retreat-4', participantId: 'p-7',
+    id: 'reg-s5', retreatId: 'retreat-5', participantId: 'p-7',
     currentStage: 'Leads',
     stageHistory: makeHistory(['Leads'], '2026-02-06'),
     lastTouchedAt: '2026-02-06T08:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
     activities: [makeActivity('Lead added', '2026-02-06T08:00:00Z')],
   },
   {
-    id: 'reg-s6', retreatId: 'retreat-4', participantId: 'p-9',
+    id: 'reg-s6', retreatId: 'retreat-5', participantId: 'p-9',
     currentStage: 'Leads',
     stageHistory: makeHistory(['Leads'], '2026-02-06'),
     lastTouchedAt: '2026-02-06T11:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
     activities: [makeActivity('Lead added', '2026-02-06T11:00:00Z')],
   },
   {
-    id: 'reg-s7', retreatId: 'retreat-4', participantId: 'p-12',
+    id: 'reg-s7', retreatId: 'retreat-5', participantId: 'p-12',
     currentStage: 'Leads',
     stageHistory: makeHistory(['Leads'], '2026-02-06'),
     lastTouchedAt: '2026-02-06T14:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
     activities: [makeActivity('Lead added', '2026-02-06T14:00:00Z')],
   },
   {
-    id: 'reg-s8', retreatId: 'retreat-4', participantId: 'p-13',
+    id: 'reg-s8', retreatId: 'retreat-5', participantId: 'p-13',
     currentStage: 'Leads',
     stageHistory: makeHistory(['Leads'], '2026-02-06'),
     lastTouchedAt: '2026-02-06T15:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
@@ -645,7 +658,7 @@ export const seedTasks: Task[] = [
   {
     id: 'task-2', retreatId: 'retreat-1', registrationId: 'reg-bs7',
     title: 'Confirm wheelchair accessibility',
-    description: 'Verify Big Sur venue can accommodate wheelchair needs. Contact venue manager.',
+    description: 'Verify Boston venue can accommodate wheelchair needs. Contact venue manager.',
     dueDate: '2026-02-15', status: 'Open', priority: 'High',
     createdAt: '2026-01-25T10:00:00Z', updatedAt: '2026-01-25T10:00:00Z',
   },
