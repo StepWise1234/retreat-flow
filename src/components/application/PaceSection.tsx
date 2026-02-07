@@ -1,5 +1,58 @@
 import { motion } from 'framer-motion';
+import { BookOpen, Brain, Heart, Users, Sparkles, Shield } from 'lucide-react';
 import silhouetteImg from '@/assets/pace-silhouette.png';
+import OrbitalTimeline, { type OrbitalItem } from './OrbitalTimeline';
+
+const TRAINING_FEATURES: OrbitalItem[] = [
+  {
+    id: 1,
+    title: 'Online Learning',
+    subtitle: 'Pre-retreat coursework',
+    content:
+      'Complete foundational training modules at your own pace before arriving. Covers neuroscience of psychedelics, ethics, and safety protocols.',
+    icon: BookOpen,
+  },
+  {
+    id: 2,
+    title: 'Nervous System',
+    subtitle: 'Somatic science',
+    content:
+      'Understand the autonomic nervous system, polyvagal theory, and how to track regulation states in yourself and your clients.',
+    icon: Brain,
+  },
+  {
+    id: 3,
+    title: 'Integration',
+    subtitle: 'Post-experience support',
+    content:
+      'Learn frameworks for helping clients metabolize and integrate their experiences into lasting, meaningful change.',
+    icon: Heart,
+  },
+  {
+    id: 4,
+    title: 'Community',
+    subtitle: 'Cohort-based learning',
+    content:
+      'Join an intimate cohort of fellow clinicians. Build relationships and a referral network that extends well beyond the training.',
+    icon: Users,
+  },
+  {
+    id: 5,
+    title: 'Facilitation',
+    subtitle: 'Mastery-level skills',
+    content:
+      'Develop advanced facilitation techniques including dosing protocols, music curation, and holding space through challenging material.',
+    icon: Sparkles,
+  },
+  {
+    id: 6,
+    title: 'Safety',
+    subtitle: 'Screening & ethics',
+    content:
+      'Master comprehensive screening processes, contraindication assessment, informed consent, and ethical boundaries in clinical practice.',
+    icon: Shield,
+  },
+];
 
 export default function PaceSection() {
   return (
@@ -17,7 +70,7 @@ export default function PaceSection() {
           Learn the pace of your system as you expand regulation capacity, metabolize shifts, and repair wholeness.
         </motion.p>
 
-        {/* Center composition — circle behind, silhouette overlapping */}
+        {/* Center composition — circle behind, silhouette overlapping, orbital around */}
         <div className="relative flex items-center justify-center">
           {/* Celadon circle — fades in and expands first */}
           <motion.div
@@ -46,6 +99,21 @@ export default function PaceSection() {
               src={silhouetteImg}
               alt="Calm silhouette profile with eyes closed"
               className="h-full w-full object-contain object-bottom"
+            />
+          </motion.div>
+
+          {/* Orbital timeline around the circle */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 1, delay: 1.4, ease: 'easeOut' }}
+            className="absolute inset-0"
+          >
+            <OrbitalTimeline
+              items={TRAINING_FEATURES}
+              radius={260}
+              mobileRadius={175}
             />
           </motion.div>
         </div>
