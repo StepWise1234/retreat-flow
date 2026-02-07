@@ -9,6 +9,9 @@ import AutomationPanel from './AutomationPanel';
 import ActivityTimeline from './ActivityTimeline';
 import AccommodationSelector from './AccommodationSelector';
 import FinancialSummary from './FinancialSummary';
+import SchedulingPanel from './scheduling/SchedulingPanel';
+import RiskCarePanel from './risk/RiskCarePanel';
+import TaskPanel from './risk/TaskPanel';
 import { useState, useEffect } from 'react';
 
 interface Props {
@@ -77,7 +80,7 @@ export default function ParticipantDetailSheet({ registrationId, onClose }: Prop
 
         <Separator />
 
-        {/* Body — two sections */}
+        {/* Pipeline + Automation */}
         <div className="grid gap-6 py-4 sm:grid-cols-2">
           <div>
             <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -85,14 +88,30 @@ export default function ParticipantDetailSheet({ registrationId, onClose }: Prop
             </h4>
             <StageTracker currentStage={registration.currentStage} />
           </div>
-
           <div>
-            <AutomationPanel
-              registration={registration}
-              participant={participant}
-              retreat={retreat}
-            />
+            <AutomationPanel registration={registration} participant={participant} retreat={retreat} />
           </div>
+        </div>
+
+        <Separator />
+
+        {/* Scheduling */}
+        <div className="py-4">
+          <SchedulingPanel registration={registration} retreat={retreat} participant={participant} />
+        </div>
+
+        <Separator />
+
+        {/* Risk & Care */}
+        <div className="py-4">
+          <RiskCarePanel registration={registration} retreatId={retreat.id} />
+        </div>
+
+        <Separator />
+
+        {/* Tasks */}
+        <div className="py-4">
+          <TaskPanel registrationId={registration.id} retreatId={retreat.id} />
         </div>
 
         <Separator />

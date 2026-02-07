@@ -2,17 +2,12 @@ import { useState } from 'react';
 import { Filter, SortAsc } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuCheckboxItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
+  DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenuRadioGroup, DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu';
 
-export type BoardFilter = 'needs-action' | 'allergies' | 'payment-pending' | 'interview-week';
+export type BoardFilter = 'needs-action' | 'allergies' | 'payment-pending' | 'interview-week' | 'high-risk' | 'overdue-tasks' | 'has-flags';
 export type BoardSort = 'stage' | 'lastTouched' | 'name';
 
 interface Props {
@@ -27,6 +22,9 @@ const FILTER_OPTIONS: { value: BoardFilter; label: string }[] = [
   { value: 'allergies', label: 'Allergies / Special requests' },
   { value: 'payment-pending', label: 'Payment pending' },
   { value: 'interview-week', label: 'Interview this week' },
+  { value: 'high-risk', label: 'High risk' },
+  { value: 'overdue-tasks', label: 'Overdue tasks' },
+  { value: 'has-flags', label: 'Has care flags' },
 ];
 
 const SORT_OPTIONS: { value: BoardSort; label: string }[] = [

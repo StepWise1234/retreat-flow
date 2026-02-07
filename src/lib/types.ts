@@ -15,6 +15,32 @@ export type RetreatStatus = 'Draft' | 'Open' | 'Full' | 'Closed' | 'Archived';
 
 export type PaymentStatus = 'Unpaid' | 'Partial' | 'Paid' | 'Refunded';
 
+export type AppointmentType = 'ChemistryCall' | 'Interview';
+
+export type AppointmentStatus = 'Proposed' | 'Scheduled' | 'Completed' | 'NoShow' | 'Canceled';
+
+export type SchedulingStatus = 'NotScheduled' | 'Proposed' | 'Scheduled' | 'Completed' | 'NoShow';
+
+export type RiskLevel = 'None' | 'Low' | 'Medium' | 'High';
+
+export const CARE_FLAGS = [
+  'Allergies',
+  'Dietary restrictions',
+  'Accessibility needs',
+  'Medical considerations',
+  'Trauma-informed considerations',
+  'Mobility concerns',
+  'Hearing/vision support',
+  'Rooming sensitivity',
+  'Interpersonal boundary needs',
+  'Other',
+] as const;
+
+export type CareFlag = (typeof CARE_FLAGS)[number];
+
+export type TaskStatus = 'Open' | 'Done' | 'Snoozed';
+export type TaskPriority = 'Low' | 'Medium' | 'High';
+
 export interface AccommodationOption {
   label: string;
   description: string;
@@ -81,6 +107,47 @@ export interface Registration {
   amountDue?: number;
   amountPaid?: number;
   paymentStatus: PaymentStatus;
+  // Scheduling
+  chemistryCallStatus: SchedulingStatus;
+  interviewStatus: SchedulingStatus;
+  chemistryCallAppointmentId?: string;
+  interviewAppointmentId?: string;
+  // Risk & Care
+  riskLevel: RiskLevel;
+  careFlags: CareFlag[];
+  careNotes: string;
+  careFlagOtherText: string;
+  flaggedAt?: string;
+  flaggedBy?: string;
+}
+
+export interface Appointment {
+  id: string;
+  retreatId: string;
+  registrationId: string;
+  type: AppointmentType;
+  startDateTime: string;
+  endDateTime: string;
+  timezone: string;
+  status: AppointmentStatus;
+  locationOrLink: string;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Task {
+  id: string;
+  retreatId: string;
+  registrationId: string;
+  title: string;
+  description: string;
+  dueDate: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  createdAt: string;
+  updatedAt: string;
+  completedAt?: string;
 }
 
 export interface MessageTemplate {
@@ -185,4 +252,17 @@ export const STATUS_STYLES: Record<RetreatStatus, string> = {
   Full: 'bg-stage-payment-light text-stage-payment',
   Closed: 'bg-stage-leads-light text-stage-leads',
   Archived: 'bg-secondary text-muted-foreground',
+};
+
+export const RISK_LEVEL_STYLES: Record<RiskLevel, { bg: string; text: string; border: string }> = {
+  None: { bg: '', text: '', border: '' },
+  Low: { bg: 'bg-stage-chemistry-light', text: 'text-stage-chemistry', border: 'border-stage-chemistry' },
+  Medium: { bg: 'bg-stage-payment-light', text: 'text-stage-payment', border: 'border-stage-payment' },
+  High: { bg: 'bg-destructive/10', text: 'text-destructive', border: 'border-destructive' },
+};
+
+export const TASK_PRIORITY_STYLES: Record<TaskPriority, string> = {
+  Low: 'bg-secondary text-muted-foreground',
+  Medium: 'bg-stage-payment-light text-stage-payment',
+  High: 'bg-destructive/10 text-destructive',
 };
