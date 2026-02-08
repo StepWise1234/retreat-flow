@@ -74,14 +74,14 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
                 className={cn(
                   'text-lg tracking-wide transition-colors duration-200',
                   prevSection
-                    ? 'text-white/50 hover:text-[hsl(155_45%_55%)] cursor-pointer'
+                    ? 'text-white/50 hover:text-[hsl(160_30%_72%)] cursor-pointer'
                     : 'text-transparent pointer-events-none',
                 )}
               >
                 ← {prevSection?.label || 'Prev'}
               </button>
 
-              <span className="text-sm font-medium tracking-widest uppercase text-[hsl(155_45%_55%)]">
+              <span className="text-sm font-medium tracking-widest uppercase text-[hsl(160_30%_72%)]">
                 {currentStep + 1} / {sections.length}
               </span>
 
@@ -90,7 +90,7 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
                 className={cn(
                   'text-lg tracking-wide transition-colors duration-200',
                   nextSection
-                    ? 'text-white/50 hover:text-[hsl(155_45%_55%)] cursor-pointer'
+                    ? 'text-white/50 hover:text-[hsl(160_30%_72%)] cursor-pointer'
                     : 'text-transparent pointer-events-none',
                 )}
               >
@@ -113,8 +113,8 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
                     <div
                       className={cn(
                         'h-2 rounded-full transition-all duration-500 ease-out',
-                        isComplete && 'bg-[hsl(155_45%_50%)]',
-                        isCurrent && 'bg-[hsl(155_50%_48%)] shadow-[0_0_14px_hsl(155_50%_48%/0.7)]',
+                        isComplete && 'bg-[hsl(160_30%_72%)]',
+                        isCurrent && 'bg-[hsl(160_30%_72%)] shadow-[0_0_14px_hsl(160_30%_72%/0.6)]',
                         !isComplete && !isCurrent && 'bg-white/12 group-hover:bg-white/25',
                       )}
                     />

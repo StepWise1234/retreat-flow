@@ -704,16 +704,16 @@ export default function ApplicationForm() {
                   onClick={next}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className="group relative px-10 py-3.5 rounded-full text-lg font-medium tracking-wide text-white/90 overflow-hidden cursor-pointer transition-all duration-300 border border-white/10 hover:border-[hsl(155_50%_48%/0.4)]"
+                  className="group relative px-10 py-3.5 rounded-full text-lg font-medium tracking-wide text-white/90 overflow-hidden cursor-pointer transition-all duration-300 border border-white/10 hover:border-[hsl(160_30%_72%/0.4)]"
                 >
                   {/* Idle: subtle glass */}
                   <span className="absolute inset-0 rounded-full bg-white/[0.04] transition-opacity duration-300 group-hover:opacity-0" />
                   {/* Hover: sage glow fill */}
-                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[hsl(155_50%_48%/0.15)] via-[hsl(160_45%_52%/0.2)] to-[hsl(170_40%_50%/0.15)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[hsl(160_30%_72%/0.12)] via-[hsl(160_30%_72%/0.18)] to-[hsl(160_30%_72%/0.12)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   {/* Glow ring */}
-                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_hsl(155_50%_48%/0)] group-hover:shadow-[0_0_24px_-4px_hsl(155_50%_48%/0.5)] transition-shadow duration-500" />
-                  {/* Rainbow sweep on hover */}
-                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-[hsl(155_50%_48%/0.08)] to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 ease-out" />
+                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_hsl(160_30%_72%/0)] group-hover:shadow-[0_0_24px_-4px_hsl(160_30%_72%/0.5)] transition-shadow duration-500" />
+                  {/* Sweep on hover */}
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-[hsl(160_30%_72%/0.08)] to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 ease-out" />
                   <span className="relative z-10 flex items-center gap-2">
                     Continue <ChevronRight className="h-5 w-5 group-hover:translate-x-0.5 transition-transform duration-200" />
                   </span>
@@ -725,8 +725,8 @@ export default function ApplicationForm() {
                   whileTap={{ scale: 0.96 }}
                   className="group relative px-10 py-3.5 rounded-full text-lg font-semibold tracking-wide text-black overflow-hidden cursor-pointer transition-all duration-300"
                 >
-                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[hsl(155_50%_48%)] via-[hsl(160_45%_55%)] to-[hsl(170_40%_50%)]" />
-                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_hsl(155_50%_48%/0)] group-hover:shadow-[0_0_30px_-4px_hsl(155_50%_48%/0.6)] transition-shadow duration-500" />
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[hsl(160_28%_68%)] via-[hsl(160_30%_72%)] to-[hsl(160_28%_68%)]" />
+                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_hsl(160_30%_72%/0)] group-hover:shadow-[0_0_30px_-4px_hsl(160_30%_72%/0.6)] transition-shadow duration-500" />
                   <span className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 ease-out" />
                   <span className="relative z-10 flex items-center gap-2">
                     <Check className="h-5 w-5" /> Submit Application
@@ -749,8 +749,8 @@ export default function ApplicationForm() {
                       <div
                         className={cn(
                           'h-2 rounded-full transition-all duration-500 ease-out',
-                          isComplete && 'bg-[hsl(155_45%_50%)]',
-                          isCurrent && 'bg-[hsl(155_50%_48%)] shadow-[0_0_14px_hsl(155_50%_48%/0.7)]',
+                          isComplete && 'bg-[hsl(160_30%_72%)]',
+                          isCurrent && 'bg-[hsl(160_30%_72%)] shadow-[0_0_14px_hsl(160_30%_72%/0.6)]',
                           !isComplete && !isCurrent && 'bg-white/12 group-hover:bg-white/25',
                         )}
                       />
