@@ -19,9 +19,9 @@ export default function FormHeader() {
         {/* Glowing line beneath text */}
         <div className="relative mt-4 w-full max-w-lg h-px z-10">
           {/* Gradient line */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(160_30%_72%)] to-transparent" />
           {/* Glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent blur-sm" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(160_30%_72%)] to-transparent blur-sm" />
         </div>
 
         {/* Sparkles below the line */}
