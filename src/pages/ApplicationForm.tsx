@@ -258,14 +258,13 @@ export default function ApplicationForm() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ background: 'hsl(var(--background))' }}>
+    <div className="min-h-screen bg-black">
       <ScrollMorphHero />
       <PaceSection />
       <FormHeader sections={SECTIONS} currentStep={step} onStepChange={setStep} />
 
       <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6 bg-black">
-        {/* Form card */}
-        <div className="rounded-2xl border border-white/10 bg-[hsl(0_0%_8%)] p-6 sm:p-8 shadow-sm animate-fade-in">
+        <div className="p-6 sm:p-8 animate-fade-in">
 
           {/* 0: About You */}
           {step === 0 && (
