@@ -60,8 +60,8 @@ const SUPPORT_NETWORK = [
 const SECTIONS = [
   { label: 'About You', index: 0 },
   { label: 'Reach Me', index: 1 },
-  { label: 'Ship To', index: 2 },
-  { label: 'Emergency', index: 3 },
+  { label: 'Emergency', index: 2 },
+  { label: 'Ship To', index: 3 },
   { label: 'Experience', index: 4 },
   { label: 'My Body', index: 5 },
   { label: 'My Mind', index: 6 },
@@ -416,10 +416,25 @@ export default function ApplicationForm() {
               </div>
             )}
 
-            {/* 2: Ship To */}
+            {/* 2: Emergency */}
             {step === 2 && (
               <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
-                <p className="text-base text-white/40">
+                <p>
+                  In case of emergency, please contact{' '}
+                  <MadLibInput value={form.emergencyFirstName} onChange={(v) => update('emergencyFirstName', v)} placeholder="first name" className="w-36 sm:w-44" />{' '}
+                  <MadLibInput value={form.emergencyLastName} onChange={(v) => update('emergencyLastName', v)} placeholder="last name" className="w-36 sm:w-44" />
+                </p>
+                <p>
+                  at{' '}
+                  <MadLibInput value={form.emergencyPhone} onChange={(v) => update('emergencyPhone', v)} placeholder="phone number" className="w-44 sm:w-52" type="tel" />.
+                </p>
+              </div>
+            )}
+
+            {/* 3: Ship To */}
+            {step === 3 && (
+              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
+                <p>
                   We'll ship your Student Training Manual before the retreat.
                 </p>
                 <p>
@@ -437,21 +452,6 @@ export default function ApplicationForm() {
                 </p>
                 <p>
                   <MadLibInput value={form.country} onChange={(v) => update('country', v)} placeholder="country" className="w-44 sm:w-52" />.
-                </p>
-              </div>
-            )}
-
-            {/* 3: Emergency */}
-            {step === 3 && (
-              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
-                <p>
-                  In case of emergency, please contact{' '}
-                  <MadLibInput value={form.emergencyFirstName} onChange={(v) => update('emergencyFirstName', v)} placeholder="first name" className="w-36 sm:w-44" />{' '}
-                  <MadLibInput value={form.emergencyLastName} onChange={(v) => update('emergencyLastName', v)} placeholder="last name" className="w-36 sm:w-44" />
-                </p>
-                <p>
-                  at{' '}
-                  <MadLibInput value={form.emergencyPhone} onChange={(v) => update('emergencyPhone', v)} placeholder="phone number" className="w-44 sm:w-52" type="tel" />.
                 </p>
               </div>
             )}
