@@ -278,36 +278,13 @@ export default function ApplicationForm() {
       {/* Minimalist pace section */}
       <PaceSection />
 
-      {/* Bridging header into form */}
-      <FormHeader />
+      {/* Bridging header with step navigation */}
+      <FormHeader sections={SECTIONS} currentStep={step} onStepChange={setStep} />
 
       <main className={cn(
         'mx-auto max-w-3xl px-4 py-6 sm:px-6 overflow-hidden bg-gradient-to-b transition-all duration-1000 ease-in-out',
         duskGradients[step]
       )}>
-        {/* Step progress */}
-        <div className="mb-6 flex items-center justify-center gap-1 overflow-x-auto pb-1">
-          {SECTIONS.map((section, idx) => {
-            const color = progressColors[idx];
-            const isComplete = idx < step;
-            const isCurrent = idx === step;
-            return (
-              <button
-                key={idx}
-                onClick={() => setStep(idx)}
-                className={cn(
-                  'flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium transition-all border whitespace-nowrap shrink-0',
-                  isCurrent && `${color.bg} ${color.text} ${color.border}`,
-                  isComplete && `${color.dot} text-white border-transparent`,
-                  !isCurrent && !isComplete && 'bg-secondary text-muted-foreground border-transparent'
-                )}
-              >
-                {isComplete ? <Check className="h-3 w-3" /> : <span>{idx + 1}</span>}
-                <span className="hidden sm:inline">{section.label}</span>
-              </button>
-            );
-          })}
-        </div>
 
         {/* Form card */}
         <div className="rounded-2xl border bg-card/95 backdrop-blur-md p-6 sm:p-8 shadow-sm animate-fade-in">
