@@ -25,7 +25,7 @@ export default function MadLibTextarea({
         className="w-full bg-transparent border-none outline-none text-white placeholder:text-white/30 resize-none py-1 text-inherit leading-relaxed"
       />
       {/* Rainbow underline */}
-      <span className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full bg-gradient-to-r from-[hsl(160_40%_55%)] via-[hsl(200_60%_60%)] to-[hsl(280_50%_65%)] opacity-30 group-hover/ml:opacity-80 group-focus-within/ml:opacity-100 transition-opacity duration-300" />
+      <span className="absolute bottom-0 left-0 right-0 h-px rounded-full bg-gradient-to-r from-[hsl(155_45%_50%)] via-[hsl(160_40%_60%)] to-[hsl(170_35%_55%)] opacity-40 group-hover/ml:opacity-90 group-focus-within/ml:opacity-100 transition-opacity duration-300" />
     </div>
   );
 }

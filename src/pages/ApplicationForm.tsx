@@ -687,45 +687,80 @@ export default function ApplicationForm() {
             )}
 
             {/* Navigation */}
-            <div className="mt-10 flex items-center justify-between pt-6 border-t border-white/[0.06]">
-              <Button
-                variant="ghost"
-                onClick={prev}
-                disabled={step === 0}
-                className="gap-1 text-white/40 hover:text-white hover:bg-white/5 disabled:opacity-20"
-              >
-                <ChevronLeft className="h-4 w-4" /> Previous
-              </Button>
-
-              <div className="flex gap-1">
-                {SECTIONS.map((_, idx) => (
-                  <span
-                    key={idx}
-                    className={cn(
-                      'h-1 rounded-full transition-all duration-300',
-                      idx === step ? 'w-6 bg-[hsl(160_40%_55%)]' : idx < step ? 'w-1.5 bg-white/30' : 'w-1.5 bg-white/10',
-                    )}
-                  />
-                ))}
-              </div>
-
-              {step < SECTIONS.length - 1 ? (
-                <Button
-                  onClick={next}
-                  className="gap-1 bg-white/10 text-white border-none hover:bg-white/20 transition-all"
+            <div className="mt-10 pt-8 flex flex-col items-center gap-6">
+              {/* Previous link — left aligned */}
+              {step > 0 && (
+                <button
+                  onClick={prev}
+                  className="self-start text-white/30 hover:text-white/60 text-sm tracking-wide transition-colors duration-200"
                 >
-                  Next <ChevronRight className="h-4 w-4" />
-                </Button>
-              ) : (
-                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                  <Button
-                    onClick={handleSubmit}
-                    className="gap-1.5 bg-gradient-to-r from-[hsl(160_40%_55%)] to-[hsl(200_60%_60%)] text-black font-semibold hover:shadow-[0_0_20px_hsl(160_40%_55%/0.4)] transition-all"
-                  >
-                    <Check className="h-4 w-4" /> Submit Application
-                  </Button>
-                </motion.div>
+                  ← {SECTIONS[step - 1]?.label}
+                </button>
               )}
+
+              {/* Center: Next / Submit button */}
+              {step < SECTIONS.length - 1 ? (
+                <motion.button
+                  onClick={next}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="group relative px-10 py-3.5 rounded-full text-lg font-medium tracking-wide text-white/90 overflow-hidden cursor-pointer transition-all duration-300 border border-white/10 hover:border-[hsl(155_50%_48%/0.4)]"
+                >
+                  {/* Idle: subtle glass */}
+                  <span className="absolute inset-0 rounded-full bg-white/[0.04] transition-opacity duration-300 group-hover:opacity-0" />
+                  {/* Hover: sage glow fill */}
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[hsl(155_50%_48%/0.15)] via-[hsl(160_45%_52%/0.2)] to-[hsl(170_40%_50%/0.15)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {/* Glow ring */}
+                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_hsl(155_50%_48%/0)] group-hover:shadow-[0_0_24px_-4px_hsl(155_50%_48%/0.5)] transition-shadow duration-500" />
+                  {/* Rainbow sweep on hover */}
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-[hsl(155_50%_48%/0.08)] to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 ease-out" />
+                  <span className="relative z-10 flex items-center gap-2">
+                    Continue <ChevronRight className="h-5 w-5 group-hover:translate-x-0.5 transition-transform duration-200" />
+                  </span>
+                </motion.button>
+              ) : (
+                <motion.button
+                  onClick={handleSubmit}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="group relative px-10 py-3.5 rounded-full text-lg font-semibold tracking-wide text-black overflow-hidden cursor-pointer transition-all duration-300"
+                >
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[hsl(155_50%_48%)] via-[hsl(160_45%_55%)] to-[hsl(170_40%_50%)]" />
+                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_hsl(155_50%_48%/0)] group-hover:shadow-[0_0_30px_-4px_hsl(155_50%_48%/0.6)] transition-shadow duration-500" />
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 ease-out" />
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Check className="h-5 w-5" /> Submit Application
+                  </span>
+                </motion.button>
+              )}
+
+              {/* Segmented progress bar — matches header */}
+              <div className="w-full max-w-xl flex gap-1.5">
+                {SECTIONS.map((section, idx) => {
+                  const isComplete = idx < step;
+                  const isCurrent = idx === step;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => setStep(idx)}
+                      className="group flex-1 py-2 cursor-pointer"
+                      aria-label={`Go to ${section.label}`}
+                    >
+                      <div
+                        className={cn(
+                          'h-2 rounded-full transition-all duration-500 ease-out',
+                          isComplete && 'bg-[hsl(155_45%_50%)]',
+                          isCurrent && 'bg-[hsl(155_50%_48%)] shadow-[0_0_14px_hsl(155_50%_48%/0.7)]',
+                          !isComplete && !isCurrent && 'bg-white/12 group-hover:bg-white/25',
+                        )}
+                      />
+                      <span className="block mt-1.5 text-[11px] text-center tracking-wide text-white/0 group-hover:text-white/50 transition-colors duration-200 whitespace-nowrap">
+                        {section.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </motion.div>
         </AnimatePresence>
