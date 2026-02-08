@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
-
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -14,6 +11,8 @@ import { cn } from '@/lib/utils';
 import ScrollMorphHero from '@/components/application/ScrollMorphHero';
 import PaceSection from '@/components/application/PaceSection';
 import FormHeader from '@/components/application/FormHeader';
+import MadLibInput from '@/components/application/MadLibInput';
+import MadLibTextarea from '@/components/application/MadLibTextarea';
 
 const TRAINING_DATES = [
   'March 13 - 16, 2026 (Boston, MA)',
@@ -67,17 +66,20 @@ const SUPPORT_NETWORK = [
 ];
 
 const SECTIONS = [
-  { label: 'Basics', index: 0 },
-  { label: 'Experience', index: 1 },
-  { label: 'Physical Health', index: 2 },
-  { label: 'Mental Health', index: 3 },
-  { label: 'Wellbeing', index: 4 },
-  { label: 'Self-Care', index: 5 },
-  { label: 'Confirmation', index: 6 },
+  { label: 'About You', index: 0 },
+  { label: 'Reach Me', index: 1 },
+  { label: 'Ship To', index: 2 },
+  { label: 'Emergency', index: 3 },
+  { label: 'Training', index: 4 },
+  { label: 'Experience', index: 5 },
+  { label: 'My Body', index: 6 },
+  { label: 'My Mind', index: 7 },
+  { label: 'Stress', index: 8 },
+  { label: 'Self-Care', index: 9 },
+  { label: 'Confirm', index: 10 },
 ];
 
 interface FormData {
-  // Section 1
   interestedDates: string[];
   preferredName: string;
   firstName: string;
@@ -97,13 +99,11 @@ interface FormData {
   emergencyFirstName: string;
   emergencyLastName: string;
   emergencyPhone: string;
-  // Section 2
   journeyWorkExperience: string;
   medicineExperience: string;
   servingExperience: string;
   lifeCircumstances: string;
   integrationSupport: string;
-  // Section 3
   physicalHealthIssues: string;
   physicalMedications: string;
   supplements: string;
@@ -112,14 +112,12 @@ interface FormData {
   physicalSymptomsOther: string;
   dietaryPreferences: string[];
   dietaryOther: string;
-  // Section 4
   dsmDiagnosis: string;
   mentalHealthIssues: string;
   psychMedications: string;
   recreationalDrugUse: string;
   suicideConsideration: string;
   mentalHealthProfessional: string;
-  // Section 5
   stressLevel: number[];
   lifeExperiences: string[];
   stressSources: string;
@@ -128,7 +126,6 @@ interface FormData {
   copingMechanisms: string[];
   copingOther: string;
   traumaDetails: string;
-  // Section 6
   selfCare: string;
   selfCareOther: string;
   supportNetwork: string[];
@@ -136,7 +133,6 @@ interface FormData {
   strengthsHobbies: string;
   trainingGoals: string;
   anythingElse: string;
-  // Section 7
   retreatId: string;
   agreeToTerms: boolean;
 }
@@ -248,377 +244,360 @@ export default function ApplicationForm() {
     setStep(0);
   };
 
-  // Red → Orange → Amber → Yellow → Lime → Emerald → Green
-  const progressColors = [
-    { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-300', dot: 'bg-red-500' },
-    { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-300', dot: 'bg-orange-500' },
-    { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-300', dot: 'bg-amber-500' },
-    { bg: 'bg-yellow-100', text: 'text-yellow-700', border: 'border-yellow-300', dot: 'bg-yellow-500' },
-    { bg: 'bg-yellow-50', text: 'text-yellow-600', border: 'border-yellow-200', dot: 'bg-yellow-400' },
-    { bg: 'bg-teal-100', text: 'text-teal-700', border: 'border-teal-300', dot: 'bg-teal-400' },
-    { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-400', dot: 'bg-emerald-500' },
-  ];
-
-  // Subtle dusk gradient — professional, light base that warms gently across steps
+  // Subtle dusk gradient — warms gently across steps
   const duskGradients = [
-    'from-[hsl(40,30%,97%)] via-[hsl(30,35%,95%)] to-[hsl(25,30%,93%)]',       // Step 0: warm white
-    'from-[hsl(30,35%,95%)] via-[hsl(25,30%,93%)] to-[hsl(20,28%,91%)]',       // Step 1: soft cream
-    'from-[hsl(25,28%,93%)] via-[hsl(20,25%,91%)] to-[hsl(15,25%,89%)]',       // Step 2: warm peach hint
-    'from-[hsl(20,25%,91%)] via-[hsl(330,18%,89%)] to-[hsl(320,15%,87%)]',     // Step 3: blush touch
-    'from-[hsl(330,18%,89%)] via-[hsl(300,12%,87%)] to-[hsl(280,14%,85%)]',    // Step 4: soft lavender
-    'from-[hsl(280,14%,85%)] via-[hsl(260,14%,83%)] to-[hsl(240,15%,81%)]',    // Step 5: twilight hint
-    'from-[hsl(250,16%,82%)] via-[hsl(235,18%,78%)] to-[hsl(225,20%,75%)]',    // Step 6: calm dusk
+    'from-[hsl(40,30%,97%)] via-[hsl(30,35%,95%)] to-[hsl(25,30%,93%)]',
+    'from-[hsl(30,35%,95%)] via-[hsl(25,30%,93%)] to-[hsl(20,28%,91%)]',
+    'from-[hsl(25,28%,93%)] via-[hsl(20,25%,91%)] to-[hsl(15,25%,89%)]',
+    'from-[hsl(20,25%,91%)] via-[hsl(330,18%,89%)] to-[hsl(320,15%,87%)]',
+    'from-[hsl(330,18%,89%)] via-[hsl(300,12%,87%)] to-[hsl(280,14%,85%)]',
+    'from-[hsl(280,14%,85%)] via-[hsl(260,14%,83%)] to-[hsl(240,15%,81%)]',
+    'from-[hsl(250,16%,82%)] via-[hsl(235,18%,78%)] to-[hsl(225,20%,75%)]',
+    'from-[hsl(20,25%,91%)] via-[hsl(330,18%,89%)] to-[hsl(320,15%,87%)]',
+    'from-[hsl(280,14%,85%)] via-[hsl(260,14%,83%)] to-[hsl(240,15%,81%)]',
+    'from-[hsl(25,28%,93%)] via-[hsl(20,25%,91%)] to-[hsl(15,25%,89%)]',
+    'from-[hsl(250,16%,82%)] via-[hsl(235,18%,78%)] to-[hsl(225,20%,75%)]',
   ];
 
   return (
     <div className="min-h-screen" style={{ background: 'hsl(var(--background))' }}>
-      {/* Scroll Morph Hero — replaces old hero + testimonials */}
       <ScrollMorphHero />
-
-      {/* Minimalist pace section */}
       <PaceSection />
-
-      {/* Bridging header with step navigation */}
       <FormHeader sections={SECTIONS} currentStep={step} onStepChange={setStep} />
 
       <main className={cn(
         'mx-auto max-w-3xl px-4 py-6 sm:px-6 overflow-hidden bg-gradient-to-b transition-all duration-1000 ease-in-out',
         duskGradients[step]
       )}>
-
         {/* Form card */}
         <div className="rounded-2xl border bg-card/95 backdrop-blur-md p-6 sm:p-8 shadow-sm animate-fade-in">
 
-          {/* SECTION 0: Training & Personal Info */}
+          {/* 0: About You */}
           {step === 0 && (
-            <div className="space-y-6">
-              <SectionTitle>Select Retreat *</SectionTitle>
-              <Select value={form.retreatId} onValueChange={(v) => update('retreatId', v)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a retreat" />
-                </SelectTrigger>
-                <SelectContent>
-                  {activeRetreats.map((r) => (
-                    <SelectItem key={r.id} value={r.id}>
-                      {r.retreatName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <SectionTitle>Interested Training Date(s)</SectionTitle>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {TRAINING_DATES.map((date) => (
-                  <label key={date} className="flex items-center gap-2 rounded-md border bg-card px-3 py-2.5 text-sm cursor-pointer hover:bg-secondary/50 transition-colors">
-                    <Checkbox
-                      checked={form.interestedDates.includes(date)}
-                      onCheckedChange={() => toggleArrayItem('interestedDates', date)}
-                    />
-                    <span className="text-foreground">{date}</span>
-                  </label>
-                ))}
-              </div>
-
-              <SectionTitle>Name *</SectionTitle>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <Label className="text-xs text-muted-foreground">Preferred Name</Label>
-                  <Input value={form.preferredName} onChange={(e) => update('preferredName', e.target.value)} className="mt-1" />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground">First (Legal) Name *</Label>
-                  <Input value={form.firstName} onChange={(e) => update('firstName', e.target.value)} className="mt-1" />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground">Last Name *</Label>
-                  <Input value={form.lastName} onChange={(e) => update('lastName', e.target.value)} className="mt-1" />
-                </div>
-              </div>
-
-              <SectionTitle>Birth Date *</SectionTitle>
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <Label className="text-xs text-muted-foreground">Month</Label>
-                  <Input placeholder="MM" value={form.birthMonth} onChange={(e) => update('birthMonth', e.target.value)} className="mt-1" />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground">Day</Label>
-                  <Input placeholder="DD" value={form.birthDay} onChange={(e) => update('birthDay', e.target.value)} className="mt-1" />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground">Year</Label>
-                  <Input placeholder="YYYY" value={form.birthYear} onChange={(e) => update('birthYear', e.target.value)} className="mt-1" />
-                </div>
-              </div>
-
-              <SectionTitle>Address</SectionTitle>
-              <p className="text-xs text-muted-foreground -mt-4">Please give us an address to ship your Student Training Manual for pre-retreat sessions.</p>
-              <div className="space-y-3">
-                <div>
-                  <Label className="text-xs text-muted-foreground">Street Address</Label>
-                  <Input value={form.streetAddress} onChange={(e) => update('streetAddress', e.target.value)} className="mt-1" />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground">Street Address Line 2</Label>
-                  <Input value={form.streetAddress2} onChange={(e) => update('streetAddress2', e.target.value)} className="mt-1" />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label className="text-xs text-muted-foreground">City</Label>
-                    <Input value={form.city} onChange={(e) => update('city', e.target.value)} className="mt-1" />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-muted-foreground">State / Province</Label>
-                    <Input value={form.stateProvince} onChange={(e) => update('stateProvince', e.target.value)} className="mt-1" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label className="text-xs text-muted-foreground">Postal / Zip Code</Label>
-                    <Input value={form.postalCode} onChange={(e) => update('postalCode', e.target.value)} className="mt-1" />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-muted-foreground">Country</Label>
-                    <Input value={form.country} onChange={(e) => update('country', e.target.value)} className="mt-1" placeholder="e.g. United States" />
-                  </div>
-                </div>
-              </div>
-
-              <SectionTitle>Contact *</SectionTitle>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <Label className="text-xs text-muted-foreground">Phone Number *</Label>
-                  <Input value={form.phone} onChange={(e) => update('phone', e.target.value)} className="mt-1" placeholder="(555) 123-4567" />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground">Email *</Label>
-                  <Input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} className="mt-1" placeholder="you@example.com" />
-                </div>
-                <div className="sm:col-span-2">
-                  <Label className="text-xs text-muted-foreground">Signal Number / Handle</Label>
-                  <Input value={form.signalHandle} onChange={(e) => update('signalHandle', e.target.value)} className="mt-1" placeholder="+1 555 123 4567 or @handle" />
-                  <p className="mt-1 text-[11px] text-muted-foreground">We use Signal for secure group communication during retreats.</p>
-                </div>
-              </div>
-
-              <SectionTitle>Emergency Contact *</SectionTitle>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <Label className="text-xs text-muted-foreground">First Name</Label>
-                  <Input value={form.emergencyFirstName} onChange={(e) => update('emergencyFirstName', e.target.value)} className="mt-1" />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground">Last Name</Label>
-                  <Input value={form.emergencyLastName} onChange={(e) => update('emergencyLastName', e.target.value)} className="mt-1" />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground">Phone Number</Label>
-                  <Input value={form.emergencyPhone} onChange={(e) => update('emergencyPhone', e.target.value)} className="mt-1" />
-                </div>
-              </div>
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+              <p>
+                Hi! My name is{' '}
+                <MadLibInput value={form.firstName} onChange={(v) => update('firstName', v)} placeholder="first name" className="w-36 sm:w-44" />{' '}
+                <MadLibInput value={form.lastName} onChange={(v) => update('lastName', v)} placeholder="last name" className="w-36 sm:w-44" />
+              </p>
+              <p>
+                but you can call me{' '}
+                <MadLibInput value={form.preferredName} onChange={(v) => update('preferredName', v)} placeholder="preferred name" className="w-40 sm:w-48" />.
+              </p>
+              <p>
+                I was born on{' '}
+                <MadLibInput value={form.birthMonth} onChange={(v) => update('birthMonth', v)} placeholder="MM" className="w-14" />{' '}/{' '}
+                <MadLibInput value={form.birthDay} onChange={(v) => update('birthDay', v)} placeholder="DD" className="w-14" />{' '}/{' '}
+                <MadLibInput value={form.birthYear} onChange={(v) => update('birthYear', v)} placeholder="YYYY" className="w-20" />.
+              </p>
             </div>
           )}
 
-          {/* SECTION 1: Experience */}
+          {/* 1: Reach Me */}
           {step === 1 && (
-            <div className="space-y-6">
-              <SectionTitle>Do you have previous experience of journey work?</SectionTitle>
-              <p className="text-xs text-muted-foreground -mt-4">Please share the broad details without using any identifying terms or names.</p>
-              <Textarea value={form.journeyWorkExperience} onChange={(e) => update('journeyWorkExperience', e.target.value)} className="min-h-[100px]" />
-
-              <SectionTitle>Do you have previous experience with this medicine?</SectionTitle>
-              <p className="text-xs text-muted-foreground -mt-4">List your experience with handshake, hug, and full-embrace; include numbers of experiences.</p>
-              <Textarea value={form.medicineExperience} onChange={(e) => update('medicineExperience', e.target.value)} className="min-h-[100px]" />
-
-              <SectionTitle>Do you have previous experience serving?</SectionTitle>
-              <p className="text-xs text-muted-foreground -mt-4">Please share your service experience in supporting others, without using any identifying terms or names.</p>
-              <Textarea value={form.servingExperience} onChange={(e) => update('servingExperience', e.target.value)} className="min-h-[100px]" />
-
-              <SectionTitle>Describe any particular life circumstances that brought you to this work:</SectionTitle>
-              <Textarea value={form.lifeCircumstances} onChange={(e) => update('lifeCircumstances', e.target.value)} className="min-h-[100px]" />
-
-              <SectionTitle>Do you have someone who can you reach out to for help in integrating what you've experienced during your session?</SectionTitle>
-              <Textarea value={form.integrationSupport} onChange={(e) => update('integrationSupport', e.target.value)} className="min-h-[80px]" />
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+              <p>
+                The best way to reach me is{' '}
+                <MadLibInput value={form.email} onChange={(v) => update('email', v)} placeholder="email address" className="w-56 sm:w-72" type="email" />.
+              </p>
+              <p>
+                You can also call me at{' '}
+                <MadLibInput value={form.phone} onChange={(v) => update('phone', v)} placeholder="phone number" className="w-44 sm:w-52" type="tel" />.
+              </p>
+              <p>
+                My Signal handle is{' '}
+                <MadLibInput value={form.signalHandle} onChange={(v) => update('signalHandle', v)} placeholder="@handle" className="w-44 sm:w-52" />.
+              </p>
             </div>
           )}
 
-          {/* SECTION 2: Physical Health */}
+          {/* 2: Ship To */}
           {step === 2 && (
-            <div className="space-y-6">
-              <SectionTitle>Please list any current significant physical health issues:</SectionTitle>
-              <Textarea value={form.physicalHealthIssues} onChange={(e) => update('physicalHealthIssues', e.target.value)} className="min-h-[80px]" />
-
-              <SectionTitle>Are you taking any prescription medication for physical conditions?</SectionTitle>
-              <p className="text-xs text-muted-foreground -mt-4">If yes, what kind and reason? Please include dosage(s).</p>
-              <Textarea value={form.physicalMedications} onChange={(e) => update('physicalMedications', e.target.value)} className="min-h-[80px]" />
-
-              <SectionTitle>Please list supplements that are part of an ongoing regimen:</SectionTitle>
-              <Textarea value={form.supplements} onChange={(e) => update('supplements', e.target.value)} className="min-h-[80px]" />
-
-              <SectionTitle>Please list any allergies that require regular treatment and medication:</SectionTitle>
-              <Textarea value={form.allergies} onChange={(e) => update('allergies', e.target.value)} className="min-h-[80px]" />
-
-              <SectionTitle>Which of these physical symptoms do you experience?</SectionTitle>
-              <CheckboxGroup
-                items={PHYSICAL_SYMPTOMS}
-                selected={form.physicalSymptoms}
-                onChange={(v) => update('physicalSymptoms', v)}
-                otherValue={form.physicalSymptomsOther}
-                onOtherChange={(v) => update('physicalSymptomsOther', v)}
-              />
-
-              <SectionTitle>Please tell us about your dietary preferences</SectionTitle>
-              <CheckboxGroup
-                items={DIETARY_OPTIONS}
-                selected={form.dietaryPreferences}
-                onChange={(v) => update('dietaryPreferences', v)}
-                otherValue={form.dietaryOther}
-                onOtherChange={(v) => update('dietaryOther', v)}
-              />
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+              <p className="text-base text-muted-foreground">
+                We'll ship your Student Training Manual before the retreat.
+              </p>
+              <p>
+                Send it to{' '}
+                <MadLibInput value={form.streetAddress} onChange={(v) => update('streetAddress', v)} placeholder="street address" className="w-full sm:w-80" />
+              </p>
+              <p>
+                <MadLibInput value={form.streetAddress2} onChange={(v) => update('streetAddress2', v)} placeholder="apt / suite (optional)" className="w-full sm:w-64" />
+              </p>
+              <p>
+                in{' '}
+                <MadLibInput value={form.city} onChange={(v) => update('city', v)} placeholder="city" className="w-40 sm:w-48" />,{' '}
+                <MadLibInput value={form.stateProvince} onChange={(v) => update('stateProvince', v)} placeholder="state" className="w-28 sm:w-36" />{' '}
+                <MadLibInput value={form.postalCode} onChange={(v) => update('postalCode', v)} placeholder="zip" className="w-24 sm:w-28" />
+              </p>
+              <p>
+                <MadLibInput value={form.country} onChange={(v) => update('country', v)} placeholder="country" className="w-44 sm:w-52" />.
+              </p>
             </div>
           )}
 
-          {/* SECTION 3: Mental Health */}
+          {/* 3: Emergency */}
           {step === 3 && (
-            <div className="space-y-6">
-              <SectionTitle>Have you ever been diagnosed with a mental illness or DSM disorder?</SectionTitle>
-              <p className="text-xs text-muted-foreground -mt-4">Such as major depression, borderline personality disorder, etc. If so, what was the diagnosis and when did it occur?</p>
-              <Textarea value={form.dsmDiagnosis} onChange={(e) => update('dsmDiagnosis', e.target.value)} className="min-h-[80px]" />
-
-              <SectionTitle>Please list any current significant mental health issues:</SectionTitle>
-              <Textarea value={form.mentalHealthIssues} onChange={(e) => update('mentalHealthIssues', e.target.value)} className="min-h-[80px]" />
-
-              <SectionTitle>Are you taking any prescription medication for psychological conditions?</SectionTitle>
-              <p className="text-xs text-muted-foreground -mt-4">If yes, what kind and reason?</p>
-              <Textarea value={form.psychMedications} onChange={(e) => update('psychMedications', e.target.value)} className="min-h-[80px]" />
-
-              <SectionTitle>Please list any stimulant or recreational drug use. Type and frequency:</SectionTitle>
-              <Textarea value={form.recreationalDrugUse} onChange={(e) => update('recreationalDrugUse', e.target.value)} className="min-h-[80px]" />
-
-              <SectionTitle>Have you ever considered suicide?</SectionTitle>
-              <p className="text-xs text-muted-foreground -mt-4">If yes, please briefly describe.</p>
-              <Textarea value={form.suicideConsideration} onChange={(e) => update('suicideConsideration', e.target.value)} className="min-h-[80px]" />
-
-              <SectionTitle>Are you currently followed by a mental health professional or counsellor?</SectionTitle>
-              <p className="text-xs text-muted-foreground -mt-4">If yes, what kind and reason?</p>
-              <Textarea value={form.mentalHealthProfessional} onChange={(e) => update('mentalHealthProfessional', e.target.value)} className="min-h-[80px]" />
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+              <p>
+                In case of emergency, please contact{' '}
+                <MadLibInput value={form.emergencyFirstName} onChange={(v) => update('emergencyFirstName', v)} placeholder="first name" className="w-36 sm:w-44" />{' '}
+                <MadLibInput value={form.emergencyLastName} onChange={(v) => update('emergencyLastName', v)} placeholder="last name" className="w-36 sm:w-44" />
+              </p>
+              <p>
+                at{' '}
+                <MadLibInput value={form.emergencyPhone} onChange={(v) => update('emergencyPhone', v)} placeholder="phone number" className="w-44 sm:w-52" type="tel" />.
+              </p>
             </div>
           )}
 
-          {/* SECTION 4: Stress & Wellbeing */}
+          {/* 4: Training */}
           {step === 4 && (
-            <div className="space-y-6">
-              <SectionTitle>I would rate my current stress/anxiety on a scale of 0-10 (10 being high)</SectionTitle>
-              <div className="px-2">
-                <Slider
-                  value={form.stressLevel}
-                  onValueChange={(v) => update('stressLevel', v)}
-                  min={0} max={10} step={1}
-                  className="my-4"
-                />
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>0 (Low)</span>
-                  <span className="font-bold text-foreground text-lg">{form.stressLevel[0]}</span>
-                  <span>10 (High)</span>
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+              <p>
+                I'd like to join{' '}
+                <span className="inline-block w-64 sm:w-80 align-bottom">
+                  <Select value={form.retreatId} onValueChange={(v) => update('retreatId', v)}>
+                    <SelectTrigger className="border-none border-b-2 rounded-none bg-transparent text-lg font-bold h-auto py-0.5 px-0 shadow-none focus:ring-0 [&>svg]:ml-2">
+                      <SelectValue placeholder="select a retreat" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {activeRetreats.map((r) => (
+                        <SelectItem key={r.id} value={r.id}>{r.retreatName}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <span className="block h-[2px] rounded-full bg-gradient-to-r from-[hsl(160_40%_55%)] via-[hsl(200_60%_60%)] to-[hsl(280_50%_65%)] opacity-50" />
+                </span>.
+              </p>
+              <div>
+                <p className="mb-4">I'm interested in these dates:</p>
+                <div className="grid grid-cols-1 gap-2 text-base">
+                  {TRAINING_DATES.map((date) => (
+                    <label key={date} className="flex items-center gap-3 rounded-lg border bg-card/80 px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors">
+                      <Checkbox
+                        checked={form.interestedDates.includes(date)}
+                        onCheckedChange={() => toggleArrayItem('interestedDates', date)}
+                      />
+                      <span className="text-foreground">{date}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
-
-              <SectionTitle>I have experienced the following:</SectionTitle>
-              <CheckboxGroup
-                items={LIFE_EXPERIENCES}
-                selected={form.lifeExperiences}
-                onChange={(v) => update('lifeExperiences', v)}
-              />
-
-              <SectionTitle>Please comment on the most current significant source(s) of Stress and Anxiety</SectionTitle>
-              <Textarea value={form.stressSources} onChange={(e) => update('stressSources', e.target.value)} className="min-h-[80px]" />
-
-              <SectionTitle>Which of these cognitive symptoms do you experience?</SectionTitle>
-              <CheckboxGroup
-                items={COGNITIVE_SYMPTOMS}
-                selected={form.cognitiveSymptoms}
-                onChange={(v) => update('cognitiveSymptoms', v)}
-                otherValue={form.cognitiveSymptomsOther}
-                onOtherChange={(v) => update('cognitiveSymptomsOther', v)}
-              />
-
-              <SectionTitle>Do you take the edge off by:</SectionTitle>
-              <CheckboxGroup
-                items={COPING_MECHANISMS}
-                selected={form.copingMechanisms}
-                onChange={(v) => update('copingMechanisms', v)}
-                otherValue={form.copingOther}
-                onOtherChange={(v) => update('copingOther', v)}
-              />
-
-              <SectionTitle>Please provide any further details about your stress/anxiety and trauma history that you feel may be relevant.</SectionTitle>
-              <Textarea value={form.traumaDetails} onChange={(e) => update('traumaDetails', e.target.value)} className="min-h-[80px]" />
             </div>
           )}
 
-          {/* SECTION 5: Self-Care & Goals */}
+          {/* 5: Experience */}
           {step === 5 && (
-            <div className="space-y-6">
-              <SectionTitle>How do you take care of yourself?</SectionTitle>
-              <div className="space-y-2">
-                {SELF_CARE_OPTIONS.map((option) => (
-                  <label key={option} className="flex items-center gap-2 rounded-md border bg-card px-3 py-2.5 text-sm cursor-pointer hover:bg-secondary/50 transition-colors">
-                    <input
-                      type="radio"
-                      name="selfCare"
-                      checked={form.selfCare === option}
-                      onChange={() => update('selfCare', option)}
-                      className="accent-primary"
-                    />
-                    <span className="text-foreground">{option}</span>
-                  </label>
-                ))}
-                <label className="flex items-start gap-2 rounded-md border bg-card px-3 py-2.5 text-sm cursor-pointer hover:bg-secondary/50 transition-colors">
-                  <input
-                    type="radio" name="selfCare"
-                    checked={form.selfCare === 'Other'}
-                    onChange={() => update('selfCare', 'Other')}
-                    className="accent-primary mt-1"
-                  />
-                  <div className="flex-1">
-                    <span className="text-foreground">Other</span>
-                    {form.selfCare === 'Other' && (
-                      <Input value={form.selfCareOther} onChange={(e) => update('selfCareOther', e.target.value)} placeholder="Please specify…" className="mt-1 h-8 text-xs" />
-                    )}
-                  </div>
-                </label>
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+              <div>
+                <p className="mb-2">My experience with journey work:</p>
+                <MadLibTextarea value={form.journeyWorkExperience} onChange={(v) => update('journeyWorkExperience', v)} placeholder="Share broadly, no identifying names…" />
               </div>
-
-              <SectionTitle>Who do you turn to for support?</SectionTitle>
-              <CheckboxGroup
-                items={SUPPORT_NETWORK}
-                selected={form.supportNetwork}
-                onChange={(v) => update('supportNetwork', v)}
-                otherValue={form.supportOther}
-                onOtherChange={(v) => update('supportOther', v)}
-              />
-
-              <SectionTitle>Tell us about your strengths, hobbies, interests. What do you like to do for fun and relaxation?</SectionTitle>
-              <Textarea value={form.strengthsHobbies} onChange={(e) => update('strengthsHobbies', e.target.value)} className="min-h-[100px]" />
-
-              <SectionTitle>Please describe your goals for joining this training:</SectionTitle>
-              <Textarea value={form.trainingGoals} onChange={(e) => update('trainingGoals', e.target.value)} className="min-h-[100px]" />
-
-              <SectionTitle>Anything else you think we should know about you so we can provide you with the best support possible.</SectionTitle>
-              <Textarea value={form.anythingElse} onChange={(e) => update('anythingElse', e.target.value)} className="min-h-[80px]" />
+              <div>
+                <p className="mb-2">My experience with this medicine:</p>
+                <MadLibTextarea value={form.medicineExperience} onChange={(v) => update('medicineExperience', v)} placeholder="Handshake, hug, full-embrace — include numbers…" />
+              </div>
+              <div>
+                <p className="mb-2">My experience serving others:</p>
+                <MadLibTextarea value={form.servingExperience} onChange={(v) => update('servingExperience', v)} placeholder="How you've supported others…" />
+              </div>
+              <div>
+                <p className="mb-2">What brought me to this work:</p>
+                <MadLibTextarea value={form.lifeCircumstances} onChange={(v) => update('lifeCircumstances', v)} placeholder="Life circumstances…" />
+              </div>
+              <div>
+                <p className="mb-2">For integration support, I can reach out to:</p>
+                <MadLibTextarea value={form.integrationSupport} onChange={(v) => update('integrationSupport', v)} placeholder="Who supports you after sessions…" rows={2} />
+              </div>
             </div>
           )}
 
-          {/* SECTION 6: Confirmation */}
+          {/* 6: My Body */}
           {step === 6 && (
-            <div className="space-y-6">
-              <SectionTitle>Review</SectionTitle>
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+              <div>
+                <p className="mb-2">Current physical health issues:</p>
+                <MadLibTextarea value={form.physicalHealthIssues} onChange={(v) => update('physicalHealthIssues', v)} placeholder="Any significant conditions…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-2">Prescriptions I take and why:</p>
+                <MadLibTextarea value={form.physicalMedications} onChange={(v) => update('physicalMedications', v)} placeholder="Medication, reason, dosage…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-2">Supplements I take regularly:</p>
+                <MadLibTextarea value={form.supplements} onChange={(v) => update('supplements', v)} placeholder="Ongoing supplements…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-2">Allergies requiring treatment:</p>
+                <MadLibTextarea value={form.allergies} onChange={(v) => update('allergies', v)} placeholder="Allergies and medications…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-3 text-base">Physical symptoms I experience:</p>
+                <CheckboxGroup
+                  items={PHYSICAL_SYMPTOMS}
+                  selected={form.physicalSymptoms}
+                  onChange={(v) => update('physicalSymptoms', v)}
+                  otherValue={form.physicalSymptomsOther}
+                  onOtherChange={(v) => update('physicalSymptomsOther', v)}
+                />
+              </div>
+              <div>
+                <p className="mb-3 text-base">Dietary preferences:</p>
+                <CheckboxGroup
+                  items={DIETARY_OPTIONS}
+                  selected={form.dietaryPreferences}
+                  onChange={(v) => update('dietaryPreferences', v)}
+                  otherValue={form.dietaryOther}
+                  onOtherChange={(v) => update('dietaryOther', v)}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* 7: My Mind */}
+          {step === 7 && (
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+              <div>
+                <p className="mb-2">Mental health diagnoses:</p>
+                <MadLibTextarea value={form.dsmDiagnosis} onChange={(v) => update('dsmDiagnosis', v)} placeholder="Diagnosis and when it occurred…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-2">Current mental health concerns:</p>
+                <MadLibTextarea value={form.mentalHealthIssues} onChange={(v) => update('mentalHealthIssues', v)} placeholder="Significant issues…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-2">Psychiatric medications I take:</p>
+                <MadLibTextarea value={form.psychMedications} onChange={(v) => update('psychMedications', v)} placeholder="What, why…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-2">Recreational or stimulant use:</p>
+                <MadLibTextarea value={form.recreationalDrugUse} onChange={(v) => update('recreationalDrugUse', v)} placeholder="Type and frequency…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-2">Have you ever considered suicide?</p>
+                <MadLibTextarea value={form.suicideConsideration} onChange={(v) => update('suicideConsideration', v)} placeholder="If yes, briefly describe…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-2">Current mental health professional:</p>
+                <MadLibTextarea value={form.mentalHealthProfessional} onChange={(v) => update('mentalHealthProfessional', v)} placeholder="Type and reason…" rows={2} />
+              </div>
+            </div>
+          )}
+
+          {/* 8: Stress */}
+          {step === 8 && (
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+              <div>
+                <p className="mb-4">My stress level right now is:</p>
+                <div className="px-2">
+                  <Slider
+                    value={form.stressLevel}
+                    onValueChange={(v) => update('stressLevel', v)}
+                    min={0} max={10} step={1}
+                    className="my-4"
+                  />
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>0 — calm</span>
+                    <span className="font-bold text-foreground text-2xl">{form.stressLevel[0]}</span>
+                    <span>10 — overwhelmed</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p className="mb-3 text-base">I've experienced:</p>
+                <CheckboxGroup
+                  items={LIFE_EXPERIENCES}
+                  selected={form.lifeExperiences}
+                  onChange={(v) => update('lifeExperiences', v)}
+                />
+              </div>
+              <div>
+                <p className="mb-2">My biggest source of stress right now:</p>
+                <MadLibTextarea value={form.stressSources} onChange={(v) => update('stressSources', v)} placeholder="What weighs on you…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-3 text-base">Cognitive symptoms I notice:</p>
+                <CheckboxGroup
+                  items={COGNITIVE_SYMPTOMS}
+                  selected={form.cognitiveSymptoms}
+                  onChange={(v) => update('cognitiveSymptoms', v)}
+                  otherValue={form.cognitiveSymptomsOther}
+                  onOtherChange={(v) => update('cognitiveSymptomsOther', v)}
+                />
+              </div>
+              <div>
+                <p className="mb-3 text-base">I take the edge off by:</p>
+                <CheckboxGroup
+                  items={COPING_MECHANISMS}
+                  selected={form.copingMechanisms}
+                  onChange={(v) => update('copingMechanisms', v)}
+                  otherValue={form.copingOther}
+                  onOtherChange={(v) => update('copingOther', v)}
+                />
+              </div>
+              <div>
+                <p className="mb-2">Anything else about stress or trauma history:</p>
+                <MadLibTextarea value={form.traumaDetails} onChange={(v) => update('traumaDetails', v)} placeholder="Anything relevant…" rows={2} />
+              </div>
+            </div>
+          )}
+
+          {/* 9: Self-Care */}
+          {step === 9 && (
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+              <div>
+                <p className="mb-3 text-base">How I take care of myself:</p>
+                <div className="space-y-2">
+                  {SELF_CARE_OPTIONS.map((option) => (
+                    <label key={option} className="flex items-center gap-3 rounded-lg border bg-card/80 px-4 py-3 text-sm cursor-pointer hover:bg-secondary/50 transition-colors">
+                      <input
+                        type="radio"
+                        name="selfCare"
+                        checked={form.selfCare === option}
+                        onChange={() => update('selfCare', option)}
+                        className="accent-primary"
+                      />
+                      <span className="text-foreground">{option}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="mb-3 text-base">I turn to for support:</p>
+                <CheckboxGroup
+                  items={SUPPORT_NETWORK}
+                  selected={form.supportNetwork}
+                  onChange={(v) => update('supportNetwork', v)}
+                  otherValue={form.supportOther}
+                  onOtherChange={(v) => update('supportOther', v)}
+                />
+              </div>
+              <div>
+                <p className="mb-2">For fun and relaxation, I love:</p>
+                <MadLibTextarea value={form.strengthsHobbies} onChange={(v) => update('strengthsHobbies', v)} placeholder="Strengths, hobbies, interests…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-2">My goals for this training:</p>
+                <MadLibTextarea value={form.trainingGoals} onChange={(v) => update('trainingGoals', v)} placeholder="What you hope to gain…" rows={2} />
+              </div>
+              <div>
+                <p className="mb-2">Anything else we should know:</p>
+                <MadLibTextarea value={form.anythingElse} onChange={(v) => update('anythingElse', v)} placeholder="So we can support you best…" rows={2} />
+              </div>
+            </div>
+          )}
+
+          {/* 10: Confirm */}
+          {step === 10 && (
+            <div className="space-y-6 text-lg sm:text-xl leading-relaxed text-foreground/80">
+              <p>Almost there! Here's a summary:</p>
               <div className="rounded-lg border bg-secondary/30 p-4 text-sm space-y-2">
                 <p><strong>Name:</strong> {form.preferredName || form.firstName} {form.lastName}</p>
                 <p><strong>Email:</strong> {form.email}</p>
                 <p><strong>Phone:</strong> {form.phone}</p>
                 {form.interestedDates.length > 0 && (
-                  <p><strong>Interested Dates:</strong> {form.interestedDates.join(', ')}</p>
+                  <p><strong>Dates:</strong> {form.interestedDates.join(', ')}</p>
                 )}
                 {form.allergies && <p><strong>Allergies:</strong> {form.allergies}</p>}
                 {form.dietaryPreferences.length > 0 && (
@@ -630,14 +609,14 @@ export default function ApplicationForm() {
                 )}
               </div>
 
-              <label className="flex items-start gap-3 rounded-md border bg-card px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors">
+              <label className="flex items-start gap-3 rounded-lg border bg-card/80 px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors">
                 <Checkbox
                   checked={form.agreeToTerms}
                   onCheckedChange={(v) => update('agreeToTerms', !!v)}
                   className="mt-0.5"
                 />
                 <span className="text-sm text-foreground">
-                  I confirm that the information provided is accurate and I consent to it being used for the purpose of supporting me during the training. I understand my personal information will be kept strictly confidential.
+                  I confirm that the information provided is accurate and I consent to it being used for the purpose of supporting me during the training. My personal information will be kept strictly confidential.
                 </span>
               </label>
             </div>
@@ -655,7 +634,7 @@ export default function ApplicationForm() {
             </Button>
 
             <span className="text-xs text-muted-foreground">
-              Step {step + 1} of {SECTIONS.length}
+              {step + 1} of {SECTIONS.length}
             </span>
 
             {step < SECTIONS.length - 1 ? (
@@ -664,7 +643,7 @@ export default function ApplicationForm() {
               </Button>
             ) : (
               <Button onClick={handleSubmit} className="gap-1">
-                <Check className="h-4 w-4" /> Submit Application
+                <Check className="h-4 w-4" /> Submit
               </Button>
             )}
           </div>
@@ -672,8 +651,4 @@ export default function ApplicationForm() {
       </main>
     </div>
   );
-}
-
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-sm font-semibold text-foreground border-l-2 border-primary/40 pl-3">{children}</h3>;
 }
