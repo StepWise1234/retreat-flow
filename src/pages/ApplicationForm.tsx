@@ -70,13 +70,12 @@ const SECTIONS = [
   { label: 'Reach Me', index: 1 },
   { label: 'Ship To', index: 2 },
   { label: 'Emergency', index: 3 },
-  { label: 'Training', index: 4 },
-  { label: 'Experience', index: 5 },
-  { label: 'My Body', index: 6 },
-  { label: 'My Mind', index: 7 },
-  { label: 'Stress', index: 8 },
-  { label: 'Self-Care', index: 9 },
-  { label: 'Confirm', index: 10 },
+  { label: 'Experience', index: 4 },
+  { label: 'My Body', index: 5 },
+  { label: 'My Mind', index: 6 },
+  { label: 'Stress', index: 7 },
+  { label: 'Self-Care', index: 8 },
+  { label: 'Confirm', index: 9 },
 ];
 
 interface FormData {
@@ -254,7 +253,6 @@ export default function ApplicationForm() {
     'from-[hsl(280,14%,85%)] via-[hsl(260,14%,83%)] to-[hsl(240,15%,81%)]',
     'from-[hsl(250,16%,82%)] via-[hsl(235,18%,78%)] to-[hsl(225,20%,75%)]',
     'from-[hsl(20,25%,91%)] via-[hsl(330,18%,89%)] to-[hsl(320,15%,87%)]',
-    'from-[hsl(280,14%,85%)] via-[hsl(260,14%,83%)] to-[hsl(240,15%,81%)]',
     'from-[hsl(25,28%,93%)] via-[hsl(20,25%,91%)] to-[hsl(15,25%,89%)]',
     'from-[hsl(250,16%,82%)] via-[hsl(235,18%,78%)] to-[hsl(225,20%,75%)]',
   ];
@@ -276,7 +274,23 @@ export default function ApplicationForm() {
           {step === 0 && (
             <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
               <p>
-                Hi! My name is{' '}
+                I'd like to join{' '}
+                <span className="inline-block w-64 sm:w-80 align-bottom">
+                  <Select value={form.retreatId} onValueChange={(v) => update('retreatId', v)}>
+                    <SelectTrigger className="border-none border-b-2 rounded-none bg-transparent text-lg font-bold h-auto py-0.5 px-0 shadow-none focus:ring-0 [&>svg]:ml-2">
+                      <SelectValue placeholder="select a retreat" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {activeRetreats.map((r) => (
+                        <SelectItem key={r.id} value={r.id}>{r.retreatName}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <span className="block h-[2px] rounded-full bg-gradient-to-r from-[hsl(160_40%_55%)] via-[hsl(200_60%_60%)] to-[hsl(280_50%_65%)] opacity-50" />
+                </span>.
+              </p>
+              <p>
+                My name is{' '}
                 <MadLibInput value={form.firstName} onChange={(v) => update('firstName', v)} placeholder="first name" className="w-36 sm:w-44" />{' '}
                 <MadLibInput value={form.lastName} onChange={(v) => update('lastName', v)} placeholder="last name" className="w-36 sm:w-44" />
               </p>
@@ -351,44 +365,8 @@ export default function ApplicationForm() {
             </div>
           )}
 
-          {/* 4: Training */}
+          {/* 4: Experience */}
           {step === 4 && (
-            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
-              <p>
-                I'd like to join{' '}
-                <span className="inline-block w-64 sm:w-80 align-bottom">
-                  <Select value={form.retreatId} onValueChange={(v) => update('retreatId', v)}>
-                    <SelectTrigger className="border-none border-b-2 rounded-none bg-transparent text-lg font-bold h-auto py-0.5 px-0 shadow-none focus:ring-0 [&>svg]:ml-2">
-                      <SelectValue placeholder="select a retreat" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {activeRetreats.map((r) => (
-                        <SelectItem key={r.id} value={r.id}>{r.retreatName}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <span className="block h-[2px] rounded-full bg-gradient-to-r from-[hsl(160_40%_55%)] via-[hsl(200_60%_60%)] to-[hsl(280_50%_65%)] opacity-50" />
-                </span>.
-              </p>
-              <div>
-                <p className="mb-4">I'm interested in these dates:</p>
-                <div className="grid grid-cols-1 gap-2 text-base">
-                  {TRAINING_DATES.map((date) => (
-                    <label key={date} className="flex items-center gap-3 rounded-lg border bg-card/80 px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors">
-                      <Checkbox
-                        checked={form.interestedDates.includes(date)}
-                        onCheckedChange={() => toggleArrayItem('interestedDates', date)}
-                      />
-                      <span className="text-foreground">{date}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 5: Experience */}
-          {step === 5 && (
             <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
               <div>
                 <p className="mb-2">My experience with journey work:</p>
@@ -413,8 +391,8 @@ export default function ApplicationForm() {
             </div>
           )}
 
-          {/* 6: My Body */}
-          {step === 6 && (
+          {/* 5: My Body */}
+          {step === 5 && (
             <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
               <div>
                 <p className="mb-2">Current physical health issues:</p>
@@ -455,8 +433,8 @@ export default function ApplicationForm() {
             </div>
           )}
 
-          {/* 7: My Mind */}
-          {step === 7 && (
+          {/* 6: My Mind */}
+          {step === 6 && (
             <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
               <div>
                 <p className="mb-2">Mental health diagnoses:</p>
@@ -485,8 +463,8 @@ export default function ApplicationForm() {
             </div>
           )}
 
-          {/* 8: Stress */}
-          {step === 8 && (
+          {/* 7: Stress */}
+          {step === 7 && (
             <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
               <div>
                 <p className="mb-4">My stress level right now is:</p>
@@ -543,8 +521,8 @@ export default function ApplicationForm() {
             </div>
           )}
 
-          {/* 9: Self-Care */}
-          {step === 9 && (
+          {/* 8: Self-Care */}
+          {step === 8 && (
             <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
               <div>
                 <p className="mb-3 text-base">How I take care of myself:</p>
@@ -588,17 +566,14 @@ export default function ApplicationForm() {
             </div>
           )}
 
-          {/* 10: Confirm */}
-          {step === 10 && (
+          {/* 9: Confirm */}
+          {step === 9 && (
             <div className="space-y-6 text-lg sm:text-xl leading-relaxed text-foreground/80">
               <p>Almost there! Here's a summary:</p>
               <div className="rounded-lg border bg-secondary/30 p-4 text-sm space-y-2">
                 <p><strong>Name:</strong> {form.preferredName || form.firstName} {form.lastName}</p>
                 <p><strong>Email:</strong> {form.email}</p>
                 <p><strong>Phone:</strong> {form.phone}</p>
-                {form.interestedDates.length > 0 && (
-                  <p><strong>Dates:</strong> {form.interestedDates.join(', ')}</p>
-                )}
                 {form.allergies && <p><strong>Allergies:</strong> {form.allergies}</p>}
                 {form.dietaryPreferences.length > 0 && (
                   <p><strong>Dietary:</strong> {form.dietaryPreferences.join(', ')}</p>
