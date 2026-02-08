@@ -59,7 +59,7 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
             {/* Current page title */}
             <motion.p
               key={currentStep}
-              className="text-center text-xl sm:text-2xl font-semibold tracking-wide text-white mb-5"
+              className="text-center text-2xl sm:text-3xl font-semibold tracking-wide text-white mb-5"
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
@@ -72,25 +72,25 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
               <button
                 onClick={() => prevSection && onStepChange?.(currentStep - 1)}
                 className={cn(
-                  'text-base tracking-wide transition-colors duration-200',
+                  'text-lg tracking-wide transition-colors duration-200',
                   prevSection
-                    ? 'text-white/50 hover:text-[hsl(155_35%_65%)] cursor-pointer'
+                    ? 'text-white/50 hover:text-[hsl(155_45%_55%)] cursor-pointer'
                     : 'text-transparent pointer-events-none',
                 )}
               >
                 ← {prevSection?.label || 'Prev'}
               </button>
 
-              <span className="text-xs font-medium tracking-widest uppercase text-[hsl(155_35%_65%)]">
+              <span className="text-sm font-medium tracking-widest uppercase text-[hsl(155_45%_55%)]">
                 {currentStep + 1} / {sections.length}
               </span>
 
               <button
                 onClick={() => nextSection && onStepChange?.(currentStep + 1)}
                 className={cn(
-                  'text-base tracking-wide transition-colors duration-200',
+                  'text-lg tracking-wide transition-colors duration-200',
                   nextSection
-                    ? 'text-white/50 hover:text-[hsl(155_35%_65%)] cursor-pointer'
+                    ? 'text-white/50 hover:text-[hsl(155_45%_55%)] cursor-pointer'
                     : 'text-transparent pointer-events-none',
                 )}
               >
@@ -98,7 +98,7 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
               </button>
             </div>
 
-            {/* Segmented bar — taller for easier clicking */}
+            {/* Segmented bar */}
             <div className="flex gap-1.5">
               {sections.map((section, idx) => {
                 const isComplete = idx < currentStep;
@@ -113,13 +113,13 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
                     <div
                       className={cn(
                         'h-2 rounded-full transition-all duration-500 ease-out',
-                        isComplete && 'bg-[hsl(155_35%_65%)]',
-                        isCurrent && 'bg-[hsl(155_40%_60%)] shadow-[0_0_12px_hsl(155_35%_65%/0.6)]',
+                        isComplete && 'bg-[hsl(155_45%_50%)]',
+                        isCurrent && 'bg-[hsl(155_50%_48%)] shadow-[0_0_14px_hsl(155_50%_48%/0.7)]',
                         !isComplete && !isCurrent && 'bg-white/12 group-hover:bg-white/25',
                       )}
                     />
                     {/* Tooltip label on hover */}
-                    <span className="block mt-1.5 text-[10px] text-center tracking-wide text-white/0 group-hover:text-white/50 transition-colors duration-200 whitespace-nowrap">
+                    <span className="block mt-1.5 text-[11px] text-center tracking-wide text-white/0 group-hover:text-white/50 transition-colors duration-200 whitespace-nowrap">
                       {section.label}
                     </span>
                   </button>
