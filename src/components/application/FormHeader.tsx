@@ -39,7 +39,7 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
         </div>
 
         {/* Sparkles below the line */}
-        <div className="relative w-full h-32 mt-0 z-0">
+        <div className="relative w-full h-20 mt-0 z-0">
           <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_80%)]">
             <SparklesCore
               background="transparent"
@@ -55,7 +55,7 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
 
         {/* Segmented step navigation */}
         {sections && (
-          <div className="w-full max-w-xl z-10 mt-2">
+          <div className="w-full max-w-xl z-10 -mt-4">
             {/* Current page title */}
             <motion.p
               key={currentStep}
@@ -72,7 +72,7 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
               <button
                 onClick={() => prevSection && onStepChange?.(currentStep - 1)}
                 className={cn(
-                  'text-sm tracking-wide transition-colors duration-200',
+                  'text-base tracking-wide transition-colors duration-200',
                   prevSection
                     ? 'text-white/50 hover:text-[hsl(155_35%_65%)] cursor-pointer'
                     : 'text-transparent pointer-events-none',
@@ -88,7 +88,7 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
               <button
                 onClick={() => nextSection && onStepChange?.(currentStep + 1)}
                 className={cn(
-                  'text-sm tracking-wide transition-colors duration-200',
+                  'text-base tracking-wide transition-colors duration-200',
                   nextSection
                     ? 'text-white/50 hover:text-[hsl(155_35%_65%)] cursor-pointer'
                     : 'text-transparent pointer-events-none',
