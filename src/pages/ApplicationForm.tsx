@@ -170,21 +170,21 @@ function CheckboxGroup({ items, selected, onChange, otherValue, onOtherChange }:
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
       {items.map((item) => (
-        <label key={item} className="flex items-center gap-2 rounded-md border bg-card px-3 py-2 text-sm cursor-pointer hover:bg-secondary/50 transition-colors">
+        <label key={item} className="flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm cursor-pointer hover:bg-white/10 transition-colors">
           <Checkbox checked={selected.includes(item)} onCheckedChange={() => toggle(item)} />
-          <span className="text-foreground">{item}</span>
+          <span className="text-white/80">{item}</span>
         </label>
       ))}
       {onOtherChange !== undefined && (
         <div className="sm:col-span-2">
-          <label className="flex items-start gap-2 rounded-md border bg-card px-3 py-2 text-sm cursor-pointer hover:bg-secondary/50 transition-colors">
+          <label className="flex items-start gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm cursor-pointer hover:bg-white/10 transition-colors">
             <Checkbox
               checked={!!otherValue?.trim()}
               onCheckedChange={(checked) => { if (!checked) onOtherChange(''); }}
               className="mt-0.5"
             />
             <div className="flex-1">
-              <span className="text-foreground">Other</span>
+              <span className="text-white/80">Other</span>
               <Input
                 placeholder="Please specify…"
                 value={otherValue || ''}
@@ -263,21 +263,18 @@ export default function ApplicationForm() {
       <PaceSection />
       <FormHeader sections={SECTIONS} currentStep={step} onStepChange={setStep} />
 
-      <main className={cn(
-        'mx-auto max-w-3xl px-4 py-6 sm:px-6 overflow-hidden bg-gradient-to-b transition-all duration-1000 ease-in-out',
-        duskGradients[step]
-      )}>
+      <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6 bg-black">
         {/* Form card */}
-        <div className="rounded-2xl border bg-card/95 backdrop-blur-md p-6 sm:p-8 shadow-sm animate-fade-in">
+        <div className="rounded-2xl border border-white/10 bg-[hsl(0_0%_8%)] p-6 sm:p-8 shadow-sm animate-fade-in">
 
           {/* 0: About You */}
           {step === 0 && (
-            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
               <p>
                 I'd like to join{' '}
                 <span className="inline-block w-64 sm:w-80 align-bottom">
                   <Select value={form.retreatId} onValueChange={(v) => update('retreatId', v)}>
-                    <SelectTrigger className="border-none border-b-2 rounded-none bg-transparent text-lg font-bold h-auto py-0.5 px-0 shadow-none focus:ring-0 [&>svg]:ml-2">
+                    <SelectTrigger className="border-none border-b-2 rounded-none bg-transparent text-lg font-bold text-white h-auto py-0.5 px-0 shadow-none focus:ring-0 [&>svg]:ml-2">
                       <SelectValue placeholder="select a retreat" />
                     </SelectTrigger>
                     <SelectContent>
@@ -309,7 +306,7 @@ export default function ApplicationForm() {
 
           {/* 1: Reach Me */}
           {step === 1 && (
-            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
               <p>
                 The best way to reach me is{' '}
                 <MadLibInput value={form.email} onChange={(v) => update('email', v)} placeholder="email address" className="w-56 sm:w-72" type="email" />.
@@ -327,8 +324,8 @@ export default function ApplicationForm() {
 
           {/* 2: Ship To */}
           {step === 2 && (
-            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
-              <p className="text-base text-muted-foreground">
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
+              <p className="text-base text-white/40">
                 We'll ship your Student Training Manual before the retreat.
               </p>
               <p>
@@ -352,7 +349,7 @@ export default function ApplicationForm() {
 
           {/* 3: Emergency */}
           {step === 3 && (
-            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
               <p>
                 In case of emergency, please contact{' '}
                 <MadLibInput value={form.emergencyFirstName} onChange={(v) => update('emergencyFirstName', v)} placeholder="first name" className="w-36 sm:w-44" />{' '}
@@ -367,7 +364,7 @@ export default function ApplicationForm() {
 
           {/* 4: Experience */}
           {step === 4 && (
-            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
               <div>
                 <p className="mb-2">My experience with journey work:</p>
                 <MadLibTextarea value={form.journeyWorkExperience} onChange={(v) => update('journeyWorkExperience', v)} placeholder="Share broadly, no identifying names…" />
@@ -393,7 +390,7 @@ export default function ApplicationForm() {
 
           {/* 5: My Body */}
           {step === 5 && (
-            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
               <div>
                 <p className="mb-2">Current physical health issues:</p>
                 <MadLibTextarea value={form.physicalHealthIssues} onChange={(v) => update('physicalHealthIssues', v)} placeholder="Any significant conditions…" rows={2} />
@@ -435,7 +432,7 @@ export default function ApplicationForm() {
 
           {/* 6: My Mind */}
           {step === 6 && (
-            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
               <div>
                 <p className="mb-2">Mental health diagnoses:</p>
                 <MadLibTextarea value={form.dsmDiagnosis} onChange={(v) => update('dsmDiagnosis', v)} placeholder="Diagnosis and when it occurred…" rows={2} />
@@ -465,7 +462,7 @@ export default function ApplicationForm() {
 
           {/* 7: Stress */}
           {step === 7 && (
-            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
               <div>
                 <p className="mb-4">My stress level right now is:</p>
                 <div className="px-2">
@@ -475,9 +472,9 @@ export default function ApplicationForm() {
                     min={0} max={10} step={1}
                     className="my-4"
                   />
-                  <div className="flex justify-between text-sm text-muted-foreground">
+                  <div className="flex justify-between text-sm text-white/40">
                     <span>0 — calm</span>
-                    <span className="font-bold text-foreground text-2xl">{form.stressLevel[0]}</span>
+                    <span className="font-bold text-white text-2xl">{form.stressLevel[0]}</span>
                     <span>10 — overwhelmed</span>
                   </div>
                 </div>
@@ -523,12 +520,12 @@ export default function ApplicationForm() {
 
           {/* 8: Self-Care */}
           {step === 8 && (
-            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/80">
+            <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
               <div>
                 <p className="mb-3 text-base">How I take care of myself:</p>
                 <div className="space-y-2">
                   {SELF_CARE_OPTIONS.map((option) => (
-                    <label key={option} className="flex items-center gap-3 rounded-lg border bg-card/80 px-4 py-3 text-sm cursor-pointer hover:bg-secondary/50 transition-colors">
+                    <label key={option} className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm cursor-pointer hover:bg-white/10 transition-colors">
                       <input
                         type="radio"
                         name="selfCare"
@@ -536,7 +533,7 @@ export default function ApplicationForm() {
                         onChange={() => update('selfCare', option)}
                         className="accent-primary"
                       />
-                      <span className="text-foreground">{option}</span>
+                      <span className="text-white/80">{option}</span>
                     </label>
                   ))}
                 </div>
@@ -568,9 +565,9 @@ export default function ApplicationForm() {
 
           {/* 9: Confirm */}
           {step === 9 && (
-            <div className="space-y-6 text-lg sm:text-xl leading-relaxed text-foreground/80">
+            <div className="space-y-6 text-lg sm:text-xl leading-relaxed text-white/70">
               <p>Almost there! Here's a summary:</p>
-              <div className="rounded-lg border bg-secondary/30 p-4 text-sm space-y-2">
+              <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-sm text-white/70 space-y-2">
                 <p><strong>Name:</strong> {form.preferredName || form.firstName} {form.lastName}</p>
                 <p><strong>Email:</strong> {form.email}</p>
                 <p><strong>Phone:</strong> {form.phone}</p>
@@ -584,13 +581,13 @@ export default function ApplicationForm() {
                 )}
               </div>
 
-              <label className="flex items-start gap-3 rounded-lg border bg-card/80 px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors">
+              <label className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3 cursor-pointer hover:bg-white/10 transition-colors">
                 <Checkbox
                   checked={form.agreeToTerms}
                   onCheckedChange={(v) => update('agreeToTerms', !!v)}
                   className="mt-0.5"
                 />
-                <span className="text-sm text-foreground">
+                <span className="text-sm text-white/70">
                   I confirm that the information provided is accurate and I consent to it being used for the purpose of supporting me during the training. My personal information will be kept strictly confidential.
                 </span>
               </label>
@@ -598,17 +595,17 @@ export default function ApplicationForm() {
           )}
 
           {/* Navigation */}
-          <div className="mt-8 flex items-center justify-between border-t pt-6">
+          <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-6">
             <Button
               variant="outline"
               onClick={prev}
               disabled={step === 0}
-              className="gap-1"
+              className="gap-1 border-white/20 text-white/60 hover:bg-white/10 hover:text-white"
             >
               <ChevronLeft className="h-4 w-4" /> Previous
             </Button>
 
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-white/30">
               {step + 1} of {SECTIONS.length}
             </span>
 
