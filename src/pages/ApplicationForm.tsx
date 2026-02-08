@@ -368,7 +368,7 @@ export default function ApplicationForm() {
                   I'd like to join{' '}
                   <span className="inline-block w-64 sm:w-80 align-bottom">
                     <Select value={form.retreatId} onValueChange={(v) => update('retreatId', v)}>
-                      <SelectTrigger className="border-none border-b-2 rounded-none bg-transparent text-lg font-bold text-white h-auto py-0.5 px-0 shadow-none focus:ring-0 [&>svg]:ml-2 [&>svg]:text-white/40">
+                      <SelectTrigger className="border-none border-b-2 rounded-none bg-transparent text-lg font-bold text-white h-auto py-0.5 px-0 shadow-none focus:ring-0 [&>svg]:ml-2 [&>svg]:text-white/40 justify-center text-center">
                         <SelectValue placeholder="select a retreat" />
                       </SelectTrigger>
                       <SelectContent className="bg-[hsl(0_0%_10%)] border-white/15 text-white">
@@ -377,7 +377,7 @@ export default function ApplicationForm() {
                         ))}
                       </SelectContent>
                     </Select>
-                    <span className="block h-[2px] rounded-full bg-gradient-to-r from-[hsl(160_40%_55%)] via-[hsl(200_60%_60%)] to-[hsl(280_50%_65%)] opacity-50" />
+                    <span className="block h-px rounded-full bg-gradient-to-r from-transparent via-[hsl(160_30%_72%)] to-transparent opacity-60" />
                   </span>.
                 </p>
                 <p>
