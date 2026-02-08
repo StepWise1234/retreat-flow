@@ -33,7 +33,7 @@ const TRAINING_FEATURES: OrbitalItem[] = [
     title: 'Community',
     subtitle: 'Cohort-based learning',
     content:
-      'Join an intimate cohort of fellow clinicians. Build relationships and a referral network that extends well beyond the training.',
+      'Join an intimate cohort of fellow clinicians. Group case consults, alumni calls, workshops and Advanced Trainings.',
     icon: Users,
   },
   {
