@@ -49,7 +49,7 @@ const TRAINING_FEATURES: OrbitalItem[] = [
     title: 'Safety',
     subtitle: 'Screening & ethics',
     content:
-      'Master comprehensive screening processes, contraindication assessment, informed consent, and ethical boundaries in clinical practice.',
+      'Master system tracking to serve at the speed of your clients and trauma-informed interventions to integrate what arises.',
     icon: Shield,
   },
 ];
