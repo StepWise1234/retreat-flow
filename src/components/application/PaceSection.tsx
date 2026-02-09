@@ -21,7 +21,7 @@ export default function PaceSection() {
         <div className="relative flex items-center justify-center">
           {/* Celadon circle */}
           <div
-            className="absolute h-[23rem] w-[23rem] rounded-full sm:h-[26rem] sm:w-[26rem] md:h-[34rem] md:w-[34rem]"
+            className="absolute h-[18.4rem] w-[18.4rem] rounded-full sm:h-[20.8rem] sm:w-[20.8rem] md:h-[27.2rem] md:w-[27.2rem]"
             style={{
               left: 'calc(-10% + 95px)',
               top: '130px',
@@ -31,7 +31,7 @@ export default function PaceSection() {
 
           {/* Silhouette — mix-blend-mode removes white bg */}
           <div
-            className="relative z-10 h-[35rem] w-[29rem] sm:h-[42rem] sm:w-[35rem] md:h-[51rem] md:w-[42rem]"
+            className="relative z-10 h-[28rem] w-[23.2rem] sm:h-[33.6rem] sm:w-[28rem] md:h-[40.8rem] md:w-[33.6rem]"
             style={{ mixBlendMode: 'multiply' }}
           >
             <img
