@@ -78,7 +78,7 @@ export default function CommonQuestions() {
                   </span>
                 </AccordionTrigger>
                 <AccordionContent className="text-base leading-[1.8] text-neutral-500 pl-6 pb-6 relative">
-                  <div className="absolute inset-0 rounded-lg bg-[radial-gradient(ellipse_at_center,_rgba(250,250,250,0.85)_0%,_transparent_70%)] pointer-events-none" />
+                  <div className="absolute inset-0 rounded-lg bg-[radial-gradient(ellipse_at_center,_rgba(250,250,250,0.95)_0%,_rgba(250,250,250,0.6)_60%,_transparent_85%)] pointer-events-none" />
                   <span className="relative">{item.a}</span>
                 </AccordionContent>
               </AccordionItem>
