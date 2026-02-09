@@ -29,7 +29,7 @@ const slides: Slide[] = [
     heading: 'depth over\nspeed',
     description:
       'Where rushing ends and real transformation begins — one breath at a time',
-    
+    imageScale: 0.85,
   },
   {
     image: silhouette3,
@@ -133,8 +133,8 @@ export default function PaceSection() {
               <img
                 src={slide.image}
                 alt={slide.alt}
-                className="h-full w-full object-contain object-bottom translate-y-8"
-                style={slide.imageScale ? { transform: `translateY(2rem) scale(${slide.imageScale})` } : undefined}
+                className="h-full w-full object-contain object-bottom"
+                style={slide.imageScale ? { transform: `scale(${slide.imageScale})`, transformOrigin: 'bottom center' } : undefined}
               />
             </motion.div>
           </AnimatePresence>
