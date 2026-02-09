@@ -33,10 +33,10 @@ export default function FindFacilitatorCTA() {
             className="flex items-center gap-3 group cursor-pointer"
           >
             <motion.div whileHover={{ x: 6 }} className="flex items-center gap-3">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground/70 group-hover:text-foreground transition-colors duration-300 leading-[1.1]">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight leading-[1.1]" style={{ color: '#FF4500' }}>
                 Apply for Training
               </h3>
-              <ArrowRight className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-foreground/40 group-hover:text-foreground/70 transition-all duration-300 group-hover:translate-x-2 shrink-0" />
+              <ArrowRight className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 transition-all duration-300 group-hover:translate-x-2 shrink-0" style={{ color: '#FF4500' }} />
             </motion.div>
           </Link>
         </motion.div>
@@ -90,10 +90,10 @@ export default function FindFacilitatorCTA() {
             <ArrowRight className="h-7 w-7 text-foreground/60 group-hover:text-foreground transition-all duration-300 group-hover:translate-x-2 shrink-0" />
           </a>
           <Link to="/apply" className="flex items-center gap-2 group cursor-pointer">
-            <h3 className="text-xl font-bold tracking-tight text-foreground/70 group-hover:text-foreground transition-colors duration-300">
+            <h3 className="text-xl font-bold tracking-tight" style={{ color: '#FF4500' }}>
               Apply for Training
             </h3>
-            <ArrowRight className="h-5 w-5 text-foreground/40 group-hover:text-foreground/70 transition-all duration-300 group-hover:translate-x-2 shrink-0" />
+            <ArrowRight className="h-5 w-5 transition-all duration-300 group-hover:translate-x-2 shrink-0" style={{ color: '#FF4500' }} />
           </Link>
         </motion.div>
       </div>
