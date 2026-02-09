@@ -181,7 +181,7 @@ export default function TestimonialsCarousel() {
         duration={3}
         className="text-neutral-400 [mask-image:radial-gradient(500px_circle_at_center,white,transparent)]"
       />
-      <div className="relative mx-auto max-w-2xl px-6 py-[calc(4rem+20px)] md:py-[calc(6rem+20px)]">
+      <div className="relative mx-auto max-w-2xl px-6 py-20 md:py-28">
         {/* Quote */}
         <div className="relative min-h-[100px] mb-12">
           <AnimatePresence mode="wait">
@@ -249,7 +249,7 @@ export default function TestimonialsCarousel() {
                     {isActive && (
                       <div
                         className="absolute inset-0 rounded-full transition-opacity duration-300"
-                        style={{ backgroundColor: colorMap[realIndex], opacity: 0.55 }}
+                        style={{ backgroundColor: colorMap[realIndex], opacity: 0.7 }}
                       />
                     )}
                   </button>
