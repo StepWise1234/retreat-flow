@@ -61,7 +61,6 @@ export default function FindFacilitatorCTA() {
           {/* Silhouette — same size as hero images */}
           <motion.div
             className="relative z-10 h-[28rem] w-[23.2rem] sm:h-[33.6rem] sm:w-[28rem] md:h-[40.8rem] md:w-[33.6rem]"
-            style={{ mixBlendMode: 'multiply' }}
             initial={{ opacity: 0, scale: 1.04 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: '-60px' }}
@@ -70,7 +69,7 @@ export default function FindFacilitatorCTA() {
             <img
               src={facilitatorImage}
               alt="Silhouette of a middle-aged male with eyes closed in a relaxed state"
-              className="h-full w-full object-contain object-bottom"
+              className="h-full w-full object-contain object-bottom mix-blend-multiply dark:mix-blend-screen"
             />
           </motion.div>
         </div>
