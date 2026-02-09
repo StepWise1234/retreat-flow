@@ -4,21 +4,15 @@ import { Shield, Timer, Brain } from 'lucide-react';
 /* ─── Inline accent circle — matches hero's solid circles ─── */
 function AccentCircle({
   color,
-  size = 28,
   className,
 }: {
   color: string;
-  size?: number;
   className?: string;
 }) {
   return (
     <span
       className={`inline-block rounded-full align-middle ${className ?? ''}`}
-      style={{
-        width: size,
-        height: size,
-        backgroundColor: color,
-      }}
+      style={{ backgroundColor: color }}
     />
   );
 }
@@ -102,7 +96,7 @@ export default function ProblemSection() {
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            <AccentCircle color="#FFA500" size={14} className="mr-2 -translate-y-px" />
+            <AccentCircle color="#FFA500" className="mr-2 -translate-y-px h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12" />
             Across thousands engaged in psychedelic-assisted therapy, a consistent pattern emerges:
           </motion.p>
 
@@ -119,10 +113,10 @@ export default function ProblemSection() {
             those experiences into identity, behavior, and life direction.
           </motion.p>
 
-          {/* Pivot statement — full orange */}
+          {/* Pivot statement — red-orange */}
           <motion.p
             className="text-base sm:text-lg leading-[1.9] font-medium"
-            style={{ color: '#FFA500' }}
+            style={{ color: '#FF4500' }}
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
@@ -131,7 +125,7 @@ export default function ProblemSection() {
             The problem wasn't access to transformation. It's the absence of structured systems to support it.
           </motion.p>
 
-          {/* Resolution — ends with brand dots */}
+          {/* Resolution — color-cycling dot */}
           <motion.p
             className="text-base sm:text-lg leading-[1.9] text-foreground/75 font-medium"
             initial={{ opacity: 0, y: 14 }}
@@ -139,13 +133,10 @@ export default function ProblemSection() {
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
           >
+            <span
+              className="inline-block h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full align-middle mr-2 -translate-y-px animate-[brandCycle_4s_ease-in-out_infinite]"
+            />
             StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
-            {' '}
-            <AccentCircle color="#FFA500" size={8} className="mx-0.5" />
-            {' '}
-            <AccentCircle color="#FF4500" size={8} className="mx-0.5" />
-            {' '}
-            <AccentCircle color="#800080" size={8} className="mx-0.5" />
           </motion.p>
         </div>
 
