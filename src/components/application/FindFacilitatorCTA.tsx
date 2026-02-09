@@ -4,8 +4,8 @@ import facilitatorImage from '@/assets/facilitator-silhouette.png';
 
 export default function FindFacilitatorCTA() {
   return (
-    <section className="relative bg-background overflow-hidden">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 py-8 md:py-0 min-h-[70vh]">
+    <section className="relative bg-background overflow-hidden -mt-16 md:-mt-24">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 py-8 md:py-0 min-h-[60vh]">
 
         {/* Left — Text CTA */}
         <motion.a
