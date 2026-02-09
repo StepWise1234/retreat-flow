@@ -59,7 +59,7 @@ function Pillar({
       <h3 className="text-base font-semibold tracking-tight text-foreground">
         {title}
       </h3>
-      <p className="text-sm leading-relaxed text-foreground/50">
+      <p className="text-base leading-[1.9] text-foreground/50">
         {description}
       </p>
     </motion.div>
@@ -69,7 +69,7 @@ function Pillar({
 export default function ProblemSection() {
   return (
     <section className="relative bg-background overflow-hidden">
-      <div className="relative mx-auto max-w-xl px-6 py-28 md:py-36">
+      <div className="relative mx-auto max-w-2xl px-6 py-28 md:py-36">
         {/* Logo */}
         <motion.div
           className="mb-24 flex justify-center"
