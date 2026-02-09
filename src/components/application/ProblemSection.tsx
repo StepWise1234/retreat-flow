@@ -5,7 +5,6 @@ import { Shield, Timer, Brain } from 'lucide-react';
 function StepWiseLogo() {
   return (
     <div className="flex items-center gap-3">
-      {/* Three dots */}
       <div className="flex items-center gap-1.5">
         <span className="block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#FFA500' }} />
         <span className="block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#FF4500' }} />
@@ -44,7 +43,7 @@ function Pillar({
       <h3 className="text-base font-semibold tracking-tight text-foreground">
         {title}
       </h3>
-      <p className="text-sm leading-relaxed text-muted-foreground">
+      <p className="text-sm leading-relaxed text-foreground/50">
         {description}
       </p>
     </motion.div>
@@ -78,19 +77,18 @@ export default function ProblemSection() {
 
         {/* Problem statement */}
         <motion.div
-          className="space-y-6 text-center"
+          className="space-y-8 text-center"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="text-lg sm:text-xl md:text-2xl leading-relaxed text-foreground/80 font-light">
-            Across hundreds of individuals and thousands of group participants, a consistent pattern emerged:
+          <p className="text-base sm:text-lg leading-relaxed text-foreground/70">
+            Across thousands engaged in psychedelic-assisted therapy, a consistent pattern emerges:
           </p>
-          <p className="text-base sm:text-lg leading-relaxed text-muted-foreground">
-            people were accessing profound insight and altered states, but lacked the preparation,
-            nervous system capacity, and longitudinal integration required to stabilize those experiences
-            into identity, behavior, and life direction.
+          <p className="text-base sm:text-lg leading-relaxed text-foreground/70">
+            People access profound insight but lack the nervous system capacity required to stabilize
+            those experiences into identity, behavior, and life direction.
           </p>
         </motion.div>
 
@@ -103,23 +101,22 @@ export default function ProblemSection() {
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
           <Divider />
-          <p className="my-8 text-center text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight leading-snug text-foreground">
+          <p className="my-8 text-center text-base sm:text-lg leading-relaxed text-foreground/70">
             The problem wasn't access to transformation
-            <span className="text-muted-foreground font-light"> — it was the absence of structured systems to support it.</span>
+            <span className="text-foreground/40"> — it's the absence of structured systems to support it.</span>
           </p>
           <Divider />
         </motion.div>
 
         {/* Closing line */}
         <motion.p
-          className="text-center text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl mx-auto mb-20 md:mb-24"
+          className="text-center text-base sm:text-lg leading-relaxed text-foreground/70 max-w-xl mx-auto mb-20 md:mb-24"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          Without that structure, even powerful experiences often led to fragmentation,
-          regression, or unrealized potential.
+          StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
         </motion.p>
 
         {/* Three pillars */}
