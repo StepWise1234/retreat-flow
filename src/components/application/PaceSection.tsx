@@ -27,9 +27,9 @@ const slides: Slide[] = [
     image: silhouette2,
     alt: 'Serene silhouette exhaling in deep relaxation',
     circleColor: '#FF4500',
-    heading: 'depth over\nspeed',
+    heading: 'safe is\ndepth',
     description:
-      'Where rushing ends and real transformation begins — one breath at a time',
+      'Honor precise insight and unburdening with real, lasting transformation in life.',
     imageScale: 0.85,
     mirrorX: true,
   },
@@ -39,7 +39,7 @@ const slides: Slide[] = [
     circleColor: '#800080',
     heading: 'slow is\nsacred',
     description:
-      'The nervous system doesn\'t heal on a deadline — it heals in its own time',
+      'Wholeness unfolds in its own time. Slow down, go deeper, and let the body lead.',
     imageScale: 0.95,
   },
 ];
