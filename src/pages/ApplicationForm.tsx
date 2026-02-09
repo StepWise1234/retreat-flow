@@ -18,6 +18,7 @@ import OrbitalSection from '@/components/application/OrbitalSection';
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
 import MadLibTextarea from '@/components/application/MadLibTextarea';
+import FloatingLogo from '@/components/application/FloatingLogo';
 import { SparklesCore } from '@/components/ui/sparkles';
 
 const PHYSICAL_SYMPTOMS = [
@@ -350,6 +351,7 @@ export default function ApplicationForm() {
 
   return (
     <div className="min-h-screen bg-black">
+      <FloatingLogo />
       <PaceSection />
       <ProblemSection />
       <FindFacilitatorCTA />
