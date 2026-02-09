@@ -98,13 +98,13 @@ export default function ProblemSection() {
                 {/* Pivot */}
                 <motion.p
                   className="text-lg sm:text-xl leading-[1.9]"
-                  style={{ color: '#FF4500' }}
                   initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  The problem wasn't access to transformation. It's the absence of structured systems to support it.
+                  <span className="text-foreground/60">The problem wasn't access to transformation.</span>{' '}
+                  <span style={{ color: '#FF4500' }}>It's the absence of capacity expansion to support it.</span>
                 </motion.p>
 
                 {/* Resolution */}
