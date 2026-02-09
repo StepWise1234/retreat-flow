@@ -34,7 +34,7 @@ export default function FindFacilitatorCTA() {
             <img
               src={facilitatorImage}
               alt="Silhouette of a Latin-American male with eyes closed in a relaxed state"
-              className="h-[440px] sm:h-[520px] md:h-[580px] lg:h-[660px] w-auto object-contain"
+              className="h-[500px] sm:h-[600px] md:h-[700px] lg:h-[800px] w-auto object-contain"
             />
           </motion.div>
         </div>
