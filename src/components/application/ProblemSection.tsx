@@ -117,7 +117,7 @@ export default function ProblemSection() {
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
+                  Using titrated 5-MeO-DMT beginning at sub perceptional levels, StepWise offers a ready-made framework for capacity-based, nervous-system-informed psychedelic-assisted therapy practice.
                 </motion.p>
               </motion.div>
             )}
