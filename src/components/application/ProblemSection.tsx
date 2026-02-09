@@ -5,10 +5,14 @@ import { Shield, Timer, Brain } from 'lucide-react';
 function BrandOrb({
   color,
   size,
+  blur = 60,
+  opacity = 0.08,
   className,
 }: {
   color: string;
   size: number;
+  blur?: number;
+  opacity?: number;
   className?: string;
 }) {
   return (
@@ -18,8 +22,8 @@ function BrandOrb({
         width: size,
         height: size,
         backgroundColor: color,
-        opacity: 0.08,
-        filter: 'blur(60px)',
+        opacity,
+        filter: `blur(${blur}px)`,
       }}
     />
   );
@@ -82,10 +86,15 @@ function Pillar({
 export default function ProblemSection() {
   return (
     <section className="relative bg-background overflow-hidden">
-      {/* ── Brand orbs as background texture ── */}
-      <BrandOrb color="#FFA500" size={420} className="top-12 -left-40 md:left-[8%]" />
-      <BrandOrb color="#FF4500" size={360} className="top-[40%] right-[-10%] md:right-[5%]" />
-      <BrandOrb color="#800080" size={400} className="bottom-20 left-[15%] md:left-[30%]" />
+      {/* ── Large ambient orbs ── */}
+      <BrandOrb color="#FFA500" size={420} opacity={0.10} blur={70} className="top-12 -left-40 md:left-[8%]" />
+      <BrandOrb color="#FF4500" size={360} opacity={0.10} blur={70} className="top-[40%] right-[-10%] md:right-[5%]" />
+      <BrandOrb color="#800080" size={400} opacity={0.10} blur={70} className="bottom-20 left-[15%] md:left-[30%]" />
+
+      {/* ── Smaller, sharper accent orbs near text ── */}
+      <BrandOrb color="#FFA500" size={120} opacity={0.14} blur={30} className="top-[22%] left-[60%] md:left-[55%]" />
+      <BrandOrb color="#FF4500" size={100} opacity={0.12} blur={25} className="top-[52%] left-[10%] md:left-[20%]" />
+      <BrandOrb color="#800080" size={140} opacity={0.14} blur={28} className="bottom-[28%] right-[8%] md:right-[25%]" />
 
       <div className="relative mx-auto max-w-xl px-6 py-28 md:py-36">
         {/* Logo */}
