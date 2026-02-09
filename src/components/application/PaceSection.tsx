@@ -29,7 +29,7 @@ const slides: Slide[] = [
     circleColor: '#FF4500',
     heading: 'safe is\ndepth',
     description:
-      'Honor precise insight and release. Create real, lasting transformation in life.',
+      'Precise insights and releases create real, lasting transformation in life.',
     imageScale: 0.85,
     mirrorX: true,
   },
@@ -39,7 +39,7 @@ const slides: Slide[] = [
     circleColor: '#800080',
     heading: 'slow is\nsacred',
     description:
-      'Deep transformation unfolds within. Transmutation is led by the body.',
+      'Deep transformation unfolds within when the nervous system leads.',
     imageScale: 0.95,
   },
 ];
