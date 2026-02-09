@@ -21,8 +21,8 @@ const SLIDES: HeroSlide[] = [
   {
     image: silhouette2,
     circleColor: '#FF4500',
-    headline: 'depth over\nspeed',
-    body: 'Honor surgically precise breakthroughs and root real transformation into life.',
+    headline: 'step by\nstep',
+    body: 'Honor surgically precise breakthroughs and root real, lasting transformation into life.',
   },
   {
     image: silhouette3,
