@@ -24,7 +24,7 @@ export default function FindFacilitatorCTA() {
         </motion.a>
 
         {/* Center composition — purple circle behind, silhouette overlapping */}
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex items-center justify-center md:translate-x-[250px]">
           {/* Purple circle — same size & offset as hero */}
           <motion.div
             className="absolute h-[15.6rem] w-[15.6rem] rounded-full sm:h-[17.7rem] sm:w-[17.7rem] md:h-[23.1rem] md:w-[23.1rem]"
