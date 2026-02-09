@@ -4,7 +4,6 @@ import FindFacilitatorCTA from '@/components/application/FindFacilitatorCTA';
 import TestimonialsCarousel from '@/components/application/TestimonialsCarousel';
 import StepWiseOverview from '@/components/application/StepWiseOverview';
 import CommonQuestions from '@/components/application/CommonQuestions';
-import OrbitalSection from '@/components/application/OrbitalSection';
 import FloatingLogo from '@/components/application/FloatingLogo';
 import SiteFooter from '@/components/application/SiteFooter';
 
@@ -18,7 +17,6 @@ export default function ApplicationForm() {
       <StepWiseOverview />
       <FindFacilitatorCTA />
       <CommonQuestions />
-      <OrbitalSection />
       <SiteFooter />
     </div>
   );
