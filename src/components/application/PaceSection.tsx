@@ -97,21 +97,27 @@ export default function PaceSection() {
           </motion.p>
         </AnimatePresence>
 
-        {/* Colored circle — centered to page */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`circle-${current}`}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[15.6rem] w-[15.6rem] rounded-full sm:h-[17.7rem] sm:w-[17.7rem] md:h-[23.1rem] md:w-[23.1rem]"
-            style={{ backgroundColor: slide.circleColor }}
-            variants={circleVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-          />
-        </AnimatePresence>
-
-        {/* Center composition — silhouette */}
+        {/* Center composition — circle behind, silhouette overlapping */}
         <div className="relative flex items-center justify-center">
+          {/* Colored circle */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`circle-${current}`}
+              className="absolute h-[15.6rem] w-[15.6rem] rounded-full sm:h-[17.7rem] sm:w-[17.7rem] md:h-[23.1rem] md:w-[23.1rem]"
+              style={{
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                backgroundColor: slide.circleColor,
+              }}
+              variants={circleVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+            />
+          </AnimatePresence>
+
+          {/* Silhouette */}
           <AnimatePresence mode="wait">
             <motion.div
               key={`img-${current}`}
