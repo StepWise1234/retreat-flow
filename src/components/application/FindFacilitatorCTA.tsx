@@ -5,32 +5,23 @@ import facilitatorImage from '@/assets/facilitator-silhouette.png';
 export default function FindFacilitatorCTA() {
   return (
     <section className="relative bg-background overflow-hidden">
-      <div className="relative mx-auto max-w-5xl px-6 py-20 md:py-28">
-        <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+      <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28">
+        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           {/* Left — Text CTA */}
-          <motion.div
-            className="flex-1 flex flex-col items-start gap-6"
+          <motion.a
+            href="#"
+            className="flex-1 flex items-center gap-4 group cursor-pointer"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={{ x: 6 }}
           >
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground leading-[1.05]">
-              Find a
-              <br />
-              Facilitator
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground leading-[1.05] whitespace-nowrap">
+              Find a Facilitator
             </h2>
-
-            <motion.a
-              href="#"
-              className="group inline-flex items-center gap-3 text-lg sm:text-xl font-medium text-foreground/70 hover:text-foreground transition-colors duration-300"
-              whileHover={{ x: 4 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            >
-              <span>Explore the directory</span>
-              <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-            </motion.a>
-          </motion.div>
+            <ArrowRight className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-foreground/60 group-hover:text-foreground transition-all duration-300 group-hover:translate-x-2 shrink-0" />
+          </motion.a>
 
           {/* Right — Silhouette */}
           <motion.div
@@ -42,8 +33,8 @@ export default function FindFacilitatorCTA() {
           >
             <img
               src={facilitatorImage}
-              alt="Silhouette of a person with eyes closed in a relaxed state"
-              className="h-[340px] sm:h-[400px] md:h-[460px] lg:h-[520px] w-auto object-contain"
+              alt="Silhouette of a Latin-American male with eyes closed in a relaxed state"
+              className="h-[440px] sm:h-[520px] md:h-[580px] lg:h-[660px] w-auto object-contain"
             />
           </motion.div>
         </div>
