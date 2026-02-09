@@ -11,6 +11,7 @@ interface Slide {
   heading: string;
   description: string;
   imageScale?: number;
+  mirrorX?: boolean;
 }
 
 const slides: Slide[] = [
@@ -30,6 +31,7 @@ const slides: Slide[] = [
     description:
       'Where rushing ends and real transformation begins — one breath at a time',
     imageScale: 0.85,
+    mirrorX: true,
   },
   {
     image: silhouette3,
@@ -135,7 +137,9 @@ export default function PaceSection() {
                 src={slide.image}
                 alt={slide.alt}
                 className="h-full w-full object-contain object-bottom"
-                style={slide.imageScale ? { transform: `scale(${slide.imageScale})`, transformOrigin: 'bottom center' } : undefined}
+                style={{
+                  ...(slide.imageScale ? { transform: `scale(${slide.imageScale})${slide.mirrorX ? ' scaleX(-1)' : ''}`, transformOrigin: 'bottom center' } : slide.mirrorX ? { transform: 'scaleX(-1)' } : undefined),
+                }}
               />
             </motion.div>
           </AnimatePresence>
