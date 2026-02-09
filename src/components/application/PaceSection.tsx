@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import silhouette1 from '@/assets/pace-silhouette.png';
 import silhouette2 from '@/assets/pace-silhouette-2.png';
@@ -11,7 +11,6 @@ interface HeroSlide {
   body: string;
   mirrorSilhouette?: boolean;
   silhouetteScale?: number;
-  headlineTopOffset?: string;
 }
 
 const SLIDES: HeroSlide[] = [
@@ -28,7 +27,6 @@ const SLIDES: HeroSlide[] = [
     body: 'Honor surgically precise breakthroughs and root real, lasting transformation into life.',
     mirrorSilhouette: true,
     silhouetteScale: 0.9,
-    headlineTopOffset: 'calc(45% + 230px)',
   },
   {
     image: silhouette3,
@@ -40,120 +38,78 @@ const SLIDES: HeroSlide[] = [
 
 const INTERVAL_MS = 9000;
 
-/* Scale the entire circle+silhouette composition down by 10% 
-   while keeping text size and placement untouched */
-const COMPOSITION_SCALE = 0.9;
-
-function SlideContent({ s }: { s: HeroSlide }) {
-  return (
-    <>
-      {/* Left text — body copy (outside composition scale) */}
-      <p
-        className="hidden md:block absolute left-6 lg:left-12 top-[calc(45%+230px)] -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
-      >
-        {s.body}
-      </p>
-
-      {/* Center composition — scaled down */}
-      <div
-        className="relative flex items-center justify-center"
-        style={{
-          transform: `scale(${COMPOSITION_SCALE})`,
-          transformOrigin: 'center bottom',
-        }}
-      >
-        {/* Colored circle */}
-        <div
-          className="absolute h-[18.4rem] w-[18.4rem] rounded-full sm:h-[20.8rem] sm:w-[20.8rem] md:h-[27.2rem] md:w-[27.2rem]"
-          style={{
-            left: 'calc(-10% + 95px)',
-            top: '130px',
-            backgroundColor: s.circleColor,
-          }}
-        />
-
-        {/* Silhouette */}
-        <div
-          className="relative z-10 h-[30rem] w-[23.2rem] sm:h-[35.6rem] sm:w-[28rem] md:h-[42.8rem] md:w-[33.6rem]"
-          style={{ mixBlendMode: 'multiply' }}
-        >
-          <img
-            src={s.image}
-            alt="Calm silhouette profile"
-            className="h-full w-full object-contain object-bottom"
-            style={{
-              transform: `${s.mirrorSilhouette ? 'scaleX(-1) ' : ''}${s.silhouetteScale ? `scale(${s.silhouetteScale})` : ''}`,
-              transformOrigin: 'bottom center',
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Right text — bold headline (outside composition scale) */}
-      <p
-        className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10 whitespace-pre-line text-right"
-        style={{ top: s.headlineTopOffset || 'calc(45% + 220px)' }}
-      >
-        {s.headline}
-      </p>
-    </>
-  );
-}
-
 export default function PaceSection() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [prevIndex, setPrevIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  const advanceSlide = useCallback(() => {
-    setPrevIndex(activeIndex);
-    setActiveIndex((prev) => (prev + 1) % SLIDES.length);
-    setIsTransitioning(true);
-  }, [activeIndex]);
 
   useEffect(() => {
-    const timer = setInterval(advanceSlide, INTERVAL_MS);
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % SLIDES.length);
+    }, INTERVAL_MS);
     return () => clearInterval(timer);
-  }, [advanceSlide]);
+  }, []);
 
-  // Clear transition state after animation completes
-  useEffect(() => {
-    if (!isTransitioning) return;
-    const timeout = setTimeout(() => setIsTransitioning(false), 1400);
-    return () => clearTimeout(timeout);
-  }, [isTransitioning]);
-
-  const handleDotClick = (i: number) => {
-    if (i === activeIndex) return;
-    setPrevIndex(activeIndex);
-    setActiveIndex(i);
-    setIsTransitioning(true);
-  };
-
-  const currentSlide = SLIDES[activeIndex];
+  const slide = SLIDES[activeIndex];
 
   return (
-    <section className="relative bg-background">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-0 min-h-[70vh]">
+    <section className="relative bg-background overflow-hidden">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-0 min-h-[70vh] overflow-visible">
 
-        {/* Previous slide (stays at full opacity underneath, removed after transition) */}
-        {isTransitioning && (
-          <div className="absolute inset-0 flex items-center justify-center z-0">
-            <SlideContent s={SLIDES[prevIndex]} />
-          </div>
-        )}
-
-        {/* Current slide (fades in on top) */}
         <AnimatePresence initial={false}>
-          <motion.div
-            key={activeIndex}
-            className="absolute inset-0 flex items-center justify-center z-[1]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.2, ease: 'easeInOut' }}
-          >
-            <SlideContent s={SLIDES[activeIndex]} />
-          </motion.div>
+          {SLIDES.map((s, i) =>
+            i === activeIndex ? (
+              <motion.div
+                key={i}
+                className="absolute inset-0 flex items-center justify-center overflow-visible"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.2, ease: 'easeInOut' }}
+              >
+                {/* Left text — body copy */}
+                <p
+                  className="hidden md:block absolute left-6 lg:left-12 top-[calc(45%+230px)] -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
+                >
+                  {s.body}
+                </p>
+
+                {/* Center composition */}
+                <div className="relative flex items-center justify-center overflow-visible">
+                  {/* Colored circle */}
+                  <div
+                    className="absolute h-[18.4rem] w-[18.4rem] rounded-full sm:h-[20.8rem] sm:w-[20.8rem] md:h-[27.2rem] md:w-[27.2rem]"
+                    style={{
+                      left: 'calc(-10% + 95px)',
+                      top: '130px',
+                      backgroundColor: s.circleColor,
+                    }}
+                  />
+
+                  {/* Silhouette */}
+                  <div
+                    className="relative z-10 h-[30rem] w-[23.2rem] sm:h-[35.6rem] sm:w-[28rem] md:h-[42.8rem] md:w-[33.6rem] overflow-visible"
+                    style={{ mixBlendMode: 'multiply' }}
+                  >
+                    <img
+                      src={s.image}
+                      alt="Calm silhouette profile"
+                      className="h-full w-full object-contain object-bottom"
+                      style={{
+                        transform: `${s.mirrorSilhouette ? 'scaleX(-1) ' : ''}${s.silhouetteScale ? `scale(${s.silhouetteScale})` : ''}`,
+                        transformOrigin: 'bottom center',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Right text — bold headline */}
+                <p
+                  className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] top-[calc(45%+220px)] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10 whitespace-pre-line text-right"
+                >
+                  {s.headline}
+                </p>
+              </motion.div>
+            ) : null
+          )}
         </AnimatePresence>
 
         {/* Slide indicators */}
@@ -161,11 +117,11 @@ export default function PaceSection() {
           {SLIDES.map((_, i) => (
             <button
               key={i}
-              onClick={() => handleDotClick(i)}
+              onClick={() => setActiveIndex(i)}
               className="h-1.5 rounded-full transition-all duration-500"
               style={{
                 width: i === activeIndex ? '2rem' : '0.375rem',
-                backgroundColor: i === activeIndex ? currentSlide.circleColor : 'hsl(var(--muted-foreground) / 0.3)',
+                backgroundColor: i === activeIndex ? slide.circleColor : 'hsl(var(--muted-foreground) / 0.3)',
               }}
               aria-label={`Go to slide ${i + 1}`}
             />
@@ -183,10 +139,10 @@ export default function PaceSection() {
               transition={{ duration: 0.5 }}
             >
               <p className="text-3xl font-bold text-foreground mb-2 tracking-tight whitespace-pre-line">
-                {currentSlide.headline.replace('\n', ' ')}
+                {slide.headline.replace('\n', ' ')}
               </p>
               <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">
-                {currentSlide.body}
+                {slide.body}
               </p>
             </motion.div>
           </AnimatePresence>
