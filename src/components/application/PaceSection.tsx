@@ -27,7 +27,7 @@ const slides: Slide[] = [
     image: silhouette2,
     alt: 'Serene silhouette exhaling in deep relaxation',
     circleColor: '#FF4500',
-    heading: 'safe is\ndepth',
+    heading: 'safe is\ndeep',
     description:
       'Precise insights and releases create real, lasting transformation in life.',
     imageScale: 0.85,
