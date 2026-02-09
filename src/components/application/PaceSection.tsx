@@ -51,15 +51,15 @@ export default function PaceSection() {
   const slide = SLIDES[activeIndex];
 
   return (
-    <section className="relative bg-background">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-0 min-h-[70vh]">
+    <section className="relative bg-background overflow-hidden">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-0 min-h-[70vh] overflow-visible">
 
         <AnimatePresence initial={false}>
           {SLIDES.map((s, i) =>
             i === activeIndex ? (
               <motion.div
                 key={i}
-                className="absolute inset-0 flex items-center justify-center"
+                className="absolute inset-0 flex items-center justify-center overflow-visible"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -73,7 +73,7 @@ export default function PaceSection() {
                 </p>
 
                 {/* Center composition */}
-                <div className="relative flex items-center justify-center">
+                <div className="relative flex items-center justify-center overflow-visible">
                   {/* Colored circle */}
                   <div
                     className="absolute h-[18.4rem] w-[18.4rem] rounded-full sm:h-[20.8rem] sm:w-[20.8rem] md:h-[27.2rem] md:w-[27.2rem]"
@@ -86,7 +86,7 @@ export default function PaceSection() {
 
                   {/* Silhouette */}
                   <div
-                    className="relative z-10 h-[28rem] w-[23.2rem] sm:h-[33.6rem] sm:w-[28rem] md:h-[40.8rem] md:w-[33.6rem]"
+                    className="relative z-10 h-[30rem] w-[23.2rem] sm:h-[35.6rem] sm:w-[28rem] md:h-[42.8rem] md:w-[33.6rem] overflow-visible"
                     style={{ mixBlendMode: 'multiply' }}
                   >
                     <img
@@ -94,7 +94,7 @@ export default function PaceSection() {
                       alt="Calm silhouette profile"
                       className="h-full w-full object-contain object-bottom"
                       style={{
-                        transform: `translateY(2rem)${s.mirrorSilhouette ? ' scaleX(-1)' : ''}${s.silhouetteScale ? ` scale(${s.silhouetteScale})` : ''}`,
+                        transform: `${s.mirrorSilhouette ? 'scaleX(-1) ' : ''}${s.silhouetteScale ? `scale(${s.silhouetteScale})` : ''}`,
                         transformOrigin: 'bottom center',
                       }}
                     />
