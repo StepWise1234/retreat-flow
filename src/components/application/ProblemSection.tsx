@@ -26,15 +26,15 @@ function AccentCircle({
 /* ─── StepWise logo — matching "Training Application" font style ─── */
 function StepWiseLogo() {
   return (
-    <div className="flex flex-col items-center gap-5">
-      <div className="flex items-center gap-2.5">
-        <span className="block h-4 w-4 rounded-full" style={{ backgroundColor: '#FFA500' }} />
-        <span className="block h-4 w-4 rounded-full" style={{ backgroundColor: '#FF4500' }} />
-        <span className="block h-4 w-4 rounded-full" style={{ backgroundColor: '#800080' }} />
-      </div>
+    <div className="flex items-center gap-4">
       <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground">
         StepWise
       </h2>
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        <span className="block h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 rounded-full" style={{ backgroundColor: '#FFA500' }} />
+        <span className="block h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 rounded-full" style={{ backgroundColor: '#FF4500' }} />
+        <span className="block h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 rounded-full" style={{ backgroundColor: '#800080' }} />
+      </div>
     </div>
   );
 }
