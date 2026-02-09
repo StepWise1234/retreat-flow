@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import PaceSection from '@/components/application/PaceSection';
 import ProblemSection from '@/components/application/ProblemSection';
 import FindFacilitatorCTA from '@/components/application/FindFacilitatorCTA';
+import TestimonialsCarousel from '@/components/application/TestimonialsCarousel';
 import OrbitalSection from '@/components/application/OrbitalSection';
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
@@ -350,6 +351,7 @@ export default function ApplicationForm() {
       <PaceSection />
       <ProblemSection />
       <FindFacilitatorCTA />
+      <TestimonialsCarousel />
       <OrbitalSection />
 
       {submitted ? (
