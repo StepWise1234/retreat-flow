@@ -12,6 +12,8 @@ import PaceSection from '@/components/application/PaceSection';
 import ProblemSection from '@/components/application/ProblemSection';
 import FindFacilitatorCTA from '@/components/application/FindFacilitatorCTA';
 import TestimonialsCarousel from '@/components/application/TestimonialsCarousel';
+import StepWiseOverview from '@/components/application/StepWiseOverview';
+import CommonQuestions from '@/components/application/CommonQuestions';
 import OrbitalSection from '@/components/application/OrbitalSection';
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
@@ -352,6 +354,8 @@ export default function ApplicationForm() {
       <ProblemSection />
       <FindFacilitatorCTA />
       <TestimonialsCarousel />
+      <StepWiseOverview />
+      <CommonQuestions />
       <OrbitalSection />
 
       {submitted ? (
