@@ -11,7 +11,7 @@ const STEPS = [
     number: '02',
     title: 'Settle & Stack',
     description:
-      'The practitioner watches for a settling of the nervous system, then offers another draw about 5 minutes later — gently increasing the amount while allowing the system to acclimate.',
+      'The facilitator watches for a settling of the nervous system, only then do they invite the client to take another draw. This gently allows the system to acclimate at the client\'s unique pace.',
   },
   {
     number: '03',
