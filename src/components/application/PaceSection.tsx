@@ -63,31 +63,43 @@ export default function PaceSection() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 1.2, ease: 'easeInOut' }}
+                transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
               >
                 {/* Left text — body copy */}
-                <p
+                <motion.p
                   className="hidden md:block absolute left-6 lg:left-12 top-[calc(45%+230px)] -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 >
                   {s.body}
-                </p>
+                </motion.p>
 
                 {/* Center composition */}
                 <div className="relative flex items-center justify-center overflow-visible">
                   {/* Colored circle */}
-                  <div
+                  <motion.div
                     className="absolute h-[18.4rem] w-[18.4rem] rounded-full sm:h-[20.8rem] sm:w-[20.8rem] md:h-[27.2rem] md:w-[27.2rem]"
                     style={{
                       left: 'calc(-10% + 95px)',
                       top: '130px',
                       backgroundColor: s.circleColor,
                     }}
+                    initial={{ scale: 0.7, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 1.15, opacity: 0 }}
+                    transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
                   />
 
                   {/* Silhouette */}
-                  <div
+                  <motion.div
                     className="relative z-10 h-[30rem] w-[23.2rem] sm:h-[35.6rem] sm:w-[28rem] md:h-[42.8rem] md:w-[33.6rem] overflow-visible"
                     style={{ mixBlendMode: 'multiply' }}
+                    initial={{ opacity: 0, scale: 1.06, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.97, y: -10 }}
+                    transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <img
                       src={s.image}
@@ -98,15 +110,19 @@ export default function PaceSection() {
                         transformOrigin: 'bottom center',
                       }}
                     />
-                  </div>
+                  </motion.div>
                 </div>
 
                 {/* Right text — bold headline */}
-                <p
+                <motion.p
                   className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] top-[calc(45%+220px)] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10 whitespace-pre-line text-right"
+                  initial={{ opacity: 0, x: 40, y: 10 }}
+                  animate={{ opacity: 1, x: 0, y: 0 }}
+                  exit={{ opacity: 0, x: 30 }}
+                  transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                 >
                   {s.headline}
-                </p>
+                </motion.p>
               </motion.div>
             ) : null
           )}
