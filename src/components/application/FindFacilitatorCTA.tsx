@@ -17,8 +17,8 @@ export default function FindFacilitatorCTA() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           whileHover={{ x: 6 }}
         >
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground leading-[1.05] whitespace-nowrap">
-            Find a Facilitator
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground leading-[1.05]">
+            Find a<br />Facilitator
           </h2>
           <ArrowRight className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-foreground/60 group-hover:text-foreground transition-all duration-300 group-hover:translate-x-2 shrink-0" />
         </motion.a>
