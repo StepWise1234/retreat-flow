@@ -23,18 +23,18 @@ function AccentCircle({
   );
 }
 
-/* ─── StepWise logo — three dots + intercap wordmark ─── */
+/* ─── StepWise logo — matching "Training Application" font style ─── */
 function StepWiseLogo() {
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex items-center gap-2">
+    <div className="flex flex-col items-center gap-5">
+      <div className="flex items-center gap-2.5">
         <span className="block h-4 w-4 rounded-full" style={{ backgroundColor: '#FFA500' }} />
         <span className="block h-4 w-4 rounded-full" style={{ backgroundColor: '#FF4500' }} />
         <span className="block h-4 w-4 rounded-full" style={{ backgroundColor: '#800080' }} />
       </div>
-      <span className="text-xl font-light tracking-[0.2em] text-foreground/70">
+      <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground">
         StepWise
-      </span>
+      </h2>
     </div>
   );
 }
