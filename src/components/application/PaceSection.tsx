@@ -10,6 +10,7 @@ interface Slide {
   circleColor: string;
   heading: string;
   description: string;
+  imageScale?: number;
 }
 
 const slides: Slide[] = [
@@ -28,6 +29,7 @@ const slides: Slide[] = [
     heading: 'depth over\nspeed',
     description:
       'Where rushing ends and real transformation begins — one breath at a time',
+    imageScale: 0.8,
   },
   {
     image: silhouette3,
@@ -132,6 +134,7 @@ export default function PaceSection() {
                 src={slide.image}
                 alt={slide.alt}
                 className="h-full w-full object-contain object-bottom translate-y-8"
+                style={slide.imageScale ? { transform: `translateY(2rem) scale(${slide.imageScale})` } : undefined}
               />
             </motion.div>
           </AnimatePresence>
