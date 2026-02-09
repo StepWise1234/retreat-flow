@@ -10,7 +10,7 @@ export default function FindFacilitatorCTA() {
         {/* Left — Text CTA */}
         <motion.a
           href="#"
-          className="hidden md:flex absolute left-6 lg:left-12 top-[55%] -translate-y-1/2 items-center gap-4 group cursor-pointer z-10"
+          className="hidden md:flex absolute left-16 lg:left-28 top-[55%] -translate-y-1/2 items-center gap-4 group cursor-pointer z-10"
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: '-60px' }}
