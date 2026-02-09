@@ -102,11 +102,11 @@ export default function ProblemSection() {
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            <AccentCircle color="#FFA500" size={10} className="mr-2 -translate-y-px" />
+            <AccentCircle color="#FFA500" size={14} className="mr-2 -translate-y-px" />
             Across thousands engaged in psychedelic-assisted therapy, a consistent pattern emerges:
           </motion.p>
 
-          {/* Core insight — red circle as emphasis marker */}
+          {/* Core insight */}
           <motion.p
             className="text-base sm:text-lg leading-[1.9] text-foreground/60 pl-5 md:pl-8 border-l-[3px]"
             style={{ borderColor: '#FF4500' }}
@@ -119,20 +119,19 @@ export default function ProblemSection() {
             those experiences into identity, behavior, and life direction.
           </motion.p>
 
-          {/* Pivot statement — orange dot punctuation */}
+          {/* Pivot statement — full orange */}
           <motion.p
-            className="text-base sm:text-lg leading-[1.9] text-foreground/60"
+            className="text-base sm:text-lg leading-[1.9] font-medium"
+            style={{ color: '#FFA500' }}
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            The problem wasn't access to transformation
-            <span className="text-foreground/30"> — it's the absence of structured systems to support it.</span>
-            {' '}<AccentCircle color="#FF4500" size={8} className="ml-1" />
+            The problem wasn't access to transformation. It's the absence of structured systems to support it.
           </motion.p>
 
-          {/* Resolution — purple emphasis */}
+          {/* Resolution — ends with brand dots */}
           <motion.p
             className="text-base sm:text-lg leading-[1.9] text-foreground/75 font-medium"
             initial={{ opacity: 0, y: 14 }}
@@ -140,8 +139,13 @@ export default function ProblemSection() {
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
           >
-            <AccentCircle color="#800080" size={10} className="mr-2 -translate-y-px" />
             StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
+            {' '}
+            <AccentCircle color="#FFA500" size={8} className="mx-0.5" />
+            {' '}
+            <AccentCircle color="#FF4500" size={8} className="mx-0.5" />
+            {' '}
+            <AccentCircle color="#800080" size={8} className="mx-0.5" />
           </motion.p>
         </div>
 
