@@ -74,12 +74,12 @@ export default function ProblemSection() {
                 className="space-y-6"
               >
                 <h3
-                  className="text-2xl sm:text-3xl font-semibold tracking-tight"
+                  className="text-3xl sm:text-4xl font-semibold tracking-tight"
                   style={{ color: activePillar.accentColor }}
                 >
                   {activePillar.title}
                 </h3>
-                <p className="text-base sm:text-lg leading-[1.9] text-foreground/60">
+                <p className="text-lg sm:text-xl leading-[1.9] text-foreground/60">
                   {activePillar.description}
                 </p>
               </motion.div>
@@ -102,14 +102,14 @@ export default function ProblemSection() {
                   transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <span className="mt-1.5 shrink-0 h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full" style={{ backgroundColor: '#FFA500' }} />
-                  <p className="text-base sm:text-lg leading-[1.9] text-foreground/60">
-                    Across thousands engaged in psychedelic-assisted therapy, a consistent pattern emerges:
+                   <p className="text-lg sm:text-xl leading-[1.9] text-foreground/60">
+                     Across thousands engaged in psychedelic-assisted therapy, a consistent pattern emerges:
                   </p>
                 </motion.div>
 
                 {/* Core insight */}
                 <motion.p
-                  className="text-base sm:text-lg leading-[1.9] text-foreground/60 pl-5 md:pl-8 border-l-[3px]"
+                  className="text-lg sm:text-xl leading-[1.9] text-foreground/60 pl-5 md:pl-8 border-l-[3px]"
                   style={{ borderColor: '#FF4500' }}
                   initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -122,7 +122,7 @@ export default function ProblemSection() {
 
                 {/* Pivot */}
                 <motion.p
-                  className="text-base sm:text-lg leading-[1.9]"
+                  className="text-lg sm:text-xl leading-[1.9]"
                   style={{ color: '#FF4500' }}
                   initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -134,7 +134,7 @@ export default function ProblemSection() {
 
                 {/* Resolution */}
                 <motion.p
-                  className="text-base sm:text-lg leading-[1.9] font-medium"
+                  className="text-lg sm:text-xl leading-[1.9] font-medium"
                   style={{ color: '#800080' }}
                   initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -200,7 +200,7 @@ export default function ProblemSection() {
 
                 {/* Label */}
                 <span
-                  className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight transition-colors duration-200"
+                  className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight transition-colors duration-200"
                   style={{ color: isActive ? pillar.accentColor : undefined }}
                 >
                   <span className={isActive ? '' : 'text-foreground/70 group-hover:text-foreground transition-colors duration-200'}>
