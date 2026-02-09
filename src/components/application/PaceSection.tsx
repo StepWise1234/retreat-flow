@@ -52,7 +52,7 @@ export default function PaceSection() {
 
   return (
     <section className="relative bg-background overflow-hidden">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-0 min-h-[70vh] overflow-visible">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-0 min-h-[80vh] overflow-visible">
 
         <AnimatePresence initial={false}>
           {SLIDES.map((s, i) =>
@@ -94,7 +94,7 @@ export default function PaceSection() {
 
                   {/* Silhouette */}
                   <motion.div
-                    className="relative z-10 h-[30rem] w-[23.2rem] sm:h-[35.6rem] sm:w-[28rem] md:h-[42.8rem] md:w-[33.6rem] overflow-visible"
+                    className="relative z-10 h-[36.25rem] w-[23.2rem] sm:h-[41.85rem] sm:w-[28rem] md:h-[49rem] md:w-[33.6rem] overflow-visible"
                     style={{ mixBlendMode: 'multiply' }}
                     initial={{ opacity: 0, scale: 1.06, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
