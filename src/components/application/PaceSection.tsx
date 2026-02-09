@@ -102,29 +102,54 @@ function SlideContent({ s }: { s: HeroSlide }) {
 
 export default function PaceSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [prevIndex, setPrevIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const resetTimer = useCallback(() => {
+  const advanceSlide = useCallback(() => {
+    setPrevIndex(activeIndex);
     setActiveIndex((prev) => (prev + 1) % SLIDES.length);
-  }, []);
+    setIsTransitioning(true);
+  }, [activeIndex]);
 
   useEffect(() => {
-    const timer = setInterval(resetTimer, INTERVAL_MS);
+    const timer = setInterval(advanceSlide, INTERVAL_MS);
     return () => clearInterval(timer);
-  }, [resetTimer]);
+  }, [advanceSlide]);
 
-  const slide = SLIDES[activeIndex];
+  // Clear transition state after animation completes
+  useEffect(() => {
+    if (!isTransitioning) return;
+    const timeout = setTimeout(() => setIsTransitioning(false), 1400);
+    return () => clearTimeout(timeout);
+  }, [isTransitioning]);
+
+  const handleDotClick = (i: number) => {
+    if (i === activeIndex) return;
+    setPrevIndex(activeIndex);
+    setActiveIndex(i);
+    setIsTransitioning(true);
+  };
+
+  const currentSlide = SLIDES[activeIndex];
 
   return (
-    <section className="relative bg-background overflow-hidden">
+    <section className="relative bg-background">
       <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-0 min-h-[70vh]">
 
+        {/* Previous slide (stays at full opacity underneath, removed after transition) */}
+        {isTransitioning && (
+          <div className="absolute inset-0 flex items-center justify-center z-0">
+            <SlideContent s={SLIDES[prevIndex]} />
+          </div>
+        )}
+
+        {/* Current slide (fades in on top) */}
         <AnimatePresence initial={false}>
           <motion.div
             key={activeIndex}
-            className="absolute inset-0 flex items-center justify-center"
+            className="absolute inset-0 flex items-center justify-center z-[1]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
             transition={{ duration: 1.2, ease: 'easeInOut' }}
           >
             <SlideContent s={SLIDES[activeIndex]} />
@@ -136,11 +161,11 @@ export default function PaceSection() {
           {SLIDES.map((_, i) => (
             <button
               key={i}
-              onClick={() => setActiveIndex(i)}
+              onClick={() => handleDotClick(i)}
               className="h-1.5 rounded-full transition-all duration-500"
               style={{
                 width: i === activeIndex ? '2rem' : '0.375rem',
-                backgroundColor: i === activeIndex ? slide.circleColor : 'hsl(var(--muted-foreground) / 0.3)',
+                backgroundColor: i === activeIndex ? currentSlide.circleColor : 'hsl(var(--muted-foreground) / 0.3)',
               }}
               aria-label={`Go to slide ${i + 1}`}
             />
@@ -158,10 +183,10 @@ export default function PaceSection() {
               transition={{ duration: 0.5 }}
             >
               <p className="text-3xl font-bold text-foreground mb-2 tracking-tight whitespace-pre-line">
-                {slide.headline.replace('\n', ' ')}
+                {currentSlide.headline.replace('\n', ' ')}
               </p>
               <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">
-                {slide.body}
+                {currentSlide.body}
               </p>
             </motion.div>
           </AnimatePresence>
