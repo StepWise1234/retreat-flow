@@ -97,7 +97,7 @@ export default function StepWiseOverview() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          This approach supports individuals in processing trauma in a way that a full-release method bypasses — honoring the body's natural rhythm for integration.
+          This supports individuals in processing emotions and trauma in a way that other psychedelic-assisted therapies bypass. StepWise honors the unique natural rhythm of each individual.
         </motion.p>
       </div>
     </section>
