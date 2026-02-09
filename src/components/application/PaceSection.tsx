@@ -21,6 +21,7 @@ const slides: Slide[] = [
     heading: 'less is\nmore',
     description:
       'The speed of your unique system to metabolize shifts and repair wholeness',
+    imageScale: 0.95,
   },
   {
     image: silhouette2,
@@ -29,7 +30,7 @@ const slides: Slide[] = [
     heading: 'depth over\nspeed',
     description:
       'Where rushing ends and real transformation begins — one breath at a time',
-    
+    imageScale: 0.8,
   },
   {
     image: silhouette3,
