@@ -29,7 +29,7 @@ const slides: Slide[] = [
     circleColor: '#FF4500',
     heading: 'safe is\ndeep',
     description:
-      'Precise insights and releases create real, lasting transformation in life.',
+      'Precise insights and releases create real, lasting transformation.',
     imageScale: 0.85,
     mirrorX: true,
   },
