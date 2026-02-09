@@ -5,7 +5,7 @@ const STEPS = [
     number: '01',
     title: 'Begin Low',
     description:
-      'The client begins with a 5-second draw on the lowest concentration pen — often experienced as very subtle and relaxing.',
+      'The client begins with the smallest draw on the lowest concentration, often experienced as subtle and relaxing.',
   },
   {
     number: '02',
