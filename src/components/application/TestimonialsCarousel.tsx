@@ -174,7 +174,7 @@ export default function TestimonialsCarousel() {
 
   return (
     <section className="relative bg-background overflow-hidden">
-      <div className="mx-auto max-w-2xl px-6 py-16 md:py-24">
+      <div className="mx-auto max-w-2xl px-6 py-[calc(4rem+20px)] md:py-[calc(6rem+20px)]">
         {/* Quote */}
         <div className="relative min-h-[100px] mb-12">
           <AnimatePresence mode="wait">
@@ -241,8 +241,8 @@ export default function TestimonialsCarousel() {
                     {/* Brand color overlay on active */}
                     {isActive && (
                       <div
-                        className="absolute inset-0 rounded-full mix-blend-color transition-opacity duration-300"
-                        style={{ backgroundColor: colorMap[realIndex], opacity: 0.35 }}
+                        className="absolute inset-0 rounded-full transition-opacity duration-300"
+                        style={{ backgroundColor: colorMap[realIndex], opacity: 0.55 }}
                       />
                     )}
                   </button>
