@@ -1,41 +1,42 @@
 import { motion } from 'framer-motion';
 import { Shield, Timer, Brain } from 'lucide-react';
 
-/* ─── Brand circle — decorative background orb ─── */
-function BrandOrb({
+/* ─── Inline accent circle — matches hero's solid circles ─── */
+function AccentCircle({
   color,
-  size,
+  size = 28,
   className,
 }: {
   color: string;
-  size: number;
+  size?: number;
   className?: string;
 }) {
   return (
-    <div
-      className={`absolute rounded-full pointer-events-none ${className ?? ''}`}
+    <span
+      className={`inline-block rounded-full align-middle ${className ?? ''}`}
       style={{
         width: size,
         height: size,
         backgroundColor: color,
-        opacity: 0.08,
-        filter: 'blur(60px)',
       }}
     />
   );
 }
 
-/* ─── StepWise logo with three signature dots ─── */
+/* ─── StepWise logo — three dots as wordmark ─── */
 function StepWiseLogo() {
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex items-center gap-1.5">
-        <span className="block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#FFA500' }} />
-        <span className="block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#FF4500' }} />
-        <span className="block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#800080' }} />
+    <div className="flex flex-col items-center gap-4">
+      <div className="flex items-center gap-2">
+        <span className="block h-4 w-4 rounded-full" style={{ backgroundColor: '#FFA500' }} />
+        <span className="block h-4 w-4 rounded-full" style={{ backgroundColor: '#FF4500' }} />
+        <span className="block h-4 w-4 rounded-full" style={{ backgroundColor: '#800080' }} />
       </div>
-      <span className="text-sm font-medium tracking-[0.25em] uppercase text-foreground/60">
+      <span className="text-xl font-light tracking-[0.4em] uppercase text-foreground/70">
         StepWise
+      </span>
+      <span className="text-[0.65rem] tracking-[0.3em] uppercase text-foreground/35 -mt-2">
+        Capacity-Based Practice
       </span>
     </div>
   );
@@ -82,39 +83,36 @@ function Pillar({
 export default function ProblemSection() {
   return (
     <section className="relative bg-background overflow-hidden">
-      {/* ── Brand orbs as background texture ── */}
-      <BrandOrb color="#FFA500" size={420} className="top-12 -left-40 md:left-[8%]" />
-      <BrandOrb color="#FF4500" size={360} className="top-[40%] right-[-10%] md:right-[5%]" />
-      <BrandOrb color="#800080" size={400} className="bottom-20 left-[15%] md:left-[30%]" />
-
       <div className="relative mx-auto max-w-xl px-6 py-28 md:py-36">
         {/* Logo */}
         <motion.div
-          className="mb-20 flex justify-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          className="mb-24 flex justify-center"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
           <StepWiseLogo />
         </motion.div>
 
-        {/* ── Magazine-style editorial copy ── */}
-        <div className="space-y-16">
-          {/* Opening */}
+        {/* ── Editorial copy with inline accent circles ── */}
+        <div className="space-y-14">
+          {/* Opening — orange dot as visual anchor */}
           <motion.p
-            className="text-base sm:text-lg leading-[1.8] text-foreground/65"
+            className="text-base sm:text-lg leading-[1.9] text-foreground/60"
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
+            <AccentCircle color="#FFA500" size={10} className="mr-2 -translate-y-px" />
             Across thousands engaged in psychedelic-assisted therapy, a consistent pattern emerges:
           </motion.p>
 
-          {/* Core insight — indented with subtle left border */}
+          {/* Core insight — red circle as emphasis marker */}
           <motion.p
-            className="text-base sm:text-lg leading-[1.8] text-foreground/65 pl-4 md:pl-8 border-l-2 border-foreground/8"
+            className="text-base sm:text-lg leading-[1.9] text-foreground/60 pl-5 md:pl-8 border-l-[3px]"
+            style={{ borderColor: '#FF4500' }}
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
@@ -124,26 +122,28 @@ export default function ProblemSection() {
             those experiences into identity, behavior, and life direction.
           </motion.p>
 
-          {/* Pivot statement */}
+          {/* Pivot statement — orange dot punctuation */}
           <motion.p
-            className="text-base sm:text-lg leading-[1.8] text-foreground/65"
+            className="text-base sm:text-lg leading-[1.9] text-foreground/60"
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
             The problem wasn't access to transformation
-            <span className="text-foreground/35"> — it's the absence of structured systems to support it.</span>
+            <span className="text-foreground/30"> — it's the absence of structured systems to support it.</span>
+            {' '}<AccentCircle color="#FF4500" size={8} className="ml-1" />
           </motion.p>
 
-          {/* Resolution */}
+          {/* Resolution — purple emphasis */}
           <motion.p
-            className="text-base sm:text-lg leading-[1.8] text-foreground/80 font-medium"
+            className="text-base sm:text-lg leading-[1.9] text-foreground/75 font-medium"
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
           >
+            <AccentCircle color="#800080" size={10} className="mr-2 -translate-y-px" />
             StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
           </motion.p>
         </div>
