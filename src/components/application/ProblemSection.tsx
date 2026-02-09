@@ -26,6 +26,21 @@ const pillars = [
   },
 ];
 
+/* ─── StepWise logo ─── */
+function StepWiseLogo() {
+  return (
+    <div className="flex items-center gap-4">
+      <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground">
+        StepWise
+      </h2>
+      <div className="flex items-center gap-2 sm:gap-3">
+        <span className="block h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full" style={{ backgroundColor: '#FFA500' }} />
+        <span className="block h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full" style={{ backgroundColor: '#FF4500' }} />
+        <span className="block h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full" style={{ backgroundColor: '#800080' }} />
+      </div>
+    </div>
+  );
+}
 
 export default function ProblemSection() {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -33,7 +48,17 @@ export default function ProblemSection() {
 
   return (
     <section className="relative bg-background overflow-hidden">
-        <div className="relative mx-auto max-w-2xl px-6 py-16 md:py-24">
+      <div className="relative mx-auto max-w-2xl px-6 py-28 md:py-36">
+        {/* Logo */}
+        <motion.div
+          className="mb-24 flex justify-center"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <StepWiseLogo />
+        </motion.div>
 
         {/* ── Swappable text area ── */}
         <div className="min-h-[260px] sm:min-h-[240px]">
@@ -98,14 +123,13 @@ export default function ProblemSection() {
                 {/* Pivot */}
                 <motion.p
                   className="text-lg sm:text-xl leading-[1.9]"
+                  style={{ color: '#FF4500' }}
                   initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <span className="text-foreground/60">The problem wasn't access to transformation.</span>
-                  <br />
-                  <span style={{ color: '#FF4500' }}>It's the absence of capacity expansion to support it.</span>
+                  The problem wasn't access to transformation. It's the absence of structured systems to support it.
                 </motion.p>
 
                 {/* Resolution */}
@@ -117,7 +141,7 @@ export default function ProblemSection() {
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  Using titrated 5-MeO-DMT beginning at sub perceptional levels, StepWise offers a ready-made framework for capacity-based, nervous-system-informed psychedelic-assisted therapy practice.
+                  StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
                 </motion.p>
               </motion.div>
             )}

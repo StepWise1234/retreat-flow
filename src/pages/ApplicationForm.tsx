@@ -12,14 +12,10 @@ import PaceSection from '@/components/application/PaceSection';
 import ProblemSection from '@/components/application/ProblemSection';
 import FindFacilitatorCTA from '@/components/application/FindFacilitatorCTA';
 import TestimonialsCarousel from '@/components/application/TestimonialsCarousel';
-import StepWiseOverview from '@/components/application/StepWiseOverview';
-import CommonQuestions from '@/components/application/CommonQuestions';
 import OrbitalSection from '@/components/application/OrbitalSection';
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
 import MadLibTextarea from '@/components/application/MadLibTextarea';
-import FloatingLogo from '@/components/application/FloatingLogo';
-import SiteFooter from '@/components/application/SiteFooter';
 import { SparklesCore } from '@/components/ui/sparkles';
 
 const PHYSICAL_SYMPTOMS = [
@@ -352,13 +348,10 @@ export default function ApplicationForm() {
 
   return (
     <div className="min-h-screen bg-black">
-      <FloatingLogo />
       <PaceSection />
       <ProblemSection />
-      <TestimonialsCarousel />
-      <StepWiseOverview />
       <FindFacilitatorCTA />
-      <CommonQuestions />
+      <TestimonialsCarousel />
       <OrbitalSection />
 
       {submitted ? (
@@ -826,7 +819,6 @@ export default function ApplicationForm() {
       </main>
         </>
       )}
-      <SiteFooter />
     </div>
   );
 }
