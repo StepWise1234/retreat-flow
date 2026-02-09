@@ -17,11 +17,11 @@ const QUESTIONS = [
   },
   {
     q: 'Can clients self-administer at their own pace?',
-    a: 'Self-administering is explicitly encouraged. A lovely aspect of the vape-pen delivery method and the StepWise protocol is that the client is in the driver\'s seat — establishing their own unique relationship with the medicine and their own rhythm.',
+    a: 'Self-administering is explicitly encouraged. A lovely aspect of the vape-pen delivery method and the StepWise protocol is that the client is in the driver\'s seat, establishing their own unique relationship with the medicine and their own rhythm.',
   },
   {
     q: 'How do you set expectations for first-timers?',
-    a: 'The brilliant reframe of StepWise is that one can gently and deliberately ease into the great expanse while taking sovereign identity awareness along for the ride. It\'s not about the big bang — it\'s about incorporating the visceral gnosis that we are one with That.',
+    a: 'The brilliant reframe of StepWise is that one can gently and deliberately ease into the great expanse while taking sovereign identity awareness along for the ride. It\'s not about the big bang. It\'s about incorporating the visceral gnosis that we are one with That.',
   },
   {
     q: 'Does this strategy affect the nature of release?',
