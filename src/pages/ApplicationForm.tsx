@@ -13,6 +13,7 @@ import PaceSection from '@/components/application/PaceSection';
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
 import MadLibTextarea from '@/components/application/MadLibTextarea';
+import { SparklesCore } from '@/components/ui/sparkles';
 
 const PHYSICAL_SYMPTOMS = [
   'Panic attacks', 'Tension', 'Quick temper/irritability', 'Inadequate Sleep',
@@ -308,6 +309,7 @@ export default function ApplicationForm() {
   const { retreats, addParticipant, addRegistration } = useApp();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormData>(initialFormData);
+  const [submitted, setSubmitted] = useState(false);
 
   const activeRetreats = retreats.filter((r) => r.status === 'Open' || r.status === 'Full');
 
@@ -338,15 +340,59 @@ export default function ApplicationForm() {
     });
 
     addRegistration(form.retreatId, participant.id, 'Application');
-    toast.success(`${fullName}'s application submitted successfully!`);
-    setForm(initialFormData);
-    setStep(0);
+    setSubmitted(true);
   };
 
   return (
     <div className="min-h-screen bg-black">
       <ScrollMorphHero />
       <PaceSection />
+
+      {submitted ? (
+        <section className="relative overflow-hidden bg-black">
+          <div className="relative mx-auto max-w-4xl px-6 pt-24 md:pt-36 pb-24 flex flex-col items-center justify-center">
+            <motion.h2
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white text-center z-10"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            >
+              Thank You!
+            </motion.h2>
+
+            {/* Glowing sage line */}
+            <div className="relative mt-4 w-full max-w-lg h-px z-10">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(160_30%_72%)] to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(160_30%_72%)] to-transparent blur-sm" />
+            </div>
+
+            {/* Sparkles */}
+            <div className="relative w-full h-20 mt-0 z-0">
+              <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_80%)]">
+                <SparklesCore
+                  background="transparent"
+                  minSize={0.4}
+                  maxSize={1.5}
+                  particleDensity={80}
+                  className="w-full h-full"
+                  particleColor="#ffffff"
+                  speed={2}
+                />
+              </div>
+            </div>
+
+            <motion.p
+              className="text-lg sm:text-xl md:text-2xl text-white/70 text-center max-w-xl z-10 -mt-4 leading-relaxed"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
+              We'll follow up with you within 72 hrs to schedule an appointment.
+            </motion.p>
+          </div>
+        </section>
+      ) : (
+        <>
       <FormHeader sections={SECTIONS} currentStep={step} onStepChange={setStep} />
 
       <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
@@ -765,6 +811,8 @@ export default function ApplicationForm() {
           </motion.div>
         </AnimatePresence>
       </main>
+        </>
+      )}
     </div>
   );
 }
