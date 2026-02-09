@@ -26,7 +26,7 @@ const SLIDES: HeroSlide[] = [
     headline: 'subtle is\nsignificant',
     body: 'Honor surgically precise breakthroughs and root real, lasting transformation into life.',
     mirrorSilhouette: true,
-    silhouetteScale: 0.9,
+    silhouetteScale: 0.81,
   },
   {
     image: silhouette3,
@@ -57,11 +57,11 @@ export default function PaceSection() {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIndex}
-            className="contents"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0 flex items-center justify-center"
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Left text — body copy */}
             <p
