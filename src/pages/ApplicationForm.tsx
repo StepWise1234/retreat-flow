@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { ChevronRight, ChevronLeft, Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import ScrollMorphHero from '@/components/application/ScrollMorphHero';
+// ScrollMorphHero removed for new hero exploration
 import PaceSection from '@/components/application/PaceSection';
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
@@ -345,7 +345,6 @@ export default function ApplicationForm() {
 
   return (
     <div className="min-h-screen bg-black">
-      <ScrollMorphHero />
       <PaceSection />
 
       {submitted ? (
