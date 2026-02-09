@@ -92,7 +92,7 @@ export default function PaceSection() {
         <AnimatePresence mode="wait">
           <motion.p
             key={`desc-${current}`}
-            className="hidden md:block absolute left-6 lg:left-12 top-[calc(45%+200px)] -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
+            className="hidden md:block absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
             variants={descVariants}
             initial="enter"
             animate="center"
@@ -149,7 +149,7 @@ export default function PaceSection() {
         <AnimatePresence mode="wait">
           <motion.p
             key={`heading-${current}`}
-            className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] top-[calc(45%+200px)] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
+            className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] top-1/2 -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
             variants={textVariants}
             initial="enter"
             animate="center"
