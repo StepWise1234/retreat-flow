@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 
 const BRAND_COLORS = ['#FFA500', '#FF4500', '#800080'];
 
@@ -173,14 +174,20 @@ export default function TestimonialsCarousel() {
   }, []);
 
   return (
-    <section className="relative bg-background overflow-hidden">
-      <div className="mx-auto max-w-2xl px-6 py-[calc(4rem+20px)] md:py-[calc(6rem+20px)]">
+    <section className="relative bg-[#fafafa] overflow-hidden">
+      <AnimatedGridPattern
+        numSquares={30}
+        maxOpacity={0.12}
+        duration={3}
+        className="text-neutral-400 [mask-image:radial-gradient(500px_circle_at_center,white,transparent)]"
+      />
+      <div className="relative mx-auto max-w-2xl px-6 py-[calc(4rem+20px)] md:py-[calc(6rem+20px)]">
         {/* Quote */}
         <div className="relative min-h-[100px] mb-12">
           <AnimatePresence mode="wait">
             <motion.p
               key={active}
-              className="absolute inset-0 text-xl md:text-2xl font-light leading-relaxed text-foreground"
+              className="absolute inset-0 text-xl md:text-2xl font-light leading-relaxed text-neutral-900"
               initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               exit={{ opacity: 0, y: -12, filter: 'blur(4px)' }}
@@ -252,7 +259,7 @@ export default function TestimonialsCarousel() {
           </div>
 
           {/* Divider */}
-          <div className="h-14 sm:h-16 md:h-20 w-px bg-border shrink-0" />
+          <div className="h-14 sm:h-16 md:h-20 w-px bg-neutral-300 shrink-0" />
 
           {/* Active author info */}
           <div className="relative shrink-0 min-w-[120px] min-h-[44px]">
@@ -265,8 +272,8 @@ export default function TestimonialsCarousel() {
                 exit={{ opacity: 0, x: 8 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               >
-                <span className="text-sm font-medium text-foreground">{testimonials[active].name}</span>
-                <span className="text-xs text-muted-foreground">{testimonials[active].role}</span>
+                <span className="text-sm font-medium text-neutral-900">{testimonials[active].name}</span>
+                <span className="text-xs text-neutral-500">{testimonials[active].role}</span>
               </motion.div>
             </AnimatePresence>
           </div>
