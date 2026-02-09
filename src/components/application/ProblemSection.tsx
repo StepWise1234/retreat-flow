@@ -112,7 +112,7 @@ export default function ProblemSection() {
 
           {/* Pivot statement — red-orange */}
           <motion.p
-            className="text-base sm:text-lg leading-[1.9] font-medium"
+            className="text-base sm:text-lg leading-[1.9]"
             style={{ color: '#FF4500' }}
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -122,21 +122,17 @@ export default function ProblemSection() {
             The problem wasn't access to transformation. It's the absence of structured systems to support it.
           </motion.p>
 
-          {/* Resolution — color-cycling dot left, text right */}
-          <motion.div
-            className="flex items-start gap-4"
+          {/* Resolution — purple */}
+          <motion.p
+            className="text-base sm:text-lg leading-[1.9] font-medium"
+            style={{ color: '#800080' }}
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span
-              className="mt-1.5 shrink-0 h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full animate-[brandCycle_4s_ease-in-out_infinite]"
-            />
-            <p className="text-base sm:text-lg leading-[1.9] text-foreground/75 font-medium">
-              StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
-            </p>
-          </motion.div>
+            StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
+          </motion.p>
         </div>
 
         {/* ── Three pillars ── */}
