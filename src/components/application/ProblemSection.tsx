@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { Shield, Timer, Brain } from 'lucide-react';
 
 /* ─── Inline accent circle — matches hero's solid circles ─── */
 function AccentCircle({
@@ -35,13 +34,11 @@ function StepWiseLogo() {
 
 /* ─── Feature pillar ─── */
 function Pillar({
-  icon: Icon,
   title,
   description,
   delay,
   accentColor,
 }: {
-  icon: typeof Shield;
   title: string;
   description: string;
   delay: number;
@@ -55,12 +52,10 @@ function Pillar({
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div
-        className="flex h-10 w-10 items-center justify-center rounded-full"
-        style={{ backgroundColor: `${accentColor}10`, border: `1px solid ${accentColor}20` }}
-      >
-        <Icon className="h-4 w-4" style={{ color: accentColor }} strokeWidth={1.5} />
-      </div>
+      <span
+        className="block h-5 w-5 rounded-full"
+        style={{ backgroundColor: accentColor }}
+      />
       <h3 className="text-base font-semibold tracking-tight text-foreground">
         {title}
       </h3>
@@ -86,19 +81,21 @@ export default function ProblemSection() {
           <StepWiseLogo />
         </motion.div>
 
-        {/* ── Editorial copy with inline accent circles ── */}
+        {/* ── Editorial copy — dots left-aligned, text to the right ── */}
         <div className="space-y-14">
-          {/* Opening — orange dot as visual anchor */}
-          <motion.p
-            className="text-base sm:text-lg leading-[1.9] text-foreground/60"
+          {/* Opening — orange dot left, text right */}
+          <motion.div
+            className="flex items-start gap-4"
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            <AccentCircle color="#FFA500" className="mr-2 -translate-y-px h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12" />
-            Across thousands engaged in psychedelic-assisted therapy, a consistent pattern emerges:
-          </motion.p>
+            <span className="mt-1.5 shrink-0 h-4 w-4 sm:h-5 sm:w-5 rounded-full" style={{ backgroundColor: '#FFA500' }} />
+            <p className="text-base sm:text-lg leading-[1.9] text-foreground/60">
+              Across thousands engaged in psychedelic-assisted therapy, a consistent pattern emerges:
+            </p>
+          </motion.div>
 
           {/* Core insight */}
           <motion.p
@@ -125,39 +122,38 @@ export default function ProblemSection() {
             The problem wasn't access to transformation. It's the absence of structured systems to support it.
           </motion.p>
 
-          {/* Resolution — color-cycling dot */}
-          <motion.p
-            className="text-base sm:text-lg leading-[1.9] text-foreground/75 font-medium"
+          {/* Resolution — color-cycling dot left, text right */}
+          <motion.div
+            className="flex items-start gap-4"
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
           >
             <span
-              className="inline-block h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full align-middle mr-2 -translate-y-px animate-[brandCycle_4s_ease-in-out_infinite]"
+              className="mt-1.5 shrink-0 h-4 w-4 sm:h-5 sm:w-5 rounded-full animate-[brandCycle_4s_ease-in-out_infinite]"
             />
-            StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
-          </motion.p>
+            <p className="text-base sm:text-lg leading-[1.9] text-foreground/75 font-medium">
+              StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
+            </p>
+          </motion.div>
         </div>
 
         {/* ── Three pillars ── */}
         <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
           <Pillar
-            icon={Shield}
             title="Safe"
             description="Tracks the nervous system's pace — honoring your body's natural rhythm for processing and repair."
             delay={0}
             accentColor="#FFA500"
           />
           <Pillar
-            icon={Timer}
             title="Adjustable"
             description="As short as your therapy session or as long as you need. The structure adapts to your timeline."
             delay={0.12}
             accentColor="#FF4500"
           />
           <Pillar
-            icon={Brain}
             title="Integrative"
             description="Daily consciousness is maintained throughout, enabling real-time integration during session."
             delay={0.24}
