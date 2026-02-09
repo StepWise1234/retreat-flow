@@ -9,6 +9,7 @@ import { ChevronRight, ChevronLeft, Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import PaceSection from '@/components/application/PaceSection';
+import CtaBanner from '@/components/application/CtaBanner';
 import ProblemSection from '@/components/application/ProblemSection';
 import OrbitalSection from '@/components/application/OrbitalSection';
 import FormHeader from '@/components/application/FormHeader';
@@ -347,6 +348,7 @@ export default function ApplicationForm() {
   return (
     <div className="min-h-screen bg-black">
       <PaceSection />
+      <CtaBanner />
       <ProblemSection />
       <OrbitalSection />
 
