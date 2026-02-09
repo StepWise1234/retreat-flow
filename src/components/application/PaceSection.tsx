@@ -38,6 +38,7 @@ const slides: Slide[] = [
     heading: 'slow is\nsacred',
     description:
       'The nervous system doesn\'t heal on a deadline — it heals in its own time',
+    imageScale: 0.95,
   },
 ];
 
