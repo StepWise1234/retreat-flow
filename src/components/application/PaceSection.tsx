@@ -86,13 +86,13 @@ export default function PaceSection() {
 
   return (
     <section className="relative bg-background">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-0 min-h-[70vh]">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-8 md:pb-0 min-h-[70vh]">
 
         {/* Left text — description */}
         <AnimatePresence mode="wait">
           <motion.p
             key={`desc-${current}`}
-            className="hidden md:block absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
+            className="hidden md:block absolute left-6 lg:left-12 top-[55%] -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
             variants={descVariants}
             initial="enter"
             animate="center"
@@ -149,7 +149,7 @@ export default function PaceSection() {
         <AnimatePresence mode="wait">
           <motion.p
             key={`heading-${current}`}
-            className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] top-1/2 -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
+            className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] top-[55%] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
             variants={textVariants}
             initial="enter"
             animate="center"
@@ -165,7 +165,7 @@ export default function PaceSection() {
         </AnimatePresence>
 
         {/* Mobile: text below */}
-        <div className="md:hidden absolute bottom-4 left-0 right-0 px-6 text-center z-10">
+        <div className="md:hidden absolute bottom-8 left-0 right-0 px-6 text-center z-10">
           <AnimatePresence mode="wait">
             <motion.p
               key={`mob-heading-${current}`}
@@ -193,7 +193,7 @@ export default function PaceSection() {
         </div>
 
         {/* Slide indicators */}
-        <div className="absolute bottom-[-1rem] left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        <div className="absolute bottom-2 md:bottom-[-1rem] left-1/2 -translate-x-1/2 flex gap-2 z-20">
           {slides.map((s, i) => (
             <button
               key={i}
