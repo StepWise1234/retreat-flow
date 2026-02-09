@@ -673,9 +673,3 @@
     transform: translateY(-1px);
   }
 }
-
-@keyframes brandCycle {
-  0%, 100% { background-color: #FFA500; }
-  33% { background-color: #FF4500; }
-  66% { background-color: #800080; }
-}
