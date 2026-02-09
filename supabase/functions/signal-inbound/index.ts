@@ -104,6 +104,20 @@ async function handleInboundMessage(
     return jsonResponse({ error: "Missing required fields: from, messageText" }, 400);
   }
 
+  // Input validation: enforce length limits
+  if (typeof msg.from !== "string" || msg.from.length > 50) {
+    return jsonResponse({ error: "Invalid 'from' field: must be a string of 50 characters or less" }, 400);
+  }
+  if (typeof msg.messageText !== "string" || msg.messageText.length > 100000) {
+    return jsonResponse({ error: "Invalid 'messageText': must be 100,000 characters or less" }, 400);
+  }
+  if (msg.to && (typeof msg.to !== "string" || msg.to.length > 50)) {
+    return jsonResponse({ error: "Invalid 'to' field: must be a string of 50 characters or less" }, 400);
+  }
+  if (msg.providerMessageId && (typeof msg.providerMessageId !== "string" || msg.providerMessageId.length > 255)) {
+    return jsonResponse({ error: "Invalid 'providerMessageId': must be 255 characters or less" }, 400);
+  }
+
   const senderHandle = msg.from;
   const providerMsgId = msg.providerMessageId || crypto.randomUUID();
 
@@ -269,6 +283,15 @@ async function handleStatusUpdate(
 ): Promise<Response> {
   if (!update.providerMessageId || !update.status) {
     return jsonResponse({ error: "Missing providerMessageId or status" }, 400);
+  }
+
+  // Validate status is an expected value
+  const allowedStatuses = ["Delivered", "Read"];
+  if (!allowedStatuses.includes(update.status)) {
+    return jsonResponse({ error: "Invalid status value" }, 400);
+  }
+  if (typeof update.providerMessageId !== "string" || update.providerMessageId.length > 255) {
+    return jsonResponse({ error: "Invalid providerMessageId" }, 400);
   }
 
   console.log(`[signal-inbound] Status update: ${update.providerMessageId} → ${update.status}`);
