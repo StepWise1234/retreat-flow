@@ -9,6 +9,8 @@ interface HeroSlide {
   circleColor: string;
   headline: string;
   body: string;
+  mirrorSilhouette?: boolean;
+  silhouetteScale?: number;
 }
 
 const SLIDES: HeroSlide[] = [
@@ -21,8 +23,10 @@ const SLIDES: HeroSlide[] = [
   {
     image: silhouette2,
     circleColor: '#FF4500',
-    headline: 'step by\nstep',
+    headline: 'subtle is\nsignificant',
     body: 'Honor surgically precise breakthroughs and root real, lasting transformation into life.',
+    mirrorSilhouette: true,
+    silhouetteScale: 0.9,
   },
   {
     image: silhouette3,
@@ -98,6 +102,9 @@ export default function PaceSection() {
                 src={slide.image}
                 alt="Calm silhouette profile"
                 className="h-full w-full object-contain object-bottom translate-y-8"
+                style={{
+                  transform: `translateY(2rem)${slide.mirrorSilhouette ? ' scaleX(-1)' : ''}${slide.silhouetteScale ? ` scale(${slide.silhouetteScale})` : ''}`,
+                }}
               />
             </motion.div>
           </AnimatePresence>
