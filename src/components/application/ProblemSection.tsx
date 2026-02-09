@@ -103,7 +103,8 @@ export default function ProblemSection() {
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <span className="text-foreground/60">The problem wasn't access to transformation.</span>{' '}
+                  <span className="text-foreground/60">The problem wasn't access to transformation.</span>
+                  <br />
                   <span style={{ color: '#FF4500' }}>It's the absence of capacity expansion to support it.</span>
                 </motion.p>
 
