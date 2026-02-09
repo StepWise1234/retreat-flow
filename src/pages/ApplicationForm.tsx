@@ -8,8 +8,8 @@ import { toast } from 'sonner';
 import { ChevronRight, ChevronLeft, Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-// ScrollMorphHero removed for new hero exploration
 import PaceSection from '@/components/application/PaceSection';
+import OrbitalSection from '@/components/application/OrbitalSection';
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
 import MadLibTextarea from '@/components/application/MadLibTextarea';
@@ -346,6 +346,7 @@ export default function ApplicationForm() {
   return (
     <div className="min-h-screen bg-black">
       <PaceSection />
+      <OrbitalSection />
 
       {submitted ? (
         <section className="relative overflow-hidden bg-black">
