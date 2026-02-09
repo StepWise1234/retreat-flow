@@ -30,10 +30,10 @@ function StepWiseLogo() {
       <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground">
         StepWise
       </h2>
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        <span className="block h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 rounded-full" style={{ backgroundColor: '#FFA500' }} />
-        <span className="block h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 rounded-full" style={{ backgroundColor: '#FF4500' }} />
-        <span className="block h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 rounded-full" style={{ backgroundColor: '#800080' }} />
+      <div className="flex items-center gap-2 sm:gap-2.5">
+        <span className="block h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 rounded-full" style={{ backgroundColor: '#FFA500' }} />
+        <span className="block h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 rounded-full" style={{ backgroundColor: '#FF4500' }} />
+        <span className="block h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 rounded-full" style={{ backgroundColor: '#800080' }} />
       </div>
     </div>
   );
