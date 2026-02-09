@@ -42,13 +42,15 @@ export default function StepWiseOverview() {
       <div className="mx-auto max-w-2xl px-6 py-24 md:py-32">
         {/* Intro */}
         <motion.div
-          className="flex items-start gap-4 mb-16"
+          className="flex items-start gap-6 sm:gap-8 mb-16"
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="mt-1.5 shrink-0 h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full" style={{ backgroundColor: '#FF4500' }} />
+          <span className="shrink-0 w-[1.875rem] sm:w-[2.25rem] flex justify-center mt-2">
+            <span className="h-3 w-3 sm:h-4 sm:w-4 rounded-full" style={{ backgroundColor: '#FF4500' }} />
+          </span>
           <p className="text-lg sm:text-xl leading-[1.9] text-foreground/60">
             A StepWise approach is a carefully titrated system delivered to honor the nervous system —
             giving both the time and the energetic space to navigate whatever comes up, meeting each
@@ -70,7 +72,7 @@ export default function StepWiseOverview() {
             >
               {/* Number */}
               <span
-                className="shrink-0 text-3xl sm:text-4xl font-bold tracking-tight tabular-nums"
+                className="shrink-0 w-[1.875rem] sm:w-[2.25rem] text-center text-3xl sm:text-4xl font-bold tracking-tight tabular-nums"
                 style={{ color: i % 3 === 0 ? '#FFA500' : i % 3 === 1 ? '#FF4500' : '#800080' }}
               >
                 {step.number}
