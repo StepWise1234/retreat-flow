@@ -18,7 +18,7 @@ const SLIDES: HeroSlide[] = [
     image: silhouette1,
     circleColor: '#FFA500',
     headline: 'less is\nmore',
-    body: 'Go at speed of your unique system as you expand regulation capacity, metabolize shifts, and repair wholeness.',
+    body: 'The unique speed of your system to metabolize shifts and repair wholeness.',
   },
   {
     image: silhouette2,
