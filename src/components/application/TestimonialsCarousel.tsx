@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const testimonials = [
@@ -76,8 +76,17 @@ const testimonials = [
   },
 ];
 
+// Triple the array for seamless infinite looping
+const loopedTestimonials = [...testimonials, ...testimonials, ...testimonials];
+
+const SCROLL_SPEED = 120; // px per second
+
 export default function TestimonialsCarousel() {
   const [active, setActive] = useState(0);
+  const stripRef = useRef<HTMLDivElement>(null);
+  const scrollDirection = useRef<'left' | 'right' | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number>(0);
 
   const advance = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -88,9 +97,76 @@ export default function TestimonialsCarousel() {
     return () => clearInterval(interval);
   }, [advance]);
 
+  // Center the strip on the middle (duplicate) set on mount
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    // Each avatar: size + gap. We offset by one full set width.
+    requestAnimationFrame(() => {
+      const singleSetWidth = strip.scrollWidth / 3;
+      strip.scrollLeft = singleSetWidth;
+    });
+  }, []);
+
+  // Infinite scroll loop reset
+  const clampScroll = useCallback(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    const singleSetWidth = strip.scrollWidth / 3;
+    if (strip.scrollLeft >= singleSetWidth * 2) {
+      strip.scrollLeft -= singleSetWidth;
+    } else if (strip.scrollLeft <= 0) {
+      strip.scrollLeft += singleSetWidth;
+    }
+  }, []);
+
+  // Animate scroll on hover
+  const tick = useCallback(
+    (time: number) => {
+      if (!lastTimeRef.current) lastTimeRef.current = time;
+      const delta = (time - lastTimeRef.current) / 1000;
+      lastTimeRef.current = time;
+
+      const strip = stripRef.current;
+      if (strip && scrollDirection.current) {
+        const dir = scrollDirection.current === 'right' ? 1 : -1;
+        strip.scrollLeft += dir * SCROLL_SPEED * delta;
+        clampScroll();
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    },
+    [clampScroll],
+  );
+
+  const startScroll = useCallback(
+    (dir: 'left' | 'right') => {
+      scrollDirection.current = dir;
+      lastTimeRef.current = 0;
+      if (!rafRef.current) {
+        rafRef.current = requestAnimationFrame(tick);
+      }
+    },
+    [tick],
+  );
+
+  const stopScroll = useCallback(() => {
+    scrollDirection.current = null;
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
   return (
     <section className="relative bg-background overflow-hidden">
-      <div className="mx-auto max-w-xl px-6 py-16 md:py-24">
+      <div className="mx-auto max-w-2xl px-6 py-16 md:py-24">
         {/* Quote */}
         <div className="relative min-h-[100px] mb-12">
           <AnimatePresence mode="wait">
@@ -109,33 +185,61 @@ export default function TestimonialsCarousel() {
 
         {/* Author row */}
         <div className="flex items-center gap-6">
-          {/* Avatars — scrolling strip */}
-          <div className="flex -space-x-2 shrink-0">
-            {testimonials.map((t, i) => (
-              <button
-                key={i}
-                onClick={() => setActive(i)}
-                className={`
-                  relative h-10 w-10 rounded-full overflow-hidden ring-2 ring-background
-                  transition-all duration-300 ease-out cursor-pointer
-                  ${active === i ? 'z-10 scale-110' : 'grayscale hover:grayscale-0 hover:scale-105'}
-                `}
-              >
-                <img
-                  src={t.image}
-                  alt={t.name}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
-              </button>
-            ))}
+          {/* Scrollable avatar strip with hover zones */}
+          <div className="relative flex-1 min-w-0">
+            {/* Left hover zone */}
+            <div
+              className="absolute left-0 top-0 bottom-0 w-12 z-20 cursor-w-resize"
+              onMouseEnter={() => startScroll('left')}
+              onMouseLeave={stopScroll}
+              style={{
+                background: 'linear-gradient(to right, hsl(var(--background)), transparent)',
+              }}
+            />
+            {/* Right hover zone */}
+            <div
+              className="absolute right-0 top-0 bottom-0 w-12 z-20 cursor-e-resize"
+              onMouseEnter={() => startScroll('right')}
+              onMouseLeave={stopScroll}
+              style={{
+                background: 'linear-gradient(to left, hsl(var(--background)), transparent)',
+              }}
+            />
+
+            {/* Strip */}
+            <div
+              ref={stripRef}
+              className="flex gap-3 overflow-x-hidden py-2 scrollbar-hide"
+            >
+              {loopedTestimonials.map((t, i) => {
+                const realIndex = i % testimonials.length;
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setActive(realIndex)}
+                    className={`
+                      relative shrink-0 h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full overflow-hidden ring-2 ring-background
+                      transition-all duration-300 ease-out cursor-pointer
+                      ${active === realIndex ? 'z-10 scale-110 ring-primary/50' : 'grayscale hover:grayscale-0 hover:scale-105'}
+                    `}
+                  >
+                    <img
+                      src={t.image}
+                      alt={t.name}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Divider */}
-          <div className="h-8 w-px bg-border shrink-0" />
+          <div className="h-14 sm:h-16 md:h-20 w-px bg-border shrink-0" />
 
           {/* Active author info */}
-          <div className="relative flex-1 min-h-[44px]">
+          <div className="relative shrink-0 min-w-[120px] min-h-[44px]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active}
