@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { ChevronRight, ChevronLeft, Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import ScrollMorphHero from '@/components/application/ScrollMorphHero';
+import PaceSection from '@/components/application/PaceSection';
 import OrbitalSection from '@/components/application/OrbitalSection';
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
@@ -343,7 +343,7 @@ export default function Apply() {
   return (
     <div className="min-h-screen bg-black">
       <FloatingLogo />
-      <ScrollMorphHero />
+      <PaceSection />
 
       {submitted ? (
         <section className="relative overflow-hidden bg-black">
@@ -388,6 +388,7 @@ export default function Apply() {
         </section>
       ) : (
         <>
+      <OrbitalSection />
       <FormHeader sections={SECTIONS} currentStep={step} onStepChange={setStep} />
 
       <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
@@ -801,7 +802,6 @@ export default function Apply() {
       </main>
         </>
       )}
-      <OrbitalSection />
       <SiteFooter />
     </div>
   );
