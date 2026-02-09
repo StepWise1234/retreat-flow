@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/contexts/AppContext";
 import ApplicationForm from "./pages/ApplicationForm";
-import Apply from "./pages/Apply";
 import Login from "./pages/Login";
 import Index from "./pages/Index";
 import RetreatBoard from "./pages/RetreatBoard";
@@ -28,7 +27,6 @@ const App = () => (
           <Routes>
             {/* Public: Application Form is the homepage */}
             <Route path="/" element={<ApplicationForm />} />
-            <Route path="/apply" element={<Apply />} />
             <Route path="/login" element={<Login />} />
 
             {/* Protected: Admin-only routes */}

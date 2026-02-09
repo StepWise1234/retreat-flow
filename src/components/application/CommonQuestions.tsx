@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 import {
   Accordion,
   AccordionContent,
@@ -18,11 +17,11 @@ const QUESTIONS = [
   },
   {
     q: 'Can clients self-administer at their own pace?',
-    a: 'Self-administering is explicitly encouraged. A lovely aspect of the vape-pen delivery method and the StepWise protocol is that the client is in the driver\'s seat, establishing their own unique relationship with the medicine and their own rhythm.',
+    a: 'Self-administering is explicitly encouraged. A lovely aspect of the vape-pen delivery method and the StepWise protocol is that the client is in the driver\'s seat — establishing their own unique relationship with the medicine and their own rhythm.',
   },
   {
     q: 'How do you set expectations for first-timers?',
-    a: 'The brilliant reframe of StepWise is that one can gently and deliberately ease into the great expanse while taking sovereign identity awareness along for the ride. It\'s not about the big bang. It\'s about incorporating the visceral gnosis that we are one with That.',
+    a: 'The brilliant reframe of StepWise is that one can gently and deliberately ease into the great expanse while taking sovereign identity awareness along for the ride. It\'s not about the big bang — it\'s about incorporating the visceral gnosis that we are one with That.',
   },
   {
     q: 'Does this strategy affect the nature of release?',
@@ -36,17 +35,11 @@ const QUESTIONS = [
 
 export default function CommonQuestions() {
   return (
-    <section className="relative bg-[#fafafa] overflow-hidden">
-      <AnimatedGridPattern
-        numSquares={30}
-        maxOpacity={0.12}
-        duration={3}
-        className="text-neutral-400 [mask-image:radial-gradient(500px_circle_at_center,white,transparent)]"
-      />
-      <div className="relative mx-auto max-w-2xl px-6 py-24 md:py-32">
+    <section className="relative bg-background overflow-hidden">
+      <div className="mx-auto max-w-2xl px-6 py-24 md:py-32">
         {/* Heading */}
         <motion.h2
-          className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 mb-16"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-16"
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
@@ -66,9 +59,9 @@ export default function CommonQuestions() {
               <AccordionItem
                 key={i}
                 value={`q-${i}`}
-                className="border-b border-neutral-200 py-1"
+                className="border-b border-foreground/10 py-1"
               >
-                <AccordionTrigger className="text-left text-base sm:text-lg font-medium text-neutral-900 hover:no-underline py-5 [&[data-state=open]>svg]:rotate-180">
+                <AccordionTrigger className="text-left text-base sm:text-lg font-medium text-foreground hover:no-underline py-5 [&[data-state=open]>svg]:rotate-180">
                   <span className="flex items-start gap-4">
                     <span
                       className="shrink-0 mt-0.5 h-2 w-2 rounded-full"
@@ -77,9 +70,8 @@ export default function CommonQuestions() {
                     {item.q}
                   </span>
                 </AccordionTrigger>
-                <AccordionContent className="text-base leading-[1.8] text-neutral-500 pl-6 pb-6 relative">
-                  <div className="absolute inset-0 rounded-lg bg-[radial-gradient(ellipse_at_center,_rgba(250,250,250,0.95)_0%,_rgba(250,250,250,0.6)_60%,_transparent_85%)] pointer-events-none" />
-                  <span className="relative">{item.a}</span>
+                <AccordionContent className="text-base leading-[1.8] text-foreground/55 pl-6 pb-6">
+                  {item.a}
                 </AccordionContent>
               </AccordionItem>
             ))}

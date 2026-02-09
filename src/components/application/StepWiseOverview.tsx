@@ -11,13 +11,13 @@ const STEPS = [
     number: '02',
     title: 'Settle & Stack',
     description:
-      'The facilitator watches for a settling of the nervous system, only then do they invite the client to take another draw. This gently allows the system to acclimate at the client\'s unique pace.',
+      'The practitioner watches for a settling of the nervous system, then offers another draw about 5 minutes later — gently increasing the amount while allowing the system to acclimate.',
   },
   {
     number: '03',
     title: 'Step Up',
     description:
-      'When the client is ready, higher concentrations expand somatic sensation and invite a willingness of surrender — always at the speed of the client\'s system.',
+      'When the client is ready, the next higher concentration expands somatic sensation and invites a willingness of surrender — always at the client\'s pace.',
   },
   {
     number: '04',
@@ -97,7 +97,7 @@ export default function StepWiseOverview() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          This supports individuals in processing emotions and trauma in a way that other psychedelic-assisted therapies bypass. StepWise honors the unique natural rhythm of each individual.
+          This approach supports individuals in processing trauma in a way that a full-release method bypasses — honoring the body's natural rhythm for integration.
         </motion.p>
       </div>
     </section>
