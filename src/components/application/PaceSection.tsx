@@ -27,7 +27,7 @@ const SLIDES: HeroSlide[] = [
     headline: 'subtle is\nsignificant',
     body: 'Honor surgically precise breakthroughs and root real, lasting transformation into life.',
     mirrorSilhouette: true,
-    silhouetteScale: 0.9,
+    silhouetteScale: 0.81,
     headlineTopOffset: 'calc(45% + 230px)',
   },
   {
@@ -78,7 +78,7 @@ export default function PaceSection() {
                 <div className="relative flex items-center justify-center overflow-visible">
                   {/* Colored circle */}
                   <div
-                    className="absolute h-[18.4rem] w-[18.4rem] rounded-full sm:h-[20.8rem] sm:w-[20.8rem] md:h-[27.2rem] md:w-[27.2rem]"
+                    className="absolute h-[16.56rem] w-[16.56rem] rounded-full sm:h-[18.72rem] sm:w-[18.72rem] md:h-[24.48rem] md:w-[24.48rem]"
                     style={{
                       left: 'calc(-10% + 95px)',
                       top: '130px',
@@ -88,7 +88,7 @@ export default function PaceSection() {
 
                   {/* Silhouette */}
                   <div
-                    className="relative z-10 h-[30rem] w-[23.2rem] sm:h-[35.6rem] sm:w-[28rem] md:h-[42.8rem] md:w-[33.6rem] overflow-visible"
+                    className="relative z-10 h-[27rem] w-[20.88rem] sm:h-[32.04rem] sm:w-[25.2rem] md:h-[38.52rem] md:w-[30.24rem] overflow-visible"
                     style={{ mixBlendMode: 'multiply' }}
                   >
                     <img
