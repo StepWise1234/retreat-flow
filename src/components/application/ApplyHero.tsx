@@ -70,7 +70,7 @@ export default function ApplyHero() {
 
         {/* Right text — bold heading */}
         <motion.p
-          className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] top-[55%] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
+          className="hidden md:block absolute right-6 lg:right-12 top-[55%] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
           variants={textVariants}
           initial="hidden"
           animate="visible"
