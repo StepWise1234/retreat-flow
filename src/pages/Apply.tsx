@@ -6,6 +6,7 @@ import { ChevronRight, ChevronLeft, Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import ApplyHero from '@/components/application/ApplyHero';
+import TrainingPhases from '@/components/application/TrainingPhases';
 import OrbitalSection from '@/components/application/OrbitalSection';
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
@@ -344,6 +345,7 @@ export default function Apply() {
     <div className="min-h-screen bg-black">
       <FloatingLogo />
       <ApplyHero />
+      <TrainingPhases />
 
       {submitted ? (
         <section className="relative overflow-hidden bg-black">
