@@ -10,7 +10,6 @@ interface Slide {
   circleColor: string;
   heading: string;
   description: string;
-  imageScale?: number;
 }
 
 const slides: Slide[] = [
@@ -29,7 +28,6 @@ const slides: Slide[] = [
     heading: 'depth over\nspeed',
     description:
       'Where rushing ends and real transformation begins — one breath at a time',
-    imageScale: 0.85,
   },
   {
     image: silhouette3,
@@ -124,7 +122,7 @@ export default function PaceSection() {
             <motion.div
               key={`img-${current}`}
               className="relative z-10 h-[28rem] w-[23.2rem] sm:h-[33.6rem] sm:w-[28rem] md:h-[40.8rem] md:w-[33.6rem]"
-              style={{ mixBlendMode: 'multiply', transform: slide.imageScale ? `scale(${slide.imageScale})` : undefined }}
+              style={{ mixBlendMode: 'multiply' }}
               variants={imageVariants}
               initial="enter"
               animate="center"
