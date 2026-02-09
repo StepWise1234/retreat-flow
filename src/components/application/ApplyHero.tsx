@@ -75,7 +75,7 @@ export default function ApplyHero() {
           initial="hidden"
           animate="visible"
         >
-          join the<br />movement
+          join<br />StepWise
         </motion.p>
 
         {/* Mobile: text below */}
@@ -86,7 +86,7 @@ export default function ApplyHero() {
             initial="hidden"
             animate="visible"
           >
-            join the movement
+            join StepWise
           </motion.p>
           <motion.p
             className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto"
