@@ -53,7 +53,7 @@ function Pillar({
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       <span
-        className="block h-5 w-5 rounded-full"
+        className="block h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full"
         style={{ backgroundColor: accentColor }}
       />
       <h3 className="text-base font-semibold tracking-tight text-foreground">
@@ -91,7 +91,7 @@ export default function ProblemSection() {
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="mt-1.5 shrink-0 h-4 w-4 sm:h-5 sm:w-5 rounded-full" style={{ backgroundColor: '#FFA500' }} />
+            <span className="mt-1.5 shrink-0 h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full" style={{ backgroundColor: '#FFA500' }} />
             <p className="text-base sm:text-lg leading-[1.9] text-foreground/60">
               Across thousands engaged in psychedelic-assisted therapy, a consistent pattern emerges:
             </p>
@@ -131,7 +131,7 @@ export default function ProblemSection() {
             transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
           >
             <span
-              className="mt-1.5 shrink-0 h-4 w-4 sm:h-5 sm:w-5 rounded-full animate-[brandCycle_4s_ease-in-out_infinite]"
+              className="mt-1.5 shrink-0 h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full animate-[brandCycle_4s_ease-in-out_infinite]"
             />
             <p className="text-base sm:text-lg leading-[1.9] text-foreground/75 font-medium">
               StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
