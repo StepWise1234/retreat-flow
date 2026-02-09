@@ -105,8 +105,8 @@ export default function PaceSection() {
               key={`circle-${current}`}
               className="absolute h-[15.6rem] w-[15.6rem] rounded-full sm:h-[17.7rem] sm:w-[17.7rem] md:h-[23.1rem] md:w-[23.1rem]"
               style={{
-                left: '50%',
-                top: '50%',
+                left: 'calc(50% - 200px)',
+                top: 'calc(50% - 200px)',
                 transform: 'translate(-50%, -50%)',
                 backgroundColor: slide.circleColor,
               }}
