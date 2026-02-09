@@ -48,11 +48,13 @@ Deno.serve(async (req) => {
   const correlationId = crypto.randomUUID();
 
   try {
-    const { messageId } = (await req.json()) as SendEmailRequest;
+    const body = await req.json();
+    const messageId = typeof body?.messageId === "string" ? body.messageId.trim() : "";
 
-    if (!messageId) {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!messageId || !uuidRegex.test(messageId)) {
       return new Response(
-        JSON.stringify({ error: "messageId is required" }),
+        JSON.stringify({ error: "messageId is required and must be a valid UUID" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
