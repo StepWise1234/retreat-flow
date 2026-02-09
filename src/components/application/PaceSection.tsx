@@ -8,7 +8,7 @@ export default function PaceSection() {
 
         {/* Left text — small body copy */}
         <motion.p
-          className="hidden md:block absolute left-6 lg:left-12 top-[calc(45%+220px)] -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
+          className="hidden md:block absolute left-6 lg:left-12 top-[calc(45%+230px)] -translate-y-1/2 max-w-[11rem] text-sm md:text-base leading-relaxed text-muted-foreground text-right z-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-80px' }}
