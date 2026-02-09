@@ -4,7 +4,7 @@ import silhouetteImg from '@/assets/pace-silhouette.png';
 export default function PaceSection() {
   return (
     <section className="relative bg-background">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-24 md:pt-32 pb-0 min-h-[70vh]">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-0 min-h-[70vh]">
 
         {/* Left text — small body copy */}
         <motion.p
