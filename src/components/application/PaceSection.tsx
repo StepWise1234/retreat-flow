@@ -14,7 +14,7 @@ export default function PaceSection() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8, delay: 1.2, ease: 'easeOut' }}
         >
-          Learn the pace of your system as you expand regulation capacity, metabolize shifts, and repair wholeness.
+          The speed of your unique system to metabolize shifts and repair wholeness
         </motion.p>
 
         {/* Center composition — circle behind, silhouette overlapping */}
@@ -74,7 +74,7 @@ export default function PaceSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 1.4 }}
           >
-            Learn the pace of your system as you expand regulation capacity, metabolize shifts, and repair wholeness.
+            The speed of your unique system to metabolize shifts and repair wholeness
           </motion.p>
         </div>
       </div>
