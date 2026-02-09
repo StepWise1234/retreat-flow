@@ -19,6 +19,7 @@ import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
 import MadLibTextarea from '@/components/application/MadLibTextarea';
 import FloatingLogo from '@/components/application/FloatingLogo';
+import SiteFooter from '@/components/application/SiteFooter';
 import { SparklesCore } from '@/components/ui/sparkles';
 
 const PHYSICAL_SYMPTOMS = [
@@ -825,6 +826,7 @@ export default function ApplicationForm() {
       </main>
         </>
       )}
+      <SiteFooter />
     </div>
   );
 }
