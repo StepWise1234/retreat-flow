@@ -6,6 +6,7 @@ import { ChevronRight, ChevronLeft, Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import ScrollMorphHero from '@/components/application/ScrollMorphHero';
+import OrbitalSection from '@/components/application/OrbitalSection';
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
 import MadLibTextarea from '@/components/application/MadLibTextarea';
@@ -800,6 +801,7 @@ export default function Apply() {
       </main>
         </>
       )}
+      <OrbitalSection />
       <SiteFooter />
     </div>
   );
