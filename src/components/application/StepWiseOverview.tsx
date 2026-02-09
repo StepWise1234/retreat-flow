@@ -41,17 +41,20 @@ export default function StepWiseOverview() {
     <section className="relative bg-background overflow-hidden">
       <div className="mx-auto max-w-2xl px-6 py-24 md:py-32">
         {/* Intro */}
-        <motion.p
-          className="text-lg sm:text-xl leading-[1.9] text-foreground/60 mb-16"
+        <motion.div
+          className="flex items-start gap-4 mb-16"
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          A StepWise approach is a carefully titrated system delivered to honor the nervous system —
-          giving both the time and the energetic space to navigate whatever comes up, meeting each
-          moment with compassion and curiosity.
-        </motion.p>
+          <span className="mt-1.5 shrink-0 h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full" style={{ backgroundColor: '#FF4500' }} />
+          <p className="text-lg sm:text-xl leading-[1.9] text-foreground/60">
+            A StepWise approach is a carefully titrated system delivered to honor the nervous system —
+            giving both the time and the energetic space to navigate whatever comes up, meeting each
+            moment with compassion and curiosity.
+          </p>
+        </motion.div>
 
         {/* Steps */}
         <div className="space-y-12">
