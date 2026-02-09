@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const BRAND_COLORS = ['#FFA500', '#FF4500', '#800080'];
 
 const testimonials = [
   {
@@ -87,6 +89,12 @@ export default function TestimonialsCarousel() {
   const scrollDirection = useRef<'left' | 'right' | null>(null);
   const rafRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(0);
+
+  // Assign a stable random brand color to each testimonial
+  const colorMap = useMemo(
+    () => testimonials.map((_, i) => BRAND_COLORS[((i * 7) + 3) % BRAND_COLORS.length]),
+    [],
+  );
 
   const advance = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -213,6 +221,7 @@ export default function TestimonialsCarousel() {
             >
               {loopedTestimonials.map((t, i) => {
                 const realIndex = i % testimonials.length;
+                const isActive = active === realIndex;
                 return (
                   <button
                     key={i}
@@ -220,7 +229,7 @@ export default function TestimonialsCarousel() {
                     className={`
                       relative shrink-0 h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full overflow-hidden ring-2 ring-background
                       transition-all duration-300 ease-out cursor-pointer
-                      ${active === realIndex ? 'z-10 scale-110 ring-primary/50' : 'grayscale hover:grayscale-0 hover:scale-105'}
+                      ${isActive ? 'z-10 scale-110 ring-primary/50' : 'grayscale hover:grayscale-0 hover:scale-105'}
                     `}
                   >
                     <img
@@ -229,6 +238,13 @@ export default function TestimonialsCarousel() {
                       className="h-full w-full object-cover"
                       loading="lazy"
                     />
+                    {/* Brand color overlay on active */}
+                    {isActive && (
+                      <div
+                        className="absolute inset-0 rounded-full mix-blend-color transition-opacity duration-300"
+                        style={{ backgroundColor: colorMap[realIndex], opacity: 0.35 }}
+                      />
+                    )}
                   </button>
                 );
               })}
