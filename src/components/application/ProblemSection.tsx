@@ -1,6 +1,30 @@
 import { motion } from 'framer-motion';
 import { Shield, Timer, Brain } from 'lucide-react';
 
+/* ─── Brand circle — decorative background orb ─── */
+function BrandOrb({
+  color,
+  size,
+  className,
+}: {
+  color: string;
+  size: number;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`absolute rounded-full pointer-events-none ${className ?? ''}`}
+      style={{
+        width: size,
+        height: size,
+        backgroundColor: color,
+        opacity: 0.08,
+        filter: 'blur(60px)',
+      }}
+    />
+  );
+}
+
 /* ─── StepWise logo with three signature dots ─── */
 function StepWiseLogo() {
   return (
@@ -23,22 +47,27 @@ function Pillar({
   title,
   description,
   delay,
+  accentColor,
 }: {
   icon: typeof Shield;
   title: string;
   description: string;
   delay: number;
+  accentColor: string;
 }) {
   return (
     <motion.div
-      className="flex flex-col items-start gap-3"
+      className="relative flex flex-col items-start gap-3"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="flex h-10 w-10 items-center justify-center rounded-full border border-foreground/10 bg-foreground/[0.03]">
-        <Icon className="h-4.5 w-4.5 text-foreground/50" strokeWidth={1.5} />
+      <div
+        className="flex h-10 w-10 items-center justify-center rounded-full"
+        style={{ backgroundColor: `${accentColor}10`, border: `1px solid ${accentColor}20` }}
+      >
+        <Icon className="h-4 w-4" style={{ color: accentColor }} strokeWidth={1.5} />
       </div>
       <h3 className="text-base font-semibold tracking-tight text-foreground">
         {title}
@@ -50,23 +79,18 @@ function Pillar({
   );
 }
 
-/* ─── Thin divider line ─── */
-function Divider() {
-  return (
-    <div className="mx-auto w-full max-w-[4rem] h-px bg-gradient-to-r from-transparent via-foreground/15 to-transparent" />
-  );
-}
-
 export default function ProblemSection() {
   return (
     <section className="relative bg-background overflow-hidden">
-      {/* Subtle top edge */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-foreground/8 to-transparent" />
+      {/* ── Brand orbs as background texture ── */}
+      <BrandOrb color="#FFA500" size={420} className="top-12 -left-40 md:left-[8%]" />
+      <BrandOrb color="#FF4500" size={360} className="top-[40%] right-[-10%] md:right-[5%]" />
+      <BrandOrb color="#800080" size={400} className="bottom-20 left-[15%] md:left-[30%]" />
 
-      <div className="mx-auto max-w-3xl px-6 py-24 md:py-32">
+      <div className="relative mx-auto max-w-xl px-6 py-28 md:py-36">
         {/* Logo */}
         <motion.div
-          className="mb-16 flex justify-center"
+          className="mb-20 flex justify-center"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -75,75 +99,80 @@ export default function ProblemSection() {
           <StepWiseLogo />
         </motion.div>
 
-        {/* Problem statement */}
-        <motion.div
-          className="space-y-8 text-center"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <p className="text-base sm:text-lg leading-relaxed text-foreground/70">
+        {/* ── Magazine-style editorial copy ── */}
+        <div className="space-y-16">
+          {/* Opening */}
+          <motion.p
+            className="text-base sm:text-lg leading-[1.8] text-foreground/65"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          >
             Across thousands engaged in psychedelic-assisted therapy, a consistent pattern emerges:
-          </p>
-          <p className="text-base sm:text-lg leading-relaxed text-foreground/70">
+          </motion.p>
+
+          {/* Core insight — indented with subtle left border */}
+          <motion.p
+            className="text-base sm:text-lg leading-[1.8] text-foreground/65 pl-4 md:pl-8 border-l-2 border-foreground/8"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          >
             People access profound insight but lack the nervous system capacity required to stabilize
             those experiences into identity, behavior, and life direction.
-          </p>
-        </motion.div>
+          </motion.p>
 
-        {/* Pull-quote */}
-        <motion.div
-          className="my-16 md:my-20"
-          initial={{ opacity: 0, scale: 0.97 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <Divider />
-          <p className="my-8 text-center text-base sm:text-lg leading-relaxed text-foreground/70">
+          {/* Pivot statement */}
+          <motion.p
+            className="text-base sm:text-lg leading-[1.8] text-foreground/65"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
             The problem wasn't access to transformation
-            <span className="text-foreground/40"> — it's the absence of structured systems to support it.</span>
-          </p>
-          <Divider />
-        </motion.div>
+            <span className="text-foreground/35"> — it's the absence of structured systems to support it.</span>
+          </motion.p>
 
-        {/* Closing line */}
-        <motion.p
-          className="text-center text-base sm:text-lg leading-relaxed text-foreground/70 max-w-xl mx-auto mb-20 md:mb-24"
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        >
-          StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
-        </motion.p>
+          {/* Resolution */}
+          <motion.p
+            className="text-base sm:text-lg leading-[1.8] text-foreground/80 font-medium"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          >
+            StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
+          </motion.p>
+        </div>
 
-        {/* Three pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+        {/* ── Three pillars ── */}
+        <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
           <Pillar
             icon={Shield}
             title="Safe"
-            description="StepWise tracks the nervous system's pace — honoring your body's natural rhythm for processing and repair."
+            description="Tracks the nervous system's pace — honoring your body's natural rhythm for processing and repair."
             delay={0}
+            accentColor="#FFA500"
           />
           <Pillar
             icon={Timer}
             title="Adjustable"
-            description="Sessions are as short as your therapy session or as long as you need. The structure adapts to your timeline, not the other way around."
+            description="As short as your therapy session or as long as you need. The structure adapts to your timeline."
             delay={0.12}
+            accentColor="#FF4500"
           />
           <Pillar
             icon={Brain}
             title="Integrative"
-            description="Daily consciousness is maintained throughout, enabling real-time integration during session — not just after."
+            description="Daily consciousness is maintained throughout, enabling real-time integration during session."
             delay={0.24}
+            accentColor="#800080"
           />
         </div>
       </div>
-
-      {/* Subtle bottom edge */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-foreground/8 to-transparent" />
     </section>
   );
 }
