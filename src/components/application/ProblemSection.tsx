@@ -46,20 +46,26 @@ function Pillar({
 }) {
   return (
     <motion.div
-      className="relative flex flex-col items-start gap-3"
+      className="relative overflow-hidden flex flex-col items-start gap-4 p-6 rounded-2xl"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
     >
+      {/* Large background circle — bleeds out of card */}
       <span
-        className="block h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full"
+        className="absolute -top-10 -right-10 h-32 w-32 sm:h-36 sm:w-36 rounded-full opacity-15"
         style={{ backgroundColor: accentColor }}
       />
-      <h3 className="text-base font-semibold tracking-tight text-foreground">
+      {/* Foreground dot */}
+      <span
+        className="relative z-10 block h-8 w-8 sm:h-10 sm:w-10 rounded-full"
+        style={{ backgroundColor: accentColor }}
+      />
+      <h3 className="relative z-10 text-lg font-semibold tracking-tight text-foreground">
         {title}
       </h3>
-      <p className="text-base leading-[1.9] text-foreground/50">
+      <p className="relative z-10 text-base leading-[1.9] text-foreground/50">
         {description}
       </p>
     </motion.div>
