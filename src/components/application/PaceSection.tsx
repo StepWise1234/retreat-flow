@@ -11,6 +11,7 @@ interface HeroSlide {
   body: string;
   mirrorSilhouette?: boolean;
   silhouetteScale?: number;
+  headlineTopOffset?: string;
 }
 
 const SLIDES: HeroSlide[] = [
@@ -27,6 +28,7 @@ const SLIDES: HeroSlide[] = [
     body: 'Honor surgically precise breakthroughs and root real, lasting transformation into life.',
     mirrorSilhouette: true,
     silhouetteScale: 0.9,
+    headlineTopOffset: 'calc(45% + 230px)',
   },
   {
     image: silhouette3,
@@ -103,7 +105,8 @@ export default function PaceSection() {
 
                 {/* Right text — bold headline */}
                 <p
-                  className="hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] top-[calc(45%+220px)] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10 whitespace-pre-line text-right"
+                  className={`hidden md:block absolute right-[calc(12%-50px)] lg:right-[calc(15%-50px)] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10 whitespace-pre-line text-right`}
+                  style={{ top: s.headlineTopOffset || 'calc(45% + 220px)' }}
                 >
                   {s.headline}
                 </p>
