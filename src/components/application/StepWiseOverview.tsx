@@ -48,9 +48,7 @@ export default function StepWiseOverview() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="shrink-0 w-[1.875rem] sm:w-[2.25rem] flex justify-center mt-2">
-            <span className="h-3 w-3 sm:h-4 sm:w-4 rounded-full" style={{ backgroundColor: '#FF4500' }} />
-          </span>
+          <span className="mt-1.5 shrink-0 h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-12 lg:w-12 rounded-full" style={{ backgroundColor: '#FF4500' }} />
           <p className="text-lg sm:text-xl leading-[1.9] text-foreground/60">
             A StepWise approach is a carefully titrated system delivered to honor the nervous system —
             giving both the time and the energetic space to navigate whatever comes up, meeting each
