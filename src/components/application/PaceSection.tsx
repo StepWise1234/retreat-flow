@@ -21,8 +21,8 @@ const SLIDES: HeroSlide[] = [
   {
     image: silhouette2,
     circleColor: '#FF4500',
-    headline: 'subtle is\nsignificant',
-    body: 'Honor the quiet breakthroughs — the moments between words where real transformation takes root.',
+    headline: 'depth over\nspeed',
+    body: 'Honor surgically precise breakthroughs and root real transformation into life.',
   },
   {
     image: silhouette3,
@@ -32,7 +32,7 @@ const SLIDES: HeroSlide[] = [
   },
 ];
 
-const INTERVAL_MS = 6000;
+const INTERVAL_MS = 9000;
 
 export default function PaceSection() {
   const [activeIndex, setActiveIndex] = useState(0);
