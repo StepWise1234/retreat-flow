@@ -355,9 +355,9 @@ export default function ApplicationForm() {
       <FloatingLogo />
       <PaceSection />
       <ProblemSection />
-      <FindFacilitatorCTA />
       <TestimonialsCarousel />
       <StepWiseOverview />
+      <FindFacilitatorCTA />
       <CommonQuestions />
       <OrbitalSection />
 
