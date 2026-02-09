@@ -63,10 +63,10 @@ export default function ProblemSection() {
       {/* Subtle top edge */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-foreground/8 to-transparent" />
 
-      <div className="mx-auto max-w-3xl px-6 py-24 md:py-32">
+      <div className="mx-auto max-w-xl px-6 py-28 md:py-40">
         {/* Logo */}
         <motion.div
-          className="mb-16 flex justify-center"
+          className="mb-20 flex justify-center"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -75,62 +75,92 @@ export default function ProblemSection() {
           <StepWiseLogo />
         </motion.div>
 
-        {/* Problem statement */}
-        <motion.div
-          className="space-y-8 text-center"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <p className="text-base sm:text-lg leading-relaxed text-foreground/70">
+        {/* ── Magazine layout with background circles ── */}
+        <div className="relative space-y-16 md:space-y-20">
+
+          {/* Orange circle — behind opener */}
+          <div
+            className="pointer-events-none absolute -left-32 top-4 h-64 w-64 rounded-full opacity-[0.07] blur-2xl"
+            style={{ backgroundColor: '#FFA500' }}
+          />
+
+          {/* Opening line */}
+          <motion.p
+            className="relative text-base sm:text-lg leading-[1.85] text-foreground/70"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
             Across thousands engaged in psychedelic-assisted therapy, a consistent pattern emerges:
-          </p>
-          <p className="text-base sm:text-lg leading-relaxed text-foreground/70">
+          </motion.p>
+
+          {/* Red circle — behind core insight */}
+          <div
+            className="pointer-events-none absolute -right-28 top-1/3 h-72 w-72 rounded-full opacity-[0.06] blur-3xl"
+            style={{ backgroundColor: '#FF4500' }}
+          />
+
+          {/* Core insight */}
+          <motion.p
+            className="relative text-base sm:text-lg leading-[1.85] text-foreground/70"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.7, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          >
             People access profound insight but lack the nervous system capacity required to stabilize
             those experiences into identity, behavior, and life direction.
-          </p>
-        </motion.div>
+          </motion.p>
 
-        {/* Pull-quote */}
-        <motion.div
-          className="my-16 md:my-20"
-          initial={{ opacity: 0, scale: 0.97 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        >
+          {/* Divider */}
           <Divider />
-          <p className="my-8 text-center text-base sm:text-lg leading-relaxed text-foreground/70">
+
+          {/* Purple circle — behind pull-quote */}
+          <div
+            className="pointer-events-none absolute -left-24 bottom-1/3 h-80 w-80 rounded-full opacity-[0.06] blur-3xl"
+            style={{ backgroundColor: '#800080' }}
+          />
+
+          {/* Pull-quote */}
+          <motion.p
+            className="relative text-base sm:text-lg leading-[1.85] text-foreground/70"
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.7, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+          >
             The problem wasn't access to transformation
             <span className="text-foreground/40"> — it's the absence of structured systems to support it.</span>
-          </p>
+          </motion.p>
+
+          {/* Divider */}
           <Divider />
-        </motion.div>
 
-        {/* Closing line */}
-        <motion.p
-          className="text-center text-base sm:text-lg leading-relaxed text-foreground/70 max-w-xl mx-auto mb-20 md:mb-24"
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        >
-          StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
-        </motion.p>
+          {/* Closing — StepWise intro */}
+          <motion.p
+            className="relative text-base sm:text-lg leading-[1.85] text-foreground/70"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            StepWise offers a ready-made framework for capacity-based, nervous-system-informed practice.
+          </motion.p>
+        </div>
 
-        {/* Three pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+        {/* ── Three pillars ── */}
+        <div className="mt-24 md:mt-32 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
           <Pillar
             icon={Shield}
             title="Safe"
-            description="StepWise tracks the nervous system's pace — honoring your body's natural rhythm for processing and repair."
+            description="Tracks the nervous system's pace — honoring your body's natural rhythm for processing and repair."
             delay={0}
           />
           <Pillar
             icon={Timer}
             title="Adjustable"
-            description="Sessions are as short as your therapy session or as long as you need. The structure adapts to your timeline, not the other way around."
+            description="As short as your therapy session or as long as you need. The structure adapts to your timeline."
             delay={0.12}
           />
           <Pillar
