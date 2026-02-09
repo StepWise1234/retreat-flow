@@ -17,7 +17,7 @@ const STEPS = [
     number: '03',
     title: 'Step Up',
     description:
-      'When the client is ready, the next higher concentration expands somatic sensation and invites a willingness of surrender — always at the client\'s pace.',
+      'When the client is ready, higher concentrations expand somatic sensation and invite a willingness of surrender — always at the speed of the client\'s system.',
   },
   {
     number: '04',
