@@ -79,7 +79,7 @@ const testimonials = [
 // Triple the array for seamless infinite looping
 const loopedTestimonials = [...testimonials, ...testimonials, ...testimonials];
 
-const SCROLL_SPEED = 120; // px per second
+const SCROLL_SPEED = 320; // px per second
 
 export default function TestimonialsCarousel() {
   const [active, setActive] = useState(0);
