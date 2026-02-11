@@ -50,7 +50,7 @@ const levels = [
     comingSoon: {
       title: 'Coming Soon: StepWise App',
       description:
-        'An AI-powered clinical companion designed for StepWise practitioners. Track client capacity across sessions, receive real-time dosing guidance informed by nervous system baselines, and generate integration reports — all within a secure, HIPAA-aligned platform. The StepWise App learns from your practice patterns to surface insights, flag contraindications, and streamline the documentation that clinical work demands, so you can stay present with your clients.',
+        'A secure, professional-grade platform built for the StepWise practitioner community. Access AI-supported session preparation tools, track participant capacity across progressive protocols, and maintain the documentation standards your practice demands — without the overhead. Beyond clinical support, the StepWise App connects you to a vetted network of fellow alumni: share case insights, coordinate peer consultation, and stay current with evolving protocols through a private, integrity-first community designed for practitioners who hold themselves to the highest standard.',
     },
   },
 ];
