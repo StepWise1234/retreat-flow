@@ -16,8 +16,8 @@ export default function FindFacilitatorCTA() {
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          <a
-            href="#"
+          <Link
+            to="/facilitators"
             className="flex items-center gap-4 group cursor-pointer"
           >
             <motion.div whileHover={{ x: 6 }} className="flex items-center gap-4">
@@ -26,7 +26,7 @@ export default function FindFacilitatorCTA() {
               </h2>
               <ArrowRight className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-foreground/60 group-hover:text-foreground transition-all duration-300 group-hover:translate-x-2 shrink-0" />
             </motion.div>
-          </a>
+          </Link>
 
           <Link
             to="/apply"
@@ -83,12 +83,12 @@ export default function FindFacilitatorCTA() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: 'easeOut', delay: 0.5 }}
         >
-          <a href="#" className="flex items-center gap-3 group cursor-pointer">
+          <Link to="/facilitators" className="flex items-center gap-3 group cursor-pointer">
             <h2 className="text-3xl font-extrabold tracking-tight text-foreground">
               Find a Facilitator
             </h2>
             <ArrowRight className="h-7 w-7 text-foreground/60 group-hover:text-foreground transition-all duration-300 group-hover:translate-x-2 shrink-0" />
-          </a>
+          </Link>
           <Link to="/apply" className="flex items-center gap-2 group cursor-pointer">
             <h3 className="text-xl font-bold tracking-tight" style={{ color: '#FF4500' }}>
               Apply for Training

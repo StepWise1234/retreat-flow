@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { AppProvider } from "@/contexts/AppContext";
 import ApplicationForm from "./pages/ApplicationForm";
 import Apply from "./pages/Apply";
+import FindFacilitator from "./pages/FindFacilitator";
 import Login from "./pages/Login";
 import Index from "./pages/Index";
 import RetreatBoard from "./pages/RetreatBoard";
@@ -37,6 +38,7 @@ const App = () => (
             {/* Public: Application Form is the homepage */}
             <Route path="/" element={<ApplicationForm />} />
             <Route path="/apply" element={<Apply />} />
+            <Route path="/facilitators" element={<FindFacilitator />} />
             <Route path="/login" element={<Login />} />
 
             {/* Protected: Admin-only routes */}

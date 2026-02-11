@@ -1,7 +1,9 @@
+import { Link } from 'react-router-dom';
+
 const BRAND_COLORS = ['#FFA500', '#FF4500', '#800080'];
 
 const NAV_LINKS = [
-  { label: 'Find a Facilitator', href: '#facilitator' },
+  { label: 'Find a Facilitator', href: '/facilitators' },
   { label: 'Common Questions', href: '#faq' },
   { label: 'Apply', href: '/apply' },
 ];
@@ -28,15 +30,25 @@ export default function SiteFooter() {
 
         {/* Nav */}
         <nav className="flex flex-wrap gap-x-8 gap-y-3 mb-12">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-sm text-foreground/50 hover:text-foreground transition-colors duration-200"
-            >
-              {link.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((link) =>
+            link.href.startsWith('/') ? (
+              <Link
+                key={link.label}
+                to={link.href}
+                className="text-sm text-foreground/50 hover:text-foreground transition-colors duration-200"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.label}
+                href={link.href}
+                className="text-sm text-foreground/50 hover:text-foreground transition-colors duration-200"
+              >
+                {link.label}
+              </a>
+            )
+          )}
         </nav>
 
         {/* Divider */}
