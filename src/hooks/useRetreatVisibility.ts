@@ -40,6 +40,23 @@ export function useRetreatVisibility() {
     },
   });
 
+  const renameMutation = useMutation({
+    mutationFn: async ({ dbId, newName }: { dbId: string; newName: string }) => {
+      const { error } = await supabase
+        .from('retreats')
+        .update({ retreat_name: newName })
+        .eq('id', dbId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-retreats-visibility'] });
+      queryClient.invalidateQueries({ queryKey: ['application-retreats'] });
+    },
+    onError: (err: any) => {
+      toast.error('Failed to rename retreat: ' + err.message);
+    },
+  });
+
   const getVisibility = (retreatName: string) => {
     const match = dbRetreats.find((r) => r.retreat_name === retreatName);
     return match ? { dbId: match.id, showOnApplication: match.show_on_application } : null;
@@ -54,5 +71,14 @@ export function useRetreatVisibility() {
     toggleMutation.mutate({ dbId: match.id, newValue: !match.show_on_application });
   };
 
-  return { dbRetreats, isLoading, getVisibility, toggleVisibility, isToggling: toggleMutation.isPending };
+  const renameRetreat = (oldName: string, newName: string) => {
+    const match = dbRetreats.find((r) => r.retreat_name === oldName);
+    if (!match) {
+      toast.error('Retreat not found in database');
+      return;
+    }
+    renameMutation.mutate({ dbId: match.id, newName });
+  };
+
+  return { dbRetreats, isLoading, getVisibility, toggleVisibility, isToggling: toggleMutation.isPending, renameRetreat };
 }
