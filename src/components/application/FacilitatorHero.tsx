@@ -63,7 +63,7 @@ export default function FacilitatorHero() {
             <img
               src={silhouette}
               alt="Serene female silhouette with eyes closed"
-              className="h-[125%] w-[125%] max-w-none object-contain object-bottom -ml-[12%] -mt-[5%]"
+              className="h-[125%] w-[125%] max-w-none object-contain object-bottom -ml-[12%] -mt-[5%] grayscale"
             />
           </motion.div>
         </div>
