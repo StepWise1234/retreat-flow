@@ -3,9 +3,11 @@ import Layout from '@/components/Layout';
 import RetreatCard from '@/components/RetreatCard';
 import CreateRetreatWizard from '@/components/CreateRetreatWizard';
 import { Mountain } from 'lucide-react';
+import { useRetreatVisibility } from '@/hooks/useRetreatVisibility';
 
 export default function Index() {
   const { retreats, registrations } = useApp();
+  const { getVisibility, toggleVisibility, isToggling } = useRetreatVisibility();
 
   // Show only Open and Full retreats on dashboard (not Draft, Closed, Archived)
   const activeRetreats = retreats.filter((r) => r.status === 'Open' || r.status === 'Full');
@@ -24,14 +26,20 @@ export default function Index() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
-        {activeRetreats.map((retreat, index) => (
-          <RetreatCard
-            key={retreat.id}
-            retreat={retreat}
-            registrations={registrations.filter((r) => r.retreatId === retreat.id)}
-            colorIndex={index}
-          />
-        ))}
+        {activeRetreats.map((retreat, index) => {
+          const vis = getVisibility(retreat.retreatName);
+          return (
+            <RetreatCard
+              key={retreat.id}
+              retreat={retreat}
+              registrations={registrations.filter((r) => r.retreatId === retreat.id)}
+              colorIndex={index}
+              showOnApplication={vis?.showOnApplication ?? null}
+              onToggleVisibility={() => toggleVisibility(retreat.retreatName)}
+              isToggling={isToggling}
+            />
+          );
+        })}
       </div>
 
       {activeRetreats.length === 0 && (
@@ -47,14 +55,20 @@ export default function Index() {
         <div className="mt-8">
           <h2 className="mb-4 text-lg font-semibold text-foreground">Drafts</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
-            {draftRetreats.map((retreat, index) => (
-              <RetreatCard
-                key={retreat.id}
-                retreat={retreat}
-                registrations={registrations.filter((r) => r.retreatId === retreat.id)}
-                colorIndex={activeRetreats.length + index}
-              />
-            ))}
+            {draftRetreats.map((retreat, index) => {
+              const vis = getVisibility(retreat.retreatName);
+              return (
+                <RetreatCard
+                  key={retreat.id}
+                  retreat={retreat}
+                  registrations={registrations.filter((r) => r.retreatId === retreat.id)}
+                  colorIndex={activeRetreats.length + index}
+                  showOnApplication={vis?.showOnApplication ?? null}
+                  onToggleVisibility={() => toggleVisibility(retreat.retreatName)}
+                  isToggling={isToggling}
+                />
+              );
+            })}
           </div>
         </div>
       )}

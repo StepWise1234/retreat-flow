@@ -1,16 +1,20 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Calendar, Users, ArrowRight } from 'lucide-react';
+import { MapPin, Calendar, Users, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { Retreat, Registration, PIPELINE_STAGES, STAGE_STYLE_MAP, PipelineStage, STATUS_STYLES, getEnrolledCount, getRetreatColor, getEffectiveCapacity, getAvailableSpots } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 interface Props {
   retreat: Retreat;
   registrations: Registration[];
   colorIndex?: number;
+  showOnApplication?: boolean | null;
+  onToggleVisibility?: () => void;
+  isToggling?: boolean;
 }
 
-export default function RetreatCard({ retreat, registrations, colorIndex = 0 }: Props) {
+export default function RetreatCard({ retreat, registrations, colorIndex = 0, showOnApplication, onToggleVisibility, isToggling }: Props) {
   const enrolled = getEnrolledCount(registrations);
   const capacity = getEffectiveCapacity(retreat);
   const spotsLeft = getAvailableSpots(retreat, registrations);
@@ -53,9 +57,33 @@ export default function RetreatCard({ retreat, registrations, colorIndex = 0 }: 
             </span>
           </div>
         </div>
-        <Badge className={cn('text-xs', STATUS_STYLES[retreat.status])}>
-          {retreat.status}
-        </Badge>
+        <div className="flex items-center gap-2">
+          {showOnApplication !== null && showOnApplication !== undefined && onToggleVisibility && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleVisibility(); }}
+                  disabled={isToggling}
+                  className={cn(
+                    'flex h-7 w-7 items-center justify-center rounded-md border transition-colors',
+                    showOnApplication
+                      ? 'border-primary/30 bg-primary/10 text-primary hover:bg-primary/20'
+                      : 'border-border bg-secondary text-muted-foreground hover:bg-secondary/80',
+                    isToggling && 'opacity-50 cursor-not-allowed',
+                  )}
+                >
+                  {showOnApplication ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                {showOnApplication ? 'Visible on application' : 'Hidden from application'}
+              </TooltipContent>
+            </Tooltip>
+          )}
+          <Badge className={cn('text-xs', STATUS_STYLES[retreat.status])}>
+            {retreat.status}
+          </Badge>
+        </div>
       </div>
 
       {/* Capacity */}
