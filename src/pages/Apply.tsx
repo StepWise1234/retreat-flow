@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ApplyHero from '@/components/application/ApplyHero';
 import TrainingPhases from '@/components/application/TrainingPhases';
 import MasteryLevels from '@/components/application/MasteryLevels';
+import { useApplicationRetreats } from '@/hooks/useApplicationRetreats';
 
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
@@ -305,12 +306,11 @@ const pageVariants = {
 };
 
 export default function Apply() {
-  const { retreats, addParticipant, addRegistration } = useApp();
+  const { addParticipant, addRegistration } = useApp();
+  const { data: applicationRetreats = [], isLoading: retreatsLoading } = useApplicationRetreats();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormData>(initialFormData);
   const [submitted, setSubmitted] = useState(false);
-
-  const activeRetreats = retreats.filter((r) => r.status === 'Open' || r.status === 'Full');
 
   const update = <K extends keyof FormData>(key: K, value: FormData[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -425,9 +425,15 @@ export default function Apply() {
                         <SelectValue placeholder="select a Beginning Level training" />
                       </SelectTrigger>
                       <SelectContent className="bg-background border-foreground/10 text-foreground">
-                        {activeRetreats.map((r) => (
-                          <SelectItem key={r.id} value={r.id} className="text-foreground/70 focus:bg-foreground/5 focus:text-foreground">{r.retreatName}</SelectItem>
-                        ))}
+                        {retreatsLoading ? (
+                          <SelectItem value="__loading" disabled className="text-foreground/40">Loading trainings…</SelectItem>
+                        ) : applicationRetreats.length === 0 ? (
+                          <SelectItem value="__empty" disabled className="text-foreground/40">No trainings available</SelectItem>
+                        ) : (
+                          applicationRetreats.map((r) => (
+                            <SelectItem key={r.id} value={r.id} className="text-foreground/70 focus:bg-foreground/5 focus:text-foreground">{r.retreat_name}</SelectItem>
+                          ))
+                        )}
                       </SelectContent>
                     </Select>
                     <span className="block h-px rounded-full bg-gradient-to-r from-transparent via-[#FF4500] to-transparent opacity-50" />

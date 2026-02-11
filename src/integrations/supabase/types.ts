@@ -274,6 +274,51 @@ export type Database = {
           },
         ]
       }
+      retreats: {
+        Row: {
+          capacity_override: boolean
+          cohort_size_target: number
+          created_at: string
+          end_date: string
+          id: string
+          location: string
+          notes: string
+          retreat_name: string
+          show_on_application: boolean
+          start_date: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          capacity_override?: boolean
+          cohort_size_target?: number
+          created_at?: string
+          end_date: string
+          id?: string
+          location?: string
+          notes?: string
+          retreat_name: string
+          show_on_application?: boolean
+          start_date: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          capacity_override?: boolean
+          cohort_size_target?: number
+          created_at?: string
+          end_date?: string
+          id?: string
+          location?: string
+          notes?: string
+          retreat_name?: string
+          show_on_application?: boolean
+          start_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       signal_settings: {
         Row: {
           created_at: string
