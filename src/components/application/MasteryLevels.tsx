@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 
 const levels = [
   {
@@ -54,7 +55,16 @@ export default function MasteryLevels() {
   const activeLevel = levels.find((l) => l.id === activeId) ?? null;
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden bg-background">
+      {/* Animated grid background */}
+      <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]">
+        <AnimatedGridPattern
+          numSquares={30}
+          maxOpacity={0.08}
+          duration={4}
+          className="w-full h-full fill-foreground/5 stroke-foreground/5"
+        />
+      </div>
 
       <div className="relative mx-auto max-w-3xl px-6 py-20 md:py-28">
         {/* Section heading */}
