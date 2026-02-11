@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { Search, ChevronLeft, Users, LayoutGrid, List, CalendarDays, CheckSquare, Eye, EyeOff } from 'lucide-react';
+import { Search, ChevronLeft, Users, LayoutGrid, List, CalendarDays, CheckSquare, Eye, EyeOff, Pencil } from 'lucide-react';
 import { isPast, parseISO } from 'date-fns';
 import { useApp } from '@/contexts/AppContext';
 import { PIPELINE_STAGES, PipelineStage, STAGE_STYLE_MAP, STATUS_STYLES, getEnrolledCount, getEffectiveCapacity, isEnrolledStage } from '@/lib/types';
@@ -26,8 +26,10 @@ type BoardView = 'kanban' | 'list' | 'calendar' | 'tasks';
 
 export default function RetreatBoard() {
   const { id } = useParams<{ id: string }>();
-  const { getRetreat, getRegistrationsForRetreat, getParticipant, moveStage, tasks: allTasks } = useApp();
+  const { getRetreat, getRegistrationsForRetreat, getParticipant, moveStage, updateRetreat, tasks: allTasks } = useApp();
   const { getVisibility, toggleVisibility, isToggling } = useRetreatVisibility();
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState('');
   const [search, setSearch] = useState('');
   const [selectedReg, setSelectedReg] = useState<string | null>(null);
   const [filters, setFilters] = useState<BoardFilter[]>([]);
@@ -158,7 +160,40 @@ export default function RetreatBoard() {
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-foreground">{retreat.retreatName}</h1>
+              {isEditingName ? (
+                <form
+                  className="flex items-center gap-2"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (editedName.trim() && editedName.trim() !== retreat.retreatName) {
+                      updateRetreat(retreat.id, { retreatName: editedName.trim() });
+                    }
+                    setIsEditingName(false);
+                  }}
+                >
+                  <Input
+                    autoFocus
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                    onBlur={() => {
+                      if (editedName.trim() && editedName.trim() !== retreat.retreatName) {
+                        updateRetreat(retreat.id, { retreatName: editedName.trim() });
+                      }
+                      setIsEditingName(false);
+                    }}
+                    onKeyDown={(e) => { if (e.key === 'Escape') setIsEditingName(false); }}
+                    className="h-8 text-xl font-bold w-72"
+                  />
+                </form>
+              ) : (
+                <button
+                  className="group/edit flex items-center gap-1.5 hover:opacity-80 transition-opacity cursor-pointer bg-transparent border-none p-0"
+                  onClick={() => { setEditedName(retreat.retreatName); setIsEditingName(true); }}
+                >
+                  <h1 className="text-xl font-bold text-foreground">{retreat.retreatName}</h1>
+                  <Pencil className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover/edit:opacity-100 transition-opacity" />
+                </button>
+              )}
               <Badge className={cn('text-xs', STATUS_STYLES[retreat.status])}>
                 {retreat.status}
               </Badge>
