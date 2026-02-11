@@ -1,10 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { Search, ChevronLeft, Users, LayoutGrid, List, CalendarDays, CheckSquare } from 'lucide-react';
+import { Search, ChevronLeft, Users, LayoutGrid, List, CalendarDays, CheckSquare, Eye, EyeOff } from 'lucide-react';
 import { isPast, parseISO } from 'date-fns';
 import { useApp } from '@/contexts/AppContext';
 import { PIPELINE_STAGES, PipelineStage, STAGE_STYLE_MAP, STATUS_STYLES, getEnrolledCount, getEffectiveCapacity, isEnrolledStage } from '@/lib/types';
+import { useRetreatVisibility } from '@/hooks/useRetreatVisibility';
 import Layout from '@/components/Layout';
 import ParticipantCard from '@/components/ParticipantCard';
 import ParticipantDetailSheet from '@/components/ParticipantDetailSheet';
@@ -18,6 +19,7 @@ import RetreatTasksView from '@/components/risk/RetreatTasksView';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 type BoardView = 'kanban' | 'list' | 'calendar' | 'tasks';
@@ -25,6 +27,7 @@ type BoardView = 'kanban' | 'list' | 'calendar' | 'tasks';
 export default function RetreatBoard() {
   const { id } = useParams<{ id: string }>();
   const { getRetreat, getRegistrationsForRetreat, getParticipant, moveStage, tasks: allTasks } = useApp();
+  const { getVisibility, toggleVisibility, isToggling } = useRetreatVisibility();
   const [search, setSearch] = useState('');
   const [selectedReg, setSelectedReg] = useState<string | null>(null);
   const [filters, setFilters] = useState<BoardFilter[]>([]);
@@ -159,6 +162,33 @@ export default function RetreatBoard() {
               <Badge className={cn('text-xs', STATUS_STYLES[retreat.status])}>
                 {retreat.status}
               </Badge>
+              {(() => {
+                const vis = getVisibility(retreat.retreatName);
+                if (!vis) return null;
+                return (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => toggleVisibility(retreat.retreatName)}
+                        disabled={isToggling}
+                        className={cn(
+                          'flex h-7 items-center gap-1.5 rounded-md border px-2 text-xs font-medium transition-colors',
+                          vis.showOnApplication
+                            ? 'border-primary/30 bg-primary/10 text-primary hover:bg-primary/20'
+                            : 'border-border bg-secondary text-muted-foreground hover:bg-secondary/80',
+                          isToggling && 'opacity-50 cursor-not-allowed',
+                        )}
+                      >
+                        {vis.showOnApplication ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
+                        {vis.showOnApplication ? 'On Application' : 'Hidden'}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {vis.showOnApplication ? 'Click to hide from application form' : 'Click to show on application form'}
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              })()}
             </div>
             <p className="text-xs text-muted-foreground">
               {retreat.location} · <Users className="inline h-3 w-3" /> {enrolled}/{capacity} enrolled · {allRegs.length} total
