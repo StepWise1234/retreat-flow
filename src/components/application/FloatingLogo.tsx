@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const BRAND_COLORS = ['#FFA500', '#FF4500', '#800080'];
 const DOT_SIZE_SM = 'h-4 w-4';
@@ -7,8 +8,12 @@ const DOT_SIZE_MD = 'md:h-5 md:w-5';
 
 export default function FloatingLogo() {
   const [expanded, setExpanded] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isApplyPage = location.pathname === '/apply';
 
   useEffect(() => {
+    if (isApplyPage) return; // dots-only on /apply
     const threshold = window.innerHeight * 0.65;
 
     const handleScroll = () => {
@@ -18,7 +23,13 @@ export default function FloatingLogo() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isApplyPage]);
+
+  const handleClick = () => {
+    if (isApplyPage) {
+      navigate('/');
+    }
+  };
 
   return (
     <motion.div
@@ -26,19 +37,22 @@ export default function FloatingLogo() {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      onClick={handleClick}
     >
-      {/* Text — slides in/out */}
-      <motion.span
-        className="text-lg md:text-xl font-bold tracking-tight text-foreground overflow-hidden whitespace-nowrap"
-        animate={{
-          width: expanded ? 'auto' : 0,
-          opacity: expanded ? 1 : 0,
-          marginRight: expanded ? 4 : 0,
-        }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      >
-        StepWise
-      </motion.span>
+      {/* Text — slides in/out (hidden on /apply) */}
+      {!isApplyPage && (
+        <motion.span
+          className="text-lg md:text-xl font-bold tracking-tight text-foreground overflow-hidden whitespace-nowrap"
+          animate={{
+            width: expanded ? 'auto' : 0,
+            opacity: expanded ? 1 : 0,
+            marginRight: expanded ? 4 : 0,
+          }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        >
+          StepWise
+        </motion.span>
+      )}
 
       {/* Dots */}
       <div className="flex items-center gap-1.5">
