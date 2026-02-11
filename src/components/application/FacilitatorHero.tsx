@@ -54,7 +54,7 @@ export default function FacilitatorHero() {
 
           {/* Silhouette */}
           <motion.div
-            className="relative z-10 h-[28rem] w-[23.2rem] sm:h-[33.6rem] sm:w-[28rem] md:h-[40.8rem] md:w-[33.6rem]"
+            className="relative z-10 h-[28rem] w-[23.2rem] sm:h-[33.6rem] sm:w-[28rem] md:h-[40.8rem] md:w-[33.6rem] overflow-hidden"
             style={{ mixBlendMode: 'multiply' }}
             variants={imageVariants}
             initial="hidden"
@@ -63,7 +63,7 @@ export default function FacilitatorHero() {
             <img
               src={silhouette}
               alt="Serene female silhouette with eyes closed"
-              className="h-full w-full object-contain object-bottom"
+              className="h-[125%] w-[125%] max-w-none object-contain object-bottom -ml-[12%] -mt-[5%]"
             />
           </motion.div>
         </div>
