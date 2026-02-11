@@ -138,7 +138,7 @@ export default function TrainingPhases() {
         </div>
 
         {/* Content area */}
-        <div className="min-h-[280px] sm:min-h-[260px]">
+        <div className="min-h-[200px]">
           <AnimatePresence mode="wait">
             {activePhase ? (
               <motion.div
