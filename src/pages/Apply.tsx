@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ApplyHero from '@/components/application/ApplyHero';
 import TrainingPhases from '@/components/application/TrainingPhases';
 import MasteryLevels from '@/components/application/MasteryLevels';
-import OrbitalSection from '@/components/application/OrbitalSection';
+
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
 import MadLibTextarea from '@/components/application/MadLibTextarea';
@@ -388,7 +388,7 @@ export default function Apply() {
         </section>
       ) : (
         <>
-      <OrbitalSection />
+      
       <FormHeader sections={SECTIONS} currentStep={step} onStepChange={setStep} />
 
       <main className="relative overflow-hidden bg-[#fafafa]">
