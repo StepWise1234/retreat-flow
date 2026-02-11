@@ -55,37 +55,21 @@ export default function MasteryLevels() {
   const activeLevel = levels.find((l) => l.id === activeId) ?? null;
 
   return (
-    <section className="relative overflow-hidden bg-[#0a0a0a]">
-      {/* Large decorative brand circles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div
-          className="absolute rounded-full blur-[120px] opacity-[0.07]"
-          style={{ backgroundColor: '#FFA500', width: '600px', height: '600px', top: '-15%', left: '-10%' }}
-        />
-        <div
-          className="absolute rounded-full blur-[120px] opacity-[0.07]"
-          style={{ backgroundColor: '#FF4500', width: '500px', height: '500px', top: '30%', right: '-8%' }}
-        />
-        <div
-          className="absolute rounded-full blur-[120px] opacity-[0.07]"
-          style={{ backgroundColor: '#800080', width: '550px', height: '550px', bottom: '-10%', left: '20%' }}
-        />
-      </div>
-
-      {/* Subtle grid */}
-      <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]">
+    <section className="relative overflow-hidden bg-background">
+      {/* Animated grid background */}
+      <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]">
         <AnimatedGridPattern
           numSquares={30}
-          maxOpacity={0.04}
+          maxOpacity={0.08}
           duration={4}
-          className="w-full h-full fill-white/5 stroke-white/5"
+          className="w-full h-full fill-foreground/5 stroke-foreground/5"
         />
       </div>
 
-      <div className="relative mx-auto max-w-3xl px-6 py-24 md:py-32">
+      <div className="relative mx-auto max-w-3xl px-6 py-20 md:py-28">
         {/* Section heading */}
         <motion.h2
-          className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white/90 text-center mb-4"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground/85 text-center mb-4"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -94,7 +78,7 @@ export default function MasteryLevels() {
           Three Levels of Mastery
         </motion.h2>
         <motion.p
-          className="text-center text-lg text-white/40 mb-16 max-w-xl mx-auto"
+          className="text-center text-lg text-foreground/50 mb-16 max-w-xl mx-auto"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -147,7 +131,7 @@ export default function MasteryLevels() {
                   className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight transition-colors duration-200"
                   style={{ color: isActive ? level.accentColor : undefined }}
                 >
-                  <span className={isActive ? '' : 'text-white/50 group-hover:text-white/80 transition-colors duration-200'}>
+                  <span className={isActive ? '' : 'text-foreground/60 group-hover:text-foreground/90 transition-colors duration-200'}>
                     {level.title}
                   </span>
                 </span>
@@ -172,18 +156,18 @@ export default function MasteryLevels() {
                   <p className="text-sm font-medium uppercase tracking-widest mb-2" style={{ color: activeLevel.accentColor }}>
                     {activeLevel.subtitle}
                   </p>
-                  <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white/90">
+                  <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground/85">
                     {activeLevel.title}
                   </h3>
                 </div>
-                <p className="text-lg leading-[1.8] text-white/50">
+                <p className="text-lg leading-[1.8] text-foreground/55">
                   {activeLevel.description}
                 </p>
                 <ul className="grid gap-3 pt-2">
                   {activeLevel.details.map((detail, i) => (
                     <motion.li
                       key={detail}
-                      className="flex items-start gap-3 text-white/55"
+                      className="flex items-start gap-3 text-foreground/65"
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: i * 0.08 }}
@@ -201,7 +185,7 @@ export default function MasteryLevels() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -12 }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="text-lg sm:text-xl leading-[1.9] text-white/40 text-center max-w-xl mx-auto"
+                className="text-lg sm:text-xl leading-[1.9] text-foreground/50 text-center max-w-xl mx-auto"
               >
                 Tap a circle above to explore each level of StepWise mastery.
               </motion.p>
