@@ -44,6 +44,11 @@ const phases = [
       'Advanced technique workshops',
       'Lifetime access to the practitioner community',
     ],
+    comingSoon: {
+      title: 'Coming Soon: StepWise App',
+      description:
+        'A secure, professional-grade platform built for the StepWise practitioner community. Access AI-supported session preparation tools, track participant capacity across progressive protocols, and maintain the documentation standards your practice demands — without the overhead. Beyond clinical support, the StepWise App connects you to a vetted network of fellow alumni: share case insights, coordinate peer consultation, and stay current with evolving protocols through a private, integrity-first community designed for practitioners who hold themselves to the highest standard.',
+    },
   },
 ];
 
@@ -174,6 +179,21 @@ export default function TrainingPhases() {
                     </motion.li>
                   ))}
                 </ul>
+                {'comingSoon' in activePhase && activePhase.comingSoon && (
+                  <motion.div
+                    className="mt-8 pt-6 border-t border-black/10"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.3 }}
+                  >
+                    <p className="text-lg font-semibold tracking-tight mb-2" style={{ color: '#800080' }}>
+                      {(activePhase as any).comingSoon.title}
+                    </p>
+                    <p className="text-base leading-[1.8] text-black/50">
+                      {(activePhase as any).comingSoon.description}
+                    </p>
+                  </motion.div>
+                )}
               </motion.div>
             ) : (
               <motion.p
