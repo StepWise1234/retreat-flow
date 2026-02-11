@@ -47,6 +47,11 @@ const levels = [
       'Supervision & mentorship pathway to trainer certification',
       'Contributing to the evolving StepWise evidence base',
     ],
+    comingSoon: {
+      title: 'Coming Soon: StepWise App',
+      description:
+        'An AI-powered clinical companion designed for StepWise practitioners. Track client capacity across sessions, receive real-time dosing guidance informed by nervous system baselines, and generate integration reports — all within a secure, HIPAA-aligned platform. The StepWise App learns from your practice patterns to surface insights, flag contraindications, and streamline the documentation that clinical work demands, so you can stay present with your clients.',
+    },
   },
 ];
 
@@ -177,6 +182,21 @@ export default function MasteryLevels() {
                     </motion.li>
                   ))}
                 </ul>
+                {'comingSoon' in activeLevel && activeLevel.comingSoon && (
+                  <motion.div
+                    className="mt-8 pt-6 border-t border-foreground/10"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.3 }}
+                  >
+                    <p className="text-lg font-semibold tracking-tight mb-2" style={{ color: '#800080' }}>
+                      {(activeLevel as any).comingSoon.title}
+                    </p>
+                    <p className="text-base leading-[1.8] text-foreground/50">
+                      {(activeLevel as any).comingSoon.description}
+                    </p>
+                  </motion.div>
+                )}
               </motion.div>
             ) : (
               <motion.p
