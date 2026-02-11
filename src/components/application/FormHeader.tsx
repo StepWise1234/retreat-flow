@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { SparklesCore } from '@/components/ui/sparkles';
+import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 import { cn } from '@/lib/utils';
 
 interface Section {
@@ -19,11 +19,21 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
   const currentSection = sections?.[currentStep];
 
   return (
-    <section className="relative overflow-hidden bg-black">
+    <section className="relative overflow-hidden bg-[#fafafa]">
+      {/* Animated grid background */}
+      <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]">
+        <AnimatedGridPattern
+          numSquares={30}
+          maxOpacity={0.08}
+          duration={4}
+          className="w-full h-full fill-black/5 stroke-black/5"
+        />
+      </div>
+
       <div className="relative mx-auto max-w-4xl px-6 pt-20 md:pt-28 pb-10 flex flex-col items-center justify-center">
         {/* Title */}
         <motion.h2
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white text-center z-10"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground text-center z-10"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
@@ -32,34 +42,22 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
           Training Application
         </motion.h2>
 
-        {/* Glowing line beneath text */}
+        {/* Brand-colored line beneath text */}
         <div className="relative mt-4 w-full max-w-lg h-px z-10">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(160_30%_72%)] to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(160_30%_72%)] to-transparent blur-sm" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF4500] to-transparent opacity-60" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF4500] to-transparent blur-sm opacity-30" />
         </div>
 
-        {/* Sparkles below the line */}
-        <div className="relative w-full h-20 mt-0 z-0">
-          <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_80%)]">
-            <SparklesCore
-              background="transparent"
-              minSize={0.4}
-              maxSize={1.5}
-              particleDensity={80}
-              className="w-full h-full"
-              particleColor="#ffffff"
-              speed={2}
-            />
-          </div>
-        </div>
+        {/* Spacer */}
+        <div className="h-12" />
 
         {/* Segmented step navigation */}
         {sections && (
-          <div className="w-full max-w-xl z-10 -mt-4">
+          <div className="w-full max-w-xl z-10">
             {/* Current page title */}
             <motion.p
               key={currentStep}
-              className="text-center text-2xl sm:text-3xl font-semibold tracking-wide text-white mb-5"
+              className="text-center text-2xl sm:text-3xl font-semibold tracking-wide text-foreground mb-5"
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
@@ -74,14 +72,14 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
                 className={cn(
                   'text-lg tracking-wide transition-colors duration-200',
                   prevSection
-                    ? 'text-white/50 hover:text-[hsl(160_30%_72%)] cursor-pointer'
+                    ? 'text-foreground/40 hover:text-[#FF4500] cursor-pointer'
                     : 'text-transparent pointer-events-none',
                 )}
               >
                 ← {prevSection?.label || 'Prev'}
               </button>
 
-              <span className="text-sm font-medium tracking-widest uppercase text-[hsl(160_30%_72%)]">
+              <span className="text-sm font-medium tracking-widest uppercase text-[#FF4500]">
                 {currentStep + 1} / {sections.length}
               </span>
 
@@ -90,7 +88,7 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
                 className={cn(
                   'text-lg tracking-wide transition-colors duration-200',
                   nextSection
-                    ? 'text-white/50 hover:text-[hsl(160_30%_72%)] cursor-pointer'
+                    ? 'text-foreground/40 hover:text-[#FF4500] cursor-pointer'
                     : 'text-transparent pointer-events-none',
                 )}
               >
@@ -113,13 +111,13 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
                     <div
                       className={cn(
                         'h-2 rounded-full transition-all duration-500 ease-out',
-                        isComplete && 'bg-[hsl(160_30%_72%)]',
-                        isCurrent && 'bg-[hsl(160_30%_72%)] shadow-[0_0_14px_hsl(160_30%_72%/0.6)]',
-                        !isComplete && !isCurrent && 'bg-white/12 group-hover:bg-white/25',
+                        isComplete && 'bg-[#FF4500]',
+                        isCurrent && 'bg-[#FF4500] shadow-[0_0_14px_rgba(255,69,0,0.4)]',
+                        !isComplete && !isCurrent && 'bg-foreground/10 group-hover:bg-foreground/20',
                       )}
                     />
                     {/* Tooltip label on hover */}
-                    <span className="block mt-1.5 text-[11px] text-center tracking-wide text-white/0 group-hover:text-white/50 transition-colors duration-200 whitespace-nowrap">
+                    <span className="block mt-1.5 text-[11px] text-center tracking-wide text-transparent group-hover:text-foreground/40 transition-colors duration-200 whitespace-nowrap">
                       {section.label}
                     </span>
                   </button>

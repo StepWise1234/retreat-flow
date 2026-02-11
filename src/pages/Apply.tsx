@@ -13,7 +13,7 @@ import MadLibInput from '@/components/application/MadLibInput';
 import MadLibTextarea from '@/components/application/MadLibTextarea';
 import FloatingLogo from '@/components/application/FloatingLogo';
 import SiteFooter from '@/components/application/SiteFooter';
-import { SparklesCore } from '@/components/ui/sparkles';
+import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 
 const PHYSICAL_SYMPTOMS = [
   'Panic attacks', 'Tension', 'Quick temper/irritability', 'Inadequate Sleep',
@@ -150,7 +150,7 @@ const initialFormData: FormData = {
   retreatId: '', agreeToTerms: false,
 };
 
-/* ─── Dark-themed checkbox pill ─── */
+/* ─── Light-themed checkbox pill ─── */
 function DarkCheckboxPill({ checked, label, onToggle }: { checked: boolean; label: string; onToggle: () => void }) {
   return (
     <motion.button
@@ -160,15 +160,15 @@ function DarkCheckboxPill({ checked, label, onToggle }: { checked: boolean; labe
       className={cn(
         'flex items-center gap-2.5 rounded-full px-4 py-2.5 text-sm cursor-pointer transition-all duration-300 border',
         checked
-          ? 'border-[hsl(160_40%_55%)] bg-[hsl(160_40%_55%/0.12)] text-white shadow-[0_0_12px_hsl(160_40%_55%/0.2)]'
-          : 'border-white/10 bg-white/[0.03] text-white/60 hover:border-white/20 hover:bg-white/[0.06]',
+          ? 'border-[#FF4500] bg-[#FF4500]/8 text-foreground shadow-[0_0_12px_rgba(255,69,0,0.12)]'
+          : 'border-foreground/10 bg-foreground/[0.02] text-foreground/60 hover:border-foreground/20 hover:bg-foreground/[0.04]',
       )}
     >
       <span className={cn(
         'flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border transition-colors duration-200',
-        checked ? 'border-[hsl(160_40%_55%)] bg-[hsl(160_40%_55%)]' : 'border-white/30',
+        checked ? 'border-[#FF4500] bg-[#FF4500]' : 'border-foreground/25',
       )}>
-        {checked && <Check className="h-3 w-3 text-black" />}
+        {checked && <Check className="h-3 w-3 text-white" />}
       </span>
       {label}
     </motion.button>
@@ -195,15 +195,15 @@ function CheckboxGroup({ items, selected, onChange, otherValue, onOtherChange }:
           <div className={cn(
             'flex items-center gap-2.5 rounded-full px-4 py-2.5 text-sm border transition-all duration-300',
             otherValue?.trim()
-              ? 'border-[hsl(160_40%_55%)] bg-[hsl(160_40%_55%/0.12)]'
-              : 'border-white/10 bg-white/[0.03]',
+              ? 'border-[#FF4500] bg-[#FF4500]/8'
+              : 'border-foreground/10 bg-foreground/[0.02]',
           )}>
-            <span className="text-white/60 shrink-0">Other:</span>
+            <span className="text-foreground/50 shrink-0">Other:</span>
             <input
               placeholder="Please specify…"
               value={otherValue || ''}
               onChange={(e) => onOtherChange(e.target.value)}
-              className="bg-transparent border-none outline-none text-white placeholder:text-white/25 text-sm flex-1"
+              className="bg-transparent border-none outline-none text-foreground placeholder:text-foreground/20 text-sm flex-1"
             />
           </div>
         </div>
@@ -212,7 +212,7 @@ function CheckboxGroup({ items, selected, onChange, otherValue, onOtherChange }:
   );
 }
 
-/* ─── Dark radio pill ─── */
+/* ─── Light radio pill ─── */
 function DarkRadioPill({ checked, label, onSelect }: { checked: boolean; label: string; onSelect: () => void }) {
   return (
     <motion.button
@@ -222,37 +222,37 @@ function DarkRadioPill({ checked, label, onSelect }: { checked: boolean; label: 
       className={cn(
         'flex items-center gap-3 rounded-full px-5 py-3 text-sm cursor-pointer transition-all duration-300 border w-full text-left',
         checked
-          ? 'border-[hsl(200_60%_60%)] bg-[hsl(200_60%_60%/0.1)] text-white shadow-[0_0_12px_hsl(200_60%_60%/0.15)]'
-          : 'border-white/10 bg-white/[0.03] text-white/60 hover:border-white/20 hover:bg-white/[0.06]',
+          ? 'border-[#800080] bg-[#800080]/8 text-foreground shadow-[0_0_12px_rgba(128,0,128,0.12)]'
+          : 'border-foreground/10 bg-foreground/[0.02] text-foreground/60 hover:border-foreground/20 hover:bg-foreground/[0.04]',
       )}
     >
       <span className={cn(
         'flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors duration-200',
-        checked ? 'border-[hsl(200_60%_60%)]' : 'border-white/30',
+        checked ? 'border-[#800080]' : 'border-foreground/25',
       )}>
-        {checked && <span className="h-2 w-2 rounded-full bg-[hsl(200_60%_60%)]" />}
+        {checked && <span className="h-2 w-2 rounded-full bg-[#800080]" />}
       </span>
       {label}
     </motion.button>
   );
 }
 
-/* ─── Dark stress slider ─── */
+/* ─── Light stress slider ─── */
 function DarkSlider({ value, onChange }: { value: number[]; onChange: (v: number[]) => void }) {
   const level = value[0];
   const percent = (level / 10) * 100;
   const trackColor = level <= 3
-    ? 'hsl(160 40% 55%)'
+    ? '#FFA500'
     : level <= 6
-      ? 'hsl(45 90% 60%)'
-      : 'hsl(0 72% 55%)';
+      ? '#FF4500'
+      : '#800080';
 
   return (
     <div className="px-2 py-4">
-      <div className="relative h-2 w-full rounded-full bg-white/10 overflow-hidden">
+      <div className="relative h-2 w-full rounded-full bg-foreground/10 overflow-hidden">
         <div
           className="absolute left-0 top-0 h-full rounded-full transition-all duration-300"
-          style={{ width: `${percent}%`, background: trackColor, boxShadow: `0 0 12px ${trackColor}` }}
+          style={{ width: `${percent}%`, background: trackColor, boxShadow: `0 0 12px ${trackColor}40` }}
         />
       </div>
       <input
@@ -270,16 +270,16 @@ function DarkSlider({ value, onChange }: { value: number[]; onChange: (v: number
           style={{
             left: `${percent}%`,
             borderColor: trackColor,
-            backgroundColor: 'black',
-            boxShadow: `0 0 8px ${trackColor}`,
+            backgroundColor: '#fafafa',
+            boxShadow: `0 0 8px ${trackColor}40`,
           }}
           animate={{ left: `${percent}%` }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         >
-          <span className="text-[8px] font-bold text-white">{level}</span>
+          <span className="text-[8px] font-bold" style={{ color: trackColor }}>{level}</span>
         </motion.div>
       </div>
-      <div className="flex justify-between text-sm text-white/40 mt-2">
+      <div className="flex justify-between text-sm text-foreground/35 mt-2">
         <span>0 — calm</span>
         <motion.span
           key={level}
@@ -342,16 +342,24 @@ export default function Apply() {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background">
       <FloatingLogo />
       <ApplyHero />
       <TrainingPhases />
 
       {submitted ? (
-        <section className="relative overflow-hidden bg-black">
+        <section className="relative overflow-hidden bg-[#fafafa]">
+          <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]">
+            <AnimatedGridPattern
+              numSquares={30}
+              maxOpacity={0.08}
+              duration={4}
+              className="w-full h-full fill-black/5 stroke-black/5"
+            />
+          </div>
           <div className="relative mx-auto max-w-4xl px-6 pt-24 md:pt-36 pb-24 flex flex-col items-center justify-center">
             <motion.h2
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white text-center z-10"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground text-center z-10"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -360,26 +368,14 @@ export default function Apply() {
             </motion.h2>
 
             <div className="relative mt-4 w-full max-w-lg h-px z-10">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(160_30%_72%)] to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(160_30%_72%)] to-transparent blur-sm" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF4500] to-transparent opacity-60" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF4500] to-transparent blur-sm opacity-30" />
             </div>
 
-            <div className="relative w-full h-20 mt-0 z-0">
-              <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_80%)]">
-                <SparklesCore
-                  background="transparent"
-                  minSize={0.4}
-                  maxSize={1.5}
-                  particleDensity={80}
-                  className="w-full h-full"
-                  particleColor="#ffffff"
-                  speed={2}
-                />
-              </div>
-            </div>
+            <div className="h-12" />
 
             <motion.p
-              className="text-lg sm:text-xl md:text-2xl text-white/70 text-center max-w-xl z-10 -mt-4 leading-relaxed"
+              className="text-lg sm:text-xl md:text-2xl text-foreground/60 text-center max-w-xl z-10 leading-relaxed"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -393,7 +389,18 @@ export default function Apply() {
       <OrbitalSection />
       <FormHeader sections={SECTIONS} currentStep={step} onStepChange={setStep} />
 
-      <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
+      <main className="relative overflow-hidden bg-[#fafafa]">
+        {/* Animated grid background */}
+        <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]">
+          <AnimatedGridPattern
+            numSquares={40}
+            maxOpacity={0.06}
+            duration={4}
+            className="w-full h-full fill-black/5 stroke-black/5"
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-3xl px-4 py-6 sm:px-6">
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
@@ -407,21 +414,21 @@ export default function Apply() {
 
             {/* 0: About You */}
             {step === 0 && (
-              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
+              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <p>
                   I'd like to join{' '}
                   <span className="inline-block w-64 sm:w-80 align-bottom">
                     <Select value={form.retreatId} onValueChange={(v) => update('retreatId', v)}>
-                      <SelectTrigger className="border-none border-b-2 rounded-none bg-transparent text-lg font-bold text-white h-auto py-0.5 px-0 shadow-none focus:ring-0 [&>svg]:ml-2 [&>svg]:text-white/40 justify-center text-center">
+                      <SelectTrigger className="border-none border-b-2 rounded-none bg-transparent text-lg font-bold text-foreground h-auto py-0.5 px-0 shadow-none focus:ring-0 [&>svg]:ml-2 [&>svg]:text-foreground/30 justify-center text-center">
                         <SelectValue placeholder="select a retreat" />
                       </SelectTrigger>
-                      <SelectContent className="bg-[hsl(0_0%_10%)] border-white/15 text-white">
+                      <SelectContent className="bg-background border-foreground/10 text-foreground">
                         {activeRetreats.map((r) => (
-                          <SelectItem key={r.id} value={r.id} className="text-white/80 focus:bg-white/10 focus:text-white">{r.retreatName}</SelectItem>
+                          <SelectItem key={r.id} value={r.id} className="text-foreground/70 focus:bg-foreground/5 focus:text-foreground">{r.retreatName}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
-                    <span className="block h-px rounded-full bg-gradient-to-r from-transparent via-[hsl(160_30%_72%)] to-transparent opacity-60" />
+                    <span className="block h-px rounded-full bg-gradient-to-r from-transparent via-[#FF4500] to-transparent opacity-50" />
                   </span>.
                 </p>
                 <p>
@@ -444,7 +451,7 @@ export default function Apply() {
 
             {/* 1: Reach Me */}
             {step === 1 && (
-              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
+              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <p>
                   The best way to reach me is{' '}
                   <MadLibInput value={form.email} onChange={(v) => update('email', v)} placeholder="email address" className="w-56 sm:w-72" type="email" />.
@@ -462,7 +469,7 @@ export default function Apply() {
 
             {/* 2: Emergency */}
             {step === 2 && (
-              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
+              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <p>
                   In case of emergency, please contact{' '}
                   <MadLibInput value={form.emergencyFirstName} onChange={(v) => update('emergencyFirstName', v)} placeholder="first name" className="w-36 sm:w-44" />{' '}
@@ -477,7 +484,7 @@ export default function Apply() {
 
             {/* 3: Ship To */}
             {step === 3 && (
-              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
+              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <p>
                   We'll ship your Student Training Manual before the retreat.
                 </p>
@@ -502,7 +509,7 @@ export default function Apply() {
 
             {/* 4: Experience */}
             {step === 4 && (
-              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
+              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <div>
                   <p className="mb-2">My experience with journey work:</p>
                   <MadLibTextarea value={form.journeyWorkExperience} onChange={(v) => update('journeyWorkExperience', v)} placeholder="Share broadly, no identifying names…" />
@@ -528,7 +535,7 @@ export default function Apply() {
 
             {/* 5: My Body */}
             {step === 5 && (
-              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
+              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <div>
                   <p className="mb-2">Current physical health issues:</p>
                   <MadLibTextarea value={form.physicalHealthIssues} onChange={(v) => update('physicalHealthIssues', v)} placeholder="Any significant conditions…" rows={2} />
@@ -546,7 +553,7 @@ export default function Apply() {
                   <MadLibTextarea value={form.allergies} onChange={(v) => update('allergies', v)} placeholder="Allergies and medications…" rows={2} />
                 </div>
                 <div>
-                  <p className="mb-3 text-base text-white/50">Physical symptoms I experience:</p>
+                  <p className="mb-3 text-base text-foreground/40">Physical symptoms I experience:</p>
                   <CheckboxGroup
                     items={PHYSICAL_SYMPTOMS}
                     selected={form.physicalSymptoms}
@@ -556,7 +563,7 @@ export default function Apply() {
                   />
                 </div>
                 <div>
-                  <p className="mb-3 text-base text-white/50">Dietary preferences:</p>
+                  <p className="mb-3 text-base text-foreground/40">Dietary preferences:</p>
                   <CheckboxGroup
                     items={DIETARY_OPTIONS}
                     selected={form.dietaryPreferences}
@@ -570,7 +577,7 @@ export default function Apply() {
 
             {/* 6: My Mind */}
             {step === 6 && (
-              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
+              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <div>
                   <p className="mb-2">Mental health diagnoses:</p>
                   <MadLibTextarea value={form.dsmDiagnosis} onChange={(v) => update('dsmDiagnosis', v)} placeholder="Diagnosis and when it occurred…" rows={2} />
@@ -600,13 +607,13 @@ export default function Apply() {
 
             {/* 7: Stress */}
             {step === 7 && (
-              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
+              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <div>
                   <p className="mb-4">My stress level right now is:</p>
                   <DarkSlider value={form.stressLevel} onChange={(v) => update('stressLevel', v)} />
                 </div>
                 <div>
-                  <p className="mb-3 text-base text-white/50">I've experienced:</p>
+                  <p className="mb-3 text-base text-foreground/40">I've experienced:</p>
                   <CheckboxGroup
                     items={LIFE_EXPERIENCES}
                     selected={form.lifeExperiences}
@@ -618,7 +625,7 @@ export default function Apply() {
                   <MadLibTextarea value={form.stressSources} onChange={(v) => update('stressSources', v)} placeholder="What weighs on you…" rows={2} />
                 </div>
                 <div>
-                  <p className="mb-3 text-base text-white/50">Cognitive symptoms I notice:</p>
+                  <p className="mb-3 text-base text-foreground/40">Cognitive symptoms I notice:</p>
                   <CheckboxGroup
                     items={COGNITIVE_SYMPTOMS}
                     selected={form.cognitiveSymptoms}
@@ -628,7 +635,7 @@ export default function Apply() {
                   />
                 </div>
                 <div>
-                  <p className="mb-3 text-base text-white/50">I take the edge off by:</p>
+                  <p className="mb-3 text-base text-foreground/40">I take the edge off by:</p>
                   <CheckboxGroup
                     items={COPING_MECHANISMS}
                     selected={form.copingMechanisms}
@@ -646,9 +653,9 @@ export default function Apply() {
 
             {/* 8: Self-Care */}
             {step === 8 && (
-              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-white/70">
+              <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <div>
-                  <p className="mb-3 text-base text-white/50">How I take care of myself:</p>
+                  <p className="mb-3 text-base text-foreground/40">How I take care of myself:</p>
                   <div className="space-y-2">
                     {SELF_CARE_OPTIONS.map((option) => (
                       <DarkRadioPill key={option} checked={form.selfCare === option} label={option} onSelect={() => update('selfCare', option)} />
@@ -656,7 +663,7 @@ export default function Apply() {
                   </div>
                 </div>
                 <div>
-                  <p className="mb-3 text-base text-white/50">I turn to for support:</p>
+                  <p className="mb-3 text-base text-foreground/40">I turn to for support:</p>
                   <CheckboxGroup
                     items={SUPPORT_NETWORK}
                     selected={form.supportNetwork}
@@ -682,27 +689,27 @@ export default function Apply() {
 
             {/* 9: Confirm */}
             {step === 9 && (
-              <div className="space-y-6 text-lg sm:text-xl leading-relaxed text-white/70">
+              <div className="space-y-6 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <motion.div
                   initial={{ scale: 0.95, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="flex items-center gap-2 text-[hsl(160_40%_55%)]"
+                  className="flex items-center gap-2 text-[#FF4500]"
                 >
                   <Sparkles className="h-5 w-5" />
                   <span className="text-base font-medium">Almost there! Here's a summary:</span>
                 </motion.div>
-                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5 text-sm text-white/70 space-y-2.5">
-                  <p><span className="text-white/40">Name:</span> <span className="text-white">{form.preferredName || form.firstName} {form.lastName}</span></p>
-                  <p><span className="text-white/40">Email:</span> <span className="text-white">{form.email}</span></p>
-                  <p><span className="text-white/40">Phone:</span> <span className="text-white">{form.phone}</span></p>
-                  {form.allergies && <p><span className="text-white/40">Allergies:</span> <span className="text-white">{form.allergies}</span></p>}
+                <div className="rounded-xl border border-foreground/10 bg-background/80 backdrop-blur-sm p-5 text-sm text-foreground/60 space-y-2.5">
+                  <p><span className="text-foreground/35">Name:</span> <span className="text-foreground">{form.preferredName || form.firstName} {form.lastName}</span></p>
+                  <p><span className="text-foreground/35">Email:</span> <span className="text-foreground">{form.email}</span></p>
+                  <p><span className="text-foreground/35">Phone:</span> <span className="text-foreground">{form.phone}</span></p>
+                  {form.allergies && <p><span className="text-foreground/35">Allergies:</span> <span className="text-foreground">{form.allergies}</span></p>}
                   {form.dietaryPreferences.length > 0 && (
-                    <p><span className="text-white/40">Dietary:</span> <span className="text-white">{form.dietaryPreferences.join(', ')}</span></p>
+                    <p><span className="text-foreground/35">Dietary:</span> <span className="text-foreground">{form.dietaryPreferences.join(', ')}</span></p>
                   )}
-                  {form.signalHandle && <p><span className="text-white/40">Signal:</span> <span className="text-white">{form.signalHandle}</span></p>}
+                  {form.signalHandle && <p><span className="text-foreground/35">Signal:</span> <span className="text-foreground">{form.signalHandle}</span></p>}
                   {form.trainingGoals && (
-                    <p><span className="text-white/40">Goals:</span> <span className="text-white">{form.trainingGoals.substring(0, 120)}{form.trainingGoals.length > 120 ? '…' : ''}</span></p>
+                    <p><span className="text-foreground/35">Goals:</span> <span className="text-foreground">{form.trainingGoals.substring(0, 120)}{form.trainingGoals.length > 120 ? '…' : ''}</span></p>
                   )}
                 </div>
 
@@ -713,17 +720,17 @@ export default function Apply() {
                   className={cn(
                     'flex items-start gap-3 rounded-xl px-5 py-4 cursor-pointer transition-all duration-300 border w-full text-left',
                     form.agreeToTerms
-                      ? 'border-[hsl(160_40%_55%)] bg-[hsl(160_40%_55%/0.08)]'
-                      : 'border-white/10 bg-white/[0.03] hover:border-white/20',
+                      ? 'border-[#FF4500] bg-[#FF4500]/8'
+                      : 'border-foreground/10 bg-foreground/[0.02] hover:border-foreground/20',
                   )}
                 >
                   <span className={cn(
                     'flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-colors duration-200 mt-0.5',
-                    form.agreeToTerms ? 'border-[hsl(160_40%_55%)] bg-[hsl(160_40%_55%)]' : 'border-white/30',
+                    form.agreeToTerms ? 'border-[#FF4500] bg-[#FF4500]' : 'border-foreground/25',
                   )}>
-                    {form.agreeToTerms && <Check className="h-3.5 w-3.5 text-black" />}
+                    {form.agreeToTerms && <Check className="h-3.5 w-3.5 text-white" />}
                   </span>
-                  <span className="text-sm text-white/60 leading-relaxed">
+                  <span className="text-sm text-foreground/50 leading-relaxed">
                     I confirm that the information provided is accurate and I consent to it being used for the purpose of supporting me during the training. My personal information will be kept strictly confidential.
                   </span>
                 </motion.button>
@@ -735,7 +742,7 @@ export default function Apply() {
               {step > 0 && (
                 <button
                   onClick={prev}
-                  className="self-start text-white/30 hover:text-white/60 text-sm tracking-wide transition-colors duration-200"
+                  className="self-start text-foreground/25 hover:text-foreground/50 text-sm tracking-wide transition-colors duration-200"
                 >
                   ← {SECTIONS[step - 1]?.label}
                 </button>
@@ -746,12 +753,12 @@ export default function Apply() {
                   onClick={next}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className="group relative px-10 py-3.5 rounded-full text-lg font-medium tracking-wide text-white/90 overflow-hidden cursor-pointer transition-all duration-300 border border-white/10 hover:border-[hsl(160_30%_72%/0.4)]"
+                  className="group relative px-10 py-3.5 rounded-full text-lg font-medium tracking-wide text-foreground/80 overflow-hidden cursor-pointer transition-all duration-300 border border-foreground/10 hover:border-[#FF4500]/40"
                 >
-                  <span className="absolute inset-0 rounded-full bg-white/[0.04] transition-opacity duration-300 group-hover:opacity-0" />
-                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[hsl(160_30%_72%/0.12)] via-[hsl(160_30%_72%/0.18)] to-[hsl(160_30%_72%/0.12)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_hsl(160_30%_72%/0)] group-hover:shadow-[0_0_24px_-4px_hsl(160_30%_72%/0.5)] transition-shadow duration-500" />
-                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-[hsl(160_30%_72%/0.08)] to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 ease-out" />
+                  <span className="absolute inset-0 rounded-full bg-foreground/[0.02] transition-opacity duration-300 group-hover:opacity-0" />
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FF4500]/8 via-[#FF4500]/12 to-[#FF4500]/8 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_rgba(255,69,0,0)] group-hover:shadow-[0_0_24px_-4px_rgba(255,69,0,0.3)] transition-shadow duration-500" />
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-[#FF4500]/6 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 ease-out" />
                   <span className="relative z-10 flex items-center gap-2">
                     Continue <ChevronRight className="h-5 w-5 group-hover:translate-x-0.5 transition-transform duration-200" />
                   </span>
@@ -761,10 +768,10 @@ export default function Apply() {
                   onClick={handleSubmit}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className="group relative px-10 py-3.5 rounded-full text-lg font-semibold tracking-wide text-black overflow-hidden cursor-pointer transition-all duration-300"
+                  className="group relative px-10 py-3.5 rounded-full text-lg font-semibold tracking-wide text-white overflow-hidden cursor-pointer transition-all duration-300"
                 >
-                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[hsl(160_28%_68%)] via-[hsl(160_30%_72%)] to-[hsl(160_28%_68%)]" />
-                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_hsl(160_30%_72%/0)] group-hover:shadow-[0_0_30px_-4px_hsl(160_30%_72%/0.6)] transition-shadow duration-500" />
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FF4500] via-[#FF4500] to-[#800080]" />
+                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_rgba(255,69,0,0)] group-hover:shadow-[0_0_30px_-4px_rgba(255,69,0,0.4)] transition-shadow duration-500" />
                   <span className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 ease-out" />
                   <span className="relative z-10 flex items-center gap-2">
                     <Check className="h-5 w-5" /> Submit Application
@@ -786,12 +793,12 @@ export default function Apply() {
                       <div
                         className={cn(
                           'h-2 rounded-full transition-all duration-500 ease-out',
-                          isComplete && 'bg-[hsl(160_30%_72%)]',
-                          isCurrent && 'bg-[hsl(160_30%_72%)] shadow-[0_0_14px_hsl(160_30%_72%/0.6)]',
-                          !isComplete && !isCurrent && 'bg-white/12 group-hover:bg-white/25',
+                          isComplete && 'bg-[#FF4500]',
+                          isCurrent && 'bg-[#FF4500] shadow-[0_0_14px_rgba(255,69,0,0.4)]',
+                          !isComplete && !isCurrent && 'bg-foreground/8 group-hover:bg-foreground/15',
                         )}
                       />
-                      <span className="block mt-1.5 text-[11px] text-center tracking-wide text-white/0 group-hover:text-white/50 transition-colors duration-200 whitespace-nowrap">
+                      <span className="block mt-1.5 text-[11px] text-center tracking-wide text-transparent group-hover:text-foreground/40 transition-colors duration-200 whitespace-nowrap">
                         {section.label}
                       </span>
                     </button>
@@ -801,6 +808,7 @@ export default function Apply() {
             </div>
           </motion.div>
         </AnimatePresence>
+        </div>
       </main>
         </>
       )}
