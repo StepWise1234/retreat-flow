@@ -63,7 +63,7 @@ const SECTIONS = [
   { label: 'About You', index: 0 },
   { label: 'Reach Me', index: 1 },
   { label: 'Emergency', index: 2 },
-  { label: 'Ship To', index: 3 },
+  { label: 'Address', index: 3 },
   { label: 'Experience', index: 4 },
   { label: 'My Body', index: 5 },
   { label: 'My Mind', index: 6 },
@@ -422,7 +422,7 @@ export default function Apply() {
                   <span className="inline-block w-64 sm:w-80 align-bottom">
                     <Select value={form.retreatId} onValueChange={(v) => update('retreatId', v)}>
                       <SelectTrigger className="border-none border-b-2 rounded-none bg-transparent text-lg font-bold text-foreground h-auto py-0.5 px-0 shadow-none focus:ring-0 [&>svg]:ml-2 [&>svg]:text-foreground/30 justify-center text-center">
-                        <SelectValue placeholder="select a retreat" />
+                        <SelectValue placeholder="select a Beginning Level training" />
                       </SelectTrigger>
                       <SelectContent className="bg-background border-foreground/10 text-foreground">
                         {activeRetreats.map((r) => (
@@ -488,10 +488,7 @@ export default function Apply() {
             {step === 3 && (
               <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <p>
-                  We'll ship your Student Training Manual before the retreat.
-                </p>
-                <p>
-                  Send it to{' '}
+                  My mailing address is{' '}
                   <MadLibInput value={form.streetAddress} onChange={(v) => update('streetAddress', v)} placeholder="street address" className="w-full sm:w-80" />
                 </p>
                 <p>
