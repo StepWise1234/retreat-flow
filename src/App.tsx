@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { AppProvider } from "@/contexts/AppContext";
 import ApplicationForm from "./pages/ApplicationForm";
 import Apply from "./pages/Apply";
@@ -16,6 +17,12 @@ import MessageCenter from "./pages/MessageCenter";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -25,6 +32,7 @@ const App = () => (
         <AppProvider>
           <Toaster />
           <Sonner />
+          <ScrollToTop />
           <Routes>
             {/* Public: Application Form is the homepage */}
             <Route path="/" element={<ApplicationForm />} />
