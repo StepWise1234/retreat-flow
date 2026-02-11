@@ -39,7 +39,7 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          Training Application
+          Application
         </motion.h2>
 
         {/* Brand-colored line beneath text */}
