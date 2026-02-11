@@ -27,7 +27,7 @@ type BoardView = 'kanban' | 'list' | 'calendar' | 'tasks';
 export default function RetreatBoard() {
   const { id } = useParams<{ id: string }>();
   const { getRetreat, getRegistrationsForRetreat, getParticipant, moveStage, updateRetreat, tasks: allTasks } = useApp();
-  const { getVisibility, toggleVisibility, isToggling } = useRetreatVisibility();
+  const { getVisibility, toggleVisibility, isToggling, renameRetreat } = useRetreatVisibility();
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState('');
   const [search, setSearch] = useState('');
@@ -166,6 +166,7 @@ export default function RetreatBoard() {
                   onSubmit={(e) => {
                     e.preventDefault();
                     if (editedName.trim() && editedName.trim() !== retreat.retreatName) {
+                      renameRetreat(retreat.retreatName, editedName.trim());
                       updateRetreat(retreat.id, { retreatName: editedName.trim() });
                     }
                     setIsEditingName(false);
@@ -177,6 +178,7 @@ export default function RetreatBoard() {
                     onChange={(e) => setEditedName(e.target.value)}
                     onBlur={() => {
                       if (editedName.trim() && editedName.trim() !== retreat.retreatName) {
+                        renameRetreat(retreat.retreatName, editedName.trim());
                         updateRetreat(retreat.id, { retreatName: editedName.trim() });
                       }
                       setIsEditingName(false);
