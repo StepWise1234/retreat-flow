@@ -54,7 +54,7 @@ export default function FacilitatorHero() {
 
           {/* Silhouette */}
           <motion.div
-            className="relative z-10 h-[28rem] w-[23.2rem] sm:h-[33.6rem] sm:w-[28rem] md:h-[40.8rem] md:w-[33.6rem] overflow-hidden"
+            className="relative z-10 h-[22.4rem] w-[18.56rem] sm:h-[26.88rem] sm:w-[22.4rem] md:h-[32.64rem] md:w-[26.88rem] overflow-hidden"
             style={{ mixBlendMode: 'multiply' }}
             variants={imageVariants}
             initial="hidden"
