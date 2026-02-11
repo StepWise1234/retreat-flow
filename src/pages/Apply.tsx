@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import ApplyHero from '@/components/application/ApplyHero';
 import TrainingPhases from '@/components/application/TrainingPhases';
+import MasteryLevels from '@/components/application/MasteryLevels';
 import OrbitalSection from '@/components/application/OrbitalSection';
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
@@ -346,6 +347,7 @@ export default function Apply() {
       <FloatingLogo />
       <ApplyHero />
       <TrainingPhases />
+      <MasteryLevels />
 
       {submitted ? (
         <section className="relative overflow-hidden bg-[#fafafa]">
