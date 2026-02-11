@@ -55,7 +55,7 @@ export default function MasteryLevels() {
   const activeLevel = levels.find((l) => l.id === activeId) ?? null;
 
   return (
-    <section className="relative overflow-hidden bg-background">
+    <section className="relative overflow-hidden">
       {/* Animated grid background */}
       <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]">
         <AnimatedGridPattern
