@@ -13,10 +13,23 @@ interface FormHeaderProps {
   onStepChange?: (step: number) => void;
 }
 
+function getStepColor(idx: number, total: number) {
+  const t = total <= 1 ? 0 : idx / (total - 1);
+  if (t < 1 / 3) return '#FF4500';   // Red-Orange
+  if (t < 2 / 3) return '#FFA500';   // Orange
+  return '#800080';                    // Purple
+}
+
+function getStepGlow(color: string) {
+  return `0 0 14px ${color}66`;
+}
+
 export default function FormHeader({ sections, currentStep = 0, onStepChange }: FormHeaderProps) {
   const prevSection = sections && currentStep > 0 ? sections[currentStep - 1] : null;
   const nextSection = sections && currentStep < (sections?.length ?? 0) - 1 ? sections[currentStep + 1] : null;
   const currentSection = sections?.[currentStep];
+  const total = sections?.length ?? 1;
+  const activeColor = getStepColor(currentStep, total);
 
   return (
     <section className="relative overflow-hidden bg-[#fafafa]">
@@ -44,8 +57,8 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
 
         {/* Brand-colored line beneath text */}
         <div className="relative mt-4 w-full max-w-lg h-px z-10">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF4500] to-transparent opacity-60" />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF4500] to-transparent blur-sm opacity-30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent opacity-60" style={{ backgroundImage: `linear-gradient(to right, transparent, ${activeColor}, transparent)` }} />
+          <div className="absolute inset-0 blur-sm opacity-30" style={{ backgroundImage: `linear-gradient(to right, transparent, ${activeColor}, transparent)` }} />
         </div>
 
         {/* Spacer */}
@@ -72,14 +85,17 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
                 className={cn(
                   'text-lg tracking-wide transition-colors duration-200',
                   prevSection
-                    ? 'text-foreground/40 hover:text-[#FF4500] cursor-pointer'
+                    ? 'text-foreground/40 cursor-pointer'
                     : 'text-transparent pointer-events-none',
                 )}
+                style={prevSection ? { ['--hover-color' as string]: activeColor } : undefined}
+                onMouseEnter={(e) => prevSection && (e.currentTarget.style.color = activeColor)}
+                onMouseLeave={(e) => prevSection && (e.currentTarget.style.color = '')}
               >
                 ← {prevSection?.label || 'Prev'}
               </button>
 
-              <span className="text-sm font-medium tracking-widest uppercase text-[#FF4500]">
+              <span className="text-sm font-medium tracking-widest uppercase" style={{ color: activeColor }}>
                 {currentStep + 1} / {sections.length}
               </span>
 
@@ -88,9 +104,11 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
                 className={cn(
                   'text-lg tracking-wide transition-colors duration-200',
                   nextSection
-                    ? 'text-foreground/40 hover:text-[#FF4500] cursor-pointer'
+                    ? 'text-foreground/40 cursor-pointer'
                     : 'text-transparent pointer-events-none',
                 )}
+                onMouseEnter={(e) => nextSection && (e.currentTarget.style.color = activeColor)}
+                onMouseLeave={(e) => nextSection && (e.currentTarget.style.color = '')}
               >
                 {nextSection?.label || 'Next'} →
               </button>
@@ -101,6 +119,7 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
               {sections.map((section, idx) => {
                 const isComplete = idx < currentStep;
                 const isCurrent = idx === currentStep;
+                const segColor = getStepColor(idx, total);
                 return (
                   <button
                     key={idx}
@@ -111,10 +130,16 @@ export default function FormHeader({ sections, currentStep = 0, onStepChange }: 
                     <div
                       className={cn(
                         'h-2 rounded-full transition-all duration-500 ease-out',
-                        isComplete && 'bg-[#FF4500]',
-                        isCurrent && 'bg-[#FF4500] shadow-[0_0_14px_rgba(255,69,0,0.4)]',
                         !isComplete && !isCurrent && 'bg-foreground/10 group-hover:bg-foreground/20',
                       )}
+                      style={
+                        isComplete || isCurrent
+                          ? {
+                              backgroundColor: segColor,
+                              boxShadow: isCurrent ? getStepGlow(segColor) : undefined,
+                            }
+                          : undefined
+                      }
                     />
                     {/* Tooltip label on hover */}
                     <span className="block mt-1.5 text-[11px] text-center tracking-wide text-transparent group-hover:text-foreground/40 transition-colors duration-200 whitespace-nowrap">
