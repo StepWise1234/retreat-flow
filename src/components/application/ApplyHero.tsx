@@ -24,7 +24,7 @@ const descVariants = {
 export default function ApplyHero() {
   return (
     <section className="relative bg-white">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-8 md:pb-0 min-h-[70vh]">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-0 min-h-[60vh] md:min-h-[70vh] md:pb-0">
 
         {/* Left text — description */}
         <motion.p
@@ -77,26 +77,26 @@ export default function ApplyHero() {
         >
           join<br />StepWise
         </motion.p>
+      </div>
 
-        {/* Mobile: text below */}
-        <div className="md:hidden absolute bottom-8 left-0 right-0 px-6 text-center z-10">
-          <motion.p
-            className="text-3xl font-bold text-foreground mb-2 tracking-tight"
-            variants={textVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            join StepWise
-          </motion.p>
-          <motion.p
-            className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto"
-            variants={descVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            A transformative training in capacity-based, nervous-system-informed psychedelic-assisted therapy practice.
-          </motion.p>
-        </div>
+      {/* Mobile: text below silhouette */}
+      <div className="md:hidden px-6 pb-8 text-center">
+        <motion.p
+          className="text-3xl font-bold text-foreground mb-2 tracking-tight"
+          variants={textVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          join StepWise
+        </motion.p>
+        <motion.p
+          className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto"
+          variants={descVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          A transformative training in capacity-based, nervous-system-informed psychedelic-assisted therapy practice.
+        </motion.p>
       </div>
     </section>
   );
