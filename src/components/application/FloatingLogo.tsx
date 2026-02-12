@@ -11,10 +11,8 @@ export default function FloatingLogo() {
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === '/';
-  const isSubPage = !isHomePage;
 
   useEffect(() => {
-    if (isSubPage) return; // dots-only on sub pages
     const threshold = window.innerHeight * 0.65;
 
     const handleScroll = () => {
@@ -24,10 +22,10 @@ export default function FloatingLogo() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isSubPage]);
+  }, []);
 
   const handleClick = () => {
-    if (isSubPage) {
+    if (!isHomePage) {
       navigate('/');
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -42,20 +40,18 @@ export default function FloatingLogo() {
       transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
       onClick={handleClick}
     >
-      {/* Text — slides in/out (hidden on /apply) */}
-      {!isSubPage && (
-        <motion.span
-          className="text-lg md:text-xl font-bold tracking-tight text-foreground overflow-hidden whitespace-nowrap"
-          animate={{
-            width: expanded ? 'auto' : 0,
-            opacity: expanded ? 1 : 0,
-            marginRight: expanded ? 4 : 0,
-          }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        >
-          StepWise
-        </motion.span>
-      )}
+      {/* Text — slides in/out */}
+      <motion.span
+        className="text-lg md:text-xl font-bold tracking-tight text-foreground overflow-hidden whitespace-nowrap"
+        animate={{
+          width: expanded ? 'auto' : 0,
+          opacity: expanded ? 1 : 0,
+          marginRight: expanded ? 4 : 0,
+        }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      >
+        StepWise
+      </motion.span>
 
       {/* Dots */}
       <div className="flex items-center gap-1.5">
