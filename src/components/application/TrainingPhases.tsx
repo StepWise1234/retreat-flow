@@ -138,7 +138,7 @@ export default function TrainingPhases() {
 
         {/* Default text */}
         <motion.p
-          className="text-lg sm:text-xl leading-[1.9] text-black/50 text-center max-w-xl mx-auto mb-4"
+          className="text-lg sm:text-xl leading-[1.9] text-black/50 text-center max-w-xl mx-auto mb-12"
           animate={{ opacity: activePhase ? 0.4 : 1 }}
           transition={{ duration: 0.3 }}
         >
