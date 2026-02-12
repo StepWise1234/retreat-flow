@@ -124,69 +124,6 @@ export default function ProblemSection() {
           </AnimatePresence>
         </div>
 
-        {/* ── Interactive pillar circles ── */}
-        <div className="mt-20 flex justify-center gap-12 sm:gap-16 md:gap-20">
-          {pillars.map((pillar, i) => {
-            const isActive = activeId === pillar.id;
-
-            return (
-              <motion.button
-                key={pillar.id}
-                onClick={() => setActiveId(isActive ? null : pillar.id)}
-                className="flex flex-col items-center gap-4 group cursor-pointer bg-transparent border-none outline-none"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {/* Circle — acts as open/close toggle */}
-                <motion.span
-                  className="relative block h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full transition-shadow duration-300"
-                  style={{ backgroundColor: pillar.accentColor }}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  animate={isActive ? { scale: 1.05 } : { scale: 1 }}
-                >
-                  {/* X icon when active */}
-                  <AnimatePresence>
-                    {isActive && (
-                      <motion.span
-                        className="absolute inset-0 flex items-center justify-center"
-                        initial={{ opacity: 0, rotate: -90 }}
-                        animate={{ opacity: 1, rotate: 0 }}
-                        exit={{ opacity: 0, rotate: 90 }}
-                        transition={{ duration: 0.25 }}
-                      >
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="white"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                        >
-                          <line x1="6" y1="6" x2="18" y2="18" />
-                          <line x1="18" y1="6" x2="6" y2="18" />
-                        </svg>
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </motion.span>
-
-                {/* Label */}
-                <span
-                  className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight transition-colors duration-200"
-                  style={{ color: isActive ? pillar.accentColor : undefined }}
-                >
-                  <span className={isActive ? '' : 'text-foreground/70 group-hover:text-foreground transition-colors duration-200'}>
-                    {pillar.title}
-                  </span>
-                </span>
-              </motion.button>
-            );
-          })}
-        </div>
       </div>
     </section>
   );

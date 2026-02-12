@@ -1,5 +1,6 @@
 import PaceSection from '@/components/application/PaceSection';
 import ProblemSection from '@/components/application/ProblemSection';
+import PillarExplorer from '@/components/application/PillarExplorer';
 import FindFacilitatorCTA from '@/components/application/FindFacilitatorCTA';
 import TestimonialsCarousel from '@/components/application/TestimonialsCarousel';
 import StepWiseOverview from '@/components/application/StepWiseOverview';
@@ -13,6 +14,7 @@ export default function ApplicationForm() {
       <FloatingLogo />
       <PaceSection />
       <ProblemSection />
+      <PillarExplorer />
       <TestimonialsCarousel />
       <StepWiseOverview />
       <FindFacilitatorCTA />
