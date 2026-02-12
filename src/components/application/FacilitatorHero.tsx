@@ -24,7 +24,7 @@ const descVariants = {
 export default function FacilitatorHero() {
   return (
     <section className="relative bg-white">
-      <div className="relative mx-auto flex max-w-6xl items-end justify-center px-6 pt-12 pb-0 min-h-[60vh] md:min-h-[70vh]">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-8 md:pb-0 min-h-[70vh]">
 
         {/* Left text — description */}
         <motion.p
@@ -54,7 +54,7 @@ export default function FacilitatorHero() {
 
           {/* Silhouette */}
           <motion.div
-            className="relative z-10 h-[22.4rem] w-[18.56rem] sm:h-[26.88rem] sm:w-[22.4rem] md:h-[32.64rem] md:w-[26.88rem] overflow-hidden"
+            className="relative z-10 h-[28rem] w-[23.2rem] sm:h-[33.6rem] sm:w-[28rem] md:h-[40.8rem] md:w-[33.6rem]"
             style={{ mixBlendMode: 'multiply' }}
             variants={imageVariants}
             initial="hidden"
@@ -63,40 +63,40 @@ export default function FacilitatorHero() {
             <img
               src={silhouette}
               alt="Serene female silhouette with eyes closed"
-              className="h-[125%] w-[125%] max-w-none object-contain object-bottom -ml-[12%] -mt-[5%] grayscale"
+              className="h-full w-full object-contain object-bottom"
             />
           </motion.div>
         </div>
 
         {/* Right text — bold heading */}
         <motion.p
-          className="hidden md:block absolute right-0 lg:right-4 xl:right-8 top-[55%] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
+          className="hidden md:block absolute right-6 lg:right-12 top-[55%] -translate-y-1/2 text-6xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight text-foreground z-10"
           variants={textVariants}
           initial="hidden"
           animate="visible"
         >
           find a<br />Facilitator
         </motion.p>
-      </div>
 
-      {/* Mobile: text below silhouette */}
-      <div className="md:hidden px-6 pb-8 text-center">
-        <motion.p
-          className="text-3xl font-bold text-foreground mb-2 tracking-tight"
-          variants={textVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          find a Facilitator
-        </motion.p>
-        <motion.p
-          className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto"
-          variants={descVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          Connecting you with trained, capacity-based practitioners in jurisdictions where 5-MeO-DMT is permitted.
-        </motion.p>
+        {/* Mobile: text below */}
+        <div className="md:hidden absolute bottom-8 left-0 right-0 px-6 text-center z-10">
+          <motion.p
+            className="text-3xl font-bold text-foreground mb-2 tracking-tight"
+            variants={textVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            find a Facilitator
+          </motion.p>
+          <motion.p
+            className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto"
+            variants={descVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            Connecting you with trained, capacity-based practitioners in jurisdictions where 5-MeO-DMT is permitted.
+          </motion.p>
+        </div>
       </div>
     </section>
   );

@@ -10,9 +10,10 @@ export default function FloatingLogo() {
   const [expanded, setExpanded] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const isHomePage = location.pathname === '/';
+  const isApplyPage = location.pathname === '/apply';
 
   useEffect(() => {
+    if (isApplyPage) return; // dots-only on /apply
     const threshold = window.innerHeight * 0.65;
 
     const handleScroll = () => {
@@ -22,13 +23,11 @@ export default function FloatingLogo() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isApplyPage]);
 
   const handleClick = () => {
-    if (!isHomePage) {
+    if (isApplyPage) {
       navigate('/');
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -40,18 +39,20 @@ export default function FloatingLogo() {
       transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
       onClick={handleClick}
     >
-      {/* Text — slides in/out */}
-      <motion.span
-        className="text-lg md:text-xl font-bold tracking-tight text-foreground overflow-hidden whitespace-nowrap"
-        animate={{
-          width: expanded ? 'auto' : 0,
-          opacity: expanded ? 1 : 0,
-          marginRight: expanded ? 4 : 0,
-        }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      >
-        StepWise
-      </motion.span>
+      {/* Text — slides in/out (hidden on /apply) */}
+      {!isApplyPage && (
+        <motion.span
+          className="text-lg md:text-xl font-bold tracking-tight text-foreground overflow-hidden whitespace-nowrap"
+          animate={{
+            width: expanded ? 'auto' : 0,
+            opacity: expanded ? 1 : 0,
+            marginRight: expanded ? 4 : 0,
+          }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        >
+          StepWise
+        </motion.span>
+      )}
 
       {/* Dots */}
       <div className="flex items-center gap-1.5">

@@ -4,7 +4,7 @@ const BRAND_COLORS = ['#FFA500', '#FF4500', '#800080'];
 
 const NAV_LINKS = [
   { label: 'Find a Facilitator', href: '/facilitators' },
-  { label: 'Common Questions', href: '/#faq' },
+  { label: 'Common Questions', href: '#faq' },
   { label: 'Apply', href: '/apply' },
 ];
 
