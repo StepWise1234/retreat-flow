@@ -4,44 +4,44 @@
 
 @layer base {
   :root {
-    --background: 40 18% 97%;
-    --foreground: 222 20% 14%;
+    --background: 30 20% 98%;
+    --foreground: 220 15% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 20% 14%;
+    --card-foreground: 220 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 20% 14%;
+    --popover-foreground: 220 15% 15%;
 
-    --primary: 198 55% 28%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 24 100% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 40 12% 93%;
-    --secondary-foreground: 222 20% 14%;
+    --secondary: 30 15% 94%;
+    --secondary-foreground: 220 15% 15%;
 
-    --muted: 40 10% 93%;
-    --muted-foreground: 220 10% 46%;
+    --muted: 30 10% 94%;
+    --muted-foreground: 220 8% 50%;
 
-    --accent: 28 85% 55%;
+    --accent: 16 100% 50%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 40 12% 89%;
-    --input: 40 12% 89%;
-    --ring: 198 55% 28%;
+    --border: 30 12% 90%;
+    --input: 30 12% 90%;
+    --ring: 24 100% 50%;
 
     --radius: 0.625rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 0 0% 99%;
+    --sidebar-foreground: 220 15% 15%;
+    --sidebar-primary: 24 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 15% 96%;
+    --sidebar-accent-foreground: 220 15% 15%;
+    --sidebar-border: 30 12% 92%;
+    --sidebar-ring: 24 100% 50%;
 
     /* Pipeline stage colors — rainbow progression */
     --stage-leads: 0 72% 51%;
@@ -81,33 +81,33 @@
   }
 
   .dark {
-    --background: 222 20% 8%;
-    --foreground: 210 40% 98%;
-    --card: 222 20% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 20% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 198 55% 50%;
-    --primary-foreground: 222 20% 8%;
-    --secondary: 217 32% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 32% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 28 85% 55%;
+    --background: 220 15% 8%;
+    --foreground: 30 20% 95%;
+    --card: 220 15% 11%;
+    --card-foreground: 30 20% 95%;
+    --popover: 220 15% 11%;
+    --popover-foreground: 30 20% 95%;
+    --primary: 24 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 30 20% 95%;
+    --muted: 220 15% 15%;
+    --muted-foreground: 220 10% 60%;
+    --accent: 16 100% 50%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 30%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 32% 17%;
-    --input: 217 32% 17%;
-    --ring: 212 26% 83%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --destructive-foreground: 30 20% 95%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 24 100% 50%;
+    --sidebar-background: 220 15% 10%;
+    --sidebar-foreground: 30 20% 95%;
+    --sidebar-primary: 24 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 220 15% 14%;
+    --sidebar-accent-foreground: 30 20% 95%;
+    --sidebar-border: 220 15% 18%;
+    --sidebar-ring: 24 100% 50%;
   }
 }
 
@@ -122,165 +122,6 @@
 }
 
 @layer utilities {
-  /* ─── Frosted-glass rainbow buttons ─── */
-  .btn-glass {
-    position: relative;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--card) / 0.7) 0%,
-      hsl(var(--secondary) / 0.5) 100%
-    );
-    backdrop-filter: blur(12px) saturate(1.4);
-    -webkit-backdrop-filter: blur(12px) saturate(1.4);
-    border: 1px solid hsl(var(--border) / 0.6);
-    box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.15),
-      0 1px 3px 0 hsl(var(--foreground) / 0.06);
-    overflow: hidden;
-    z-index: 0;
-  }
-
-  /* Rainbow shimmer sweep inside */
-  .btn-glass::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(
-      105deg,
-      transparent 0%,
-      hsl(var(--stage-leads) / 0.06) 15%,
-      hsl(var(--stage-chemistry) / 0.08) 25%,
-      hsl(var(--stage-application) / 0.06) 35%,
-      hsl(var(--stage-interview) / 0.08) 50%,
-      hsl(var(--stage-approval) / 0.06) 60%,
-      hsl(var(--stage-payment) / 0.08) 70%,
-      hsl(var(--stage-accommodation) / 0.06) 85%,
-      transparent 100%
-    );
-    opacity: 0;
-    transition: opacity 0.35s ease-out;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  /* Rainbow border glow on hover */
-  .btn-glass::after {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--stage-leads) / 0),
-      hsl(var(--stage-chemistry) / 0),
-      hsl(var(--stage-interview) / 0),
-      hsl(var(--stage-approval) / 0),
-      hsl(var(--stage-accommodation) / 0),
-      hsl(var(--stage-course) / 0)
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: all 0.4s ease-out;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  .btn-glass:hover {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--card) / 0.85) 0%,
-      hsl(var(--secondary) / 0.65) 100%
-    );
-    border-color: hsl(var(--border) / 0.3);
-    box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.2),
-      0 4px 16px -4px hsl(var(--stage-approval) / 0.12),
-      0 2px 8px -2px hsl(var(--stage-accommodation) / 0.08);
-    transform: translateY(-1px);
-  }
-
-  .btn-glass:hover::before {
-    opacity: 1;
-  }
-
-  .btn-glass:hover::after {
-    opacity: 1;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--stage-leads) / 0.4),
-      hsl(var(--stage-chemistry) / 0.35),
-      hsl(var(--stage-interview) / 0.4),
-      hsl(var(--stage-approval) / 0.35),
-      hsl(var(--stage-accommodation) / 0.4),
-      hsl(var(--stage-course) / 0.35)
-    );
-  }
-
-  .btn-glass:active {
-    transform: translateY(0);
-    box-shadow:
-      inset 0 1px 2px 0 hsl(var(--foreground) / 0.08),
-      0 0 0 1px hsl(var(--border) / 0.5);
-  }
-
-  /* Subtle variant — lighter frost */
-  .btn-glass-subtle {
-    position: relative;
-    background: hsl(var(--card) / 0.45);
-    backdrop-filter: blur(8px) saturate(1.2);
-    -webkit-backdrop-filter: blur(8px) saturate(1.2);
-    box-shadow: inset 0 1px 0 0 hsl(0 0% 100% / 0.1);
-    overflow: hidden;
-  }
-
-  .btn-glass-subtle:hover {
-    background: hsl(var(--card) / 0.65);
-    box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.15),
-      0 2px 8px -2px hsl(var(--stage-approval) / 0.1);
-    transform: translateY(-1px);
-  }
-
-  .btn-glass-subtle:active {
-    transform: translateY(0);
-  }
-
-  /* Dark mode adjustments */
-  .dark .btn-glass {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--card) / 0.5) 0%,
-      hsl(var(--secondary) / 0.3) 100%
-    );
-    border-color: hsl(var(--border) / 0.4);
-    box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.06),
-      0 1px 3px 0 hsl(0 0% 0% / 0.2);
-  }
-
-  .dark .btn-glass:hover {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--card) / 0.65) 0%,
-      hsl(var(--secondary) / 0.45) 100%
-    );
-    box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.08),
-      0 4px 16px -4px hsl(var(--stage-approval) / 0.2),
-      0 2px 8px -2px hsl(var(--stage-accommodation) / 0.15);
-  }
-
-  .dark .btn-glass-subtle {
-    background: hsl(var(--card) / 0.3);
-  }
-
-  .dark .btn-glass-subtle:hover {
-    background: hsl(var(--card) / 0.5);
-  }
   .scrollbar-thin {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--border)) transparent;
@@ -300,32 +141,17 @@
     border-radius: 3px;
   }
 
-  /* Subtle gradient backgrounds */
+  /* Clean page background */
   .bg-gradient-page {
-    background: linear-gradient(
-      165deg,
-      hsl(var(--background)) 0%,
-      hsl(var(--secondary) / 0.5) 40%,
-      hsl(var(--background)) 70%,
-      hsl(var(--accent) / 0.04) 100%
-    );
+    background: hsl(var(--background));
   }
 
   .bg-gradient-card {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--card)) 0%,
-      hsl(var(--secondary) / 0.3) 100%
-    );
+    background: hsl(var(--card));
   }
 
   .bg-gradient-header {
-    background: linear-gradient(
-      90deg,
-      hsl(var(--card)) 0%,
-      hsl(var(--primary) / 0.03) 50%,
-      hsl(var(--card)) 100%
-    );
+    background: hsl(var(--card));
   }
 
   /* ─── Orbital timeline keyframes ─── */
@@ -338,188 +164,16 @@
     to   { transform: rotate(-360deg); }
   }
 
-  /* ─── Rainbow keyframes ─── */
-  @keyframes rainbow-border-spin {
-    0%   { --rainbow-angle: 0deg; }
-    100% { --rainbow-angle: 360deg; }
-  }
-
-  @keyframes rainbow-shimmer {
-    0%   { background-position: -200% center; }
-    100% { background-position: 200% center; }
-  }
-
-  @keyframes rainbow-pulse {
-    0%, 100% { opacity: 0; }
-    50%      { opacity: 1; }
-  }
-
-  @keyframes prism-shift {
-    0%   { filter: hue-rotate(0deg); }
-    100% { filter: hue-rotate(360deg); }
-  }
-
-  /* ─── Futuristic rainbow hover effects ─── */
-
-  /* Lift with rainbow shadow bloom */
+  /* Clean hover effects */
   .hover-lift {
-    @apply transition-all duration-300 ease-out;
+    @apply transition-all duration-200 ease-out;
   }
   .hover-lift:hover {
-    transform: translateY(-3px) scale(1.005);
-    box-shadow:
-      0 4px 12px -4px hsl(var(--stage-leads) / 0.12),
-      0 8px 20px -6px hsl(var(--stage-approval) / 0.10),
-      0 12px 30px -8px hsl(var(--stage-accommodation) / 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px -4px hsl(var(--foreground) / 0.08);
   }
 
-  /* Rainbow border glow on hover */
-  .hover-border-glow {
-    @apply transition-all duration-500 ease-out;
-    position: relative;
-  }
-  .hover-border-glow::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--stage-leads) / 0),
-      hsl(var(--stage-chemistry) / 0),
-      hsl(var(--stage-application) / 0),
-      hsl(var(--stage-interview) / 0),
-      hsl(var(--stage-approval) / 0),
-      hsl(var(--stage-payment) / 0),
-      hsl(var(--stage-accommodation) / 0),
-      hsl(var(--stage-course) / 0)
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    transition: all 0.4s ease-out;
-    opacity: 0;
-    z-index: 1;
-    pointer-events: none;
-  }
-  .hover-border-glow:hover::before {
-    opacity: 1;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--stage-leads) / 0.5),
-      hsl(var(--stage-chemistry) / 0.5),
-      hsl(var(--stage-application) / 0.4),
-      hsl(var(--stage-interview) / 0.5),
-      hsl(var(--stage-approval) / 0.5),
-      hsl(var(--stage-payment) / 0.4),
-      hsl(var(--stage-accommodation) / 0.5),
-      hsl(var(--stage-course) / 0.5)
-    );
-  }
-
-  /* Rainbow shimmer sweep on hover */
-  .hover-shimmer {
-    @apply transition-all duration-300 ease-out;
-    position: relative;
-    overflow: hidden;
-  }
-  .hover-shimmer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -200%;
-    width: 200%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      hsl(var(--stage-leads) / 0.03) 10%,
-      hsl(var(--stage-chemistry) / 0.05) 20%,
-      hsl(var(--stage-application) / 0.04) 30%,
-      hsl(var(--stage-interview) / 0.05) 45%,
-      hsl(var(--stage-approval) / 0.04) 55%,
-      hsl(var(--stage-payment) / 0.05) 65%,
-      hsl(var(--stage-accommodation) / 0.04) 80%,
-      hsl(var(--stage-course) / 0.03) 90%,
-      transparent 100%
-    );
-    transition: left 0.6s ease-out;
-    z-index: 0;
-    pointer-events: none;
-  }
-  .hover-shimmer:hover::before {
-    left: 100%;
-  }
-
-  /* Prismatic glow — soft rainbow halo around element */
-  .hover-prism {
-    @apply transition-all duration-500 ease-out;
-  }
-  .hover-prism:hover {
-    box-shadow:
-      -3px -3px 12px -4px hsl(var(--stage-leads) / 0.10),
-       3px -3px 12px -4px hsl(var(--stage-interview) / 0.10),
-       3px  3px 12px -4px hsl(var(--stage-approval) / 0.10),
-      -3px  3px 12px -4px hsl(var(--stage-accommodation) / 0.10);
-  }
-
-  /* Rainbow bottom-bar reveal on hover */
-  .hover-rainbow-bar {
-    position: relative;
-    overflow: hidden;
-  }
-  .hover-rainbow-bar::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(
-      90deg,
-      hsl(var(--stage-leads)),
-      hsl(var(--stage-chemistry)),
-      hsl(var(--stage-application)),
-      hsl(var(--stage-interview)),
-      hsl(var(--stage-approval)),
-      hsl(var(--stage-payment)),
-      hsl(var(--stage-accommodation)),
-      hsl(var(--stage-course))
-    );
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-    border-radius: 0 0 inherit inherit;
-  }
-  .hover-rainbow-bar:hover::after {
-    transform: scaleX(1);
-  }
-
-  /* Rainbow text shimmer on hover */
-  .hover-rainbow-text {
-    @apply transition-colors duration-300;
-  }
-  .hover-rainbow-text:hover {
-    background: linear-gradient(
-      90deg,
-      hsl(var(--stage-leads)),
-      hsl(var(--stage-chemistry)),
-      hsl(var(--stage-application)),
-      hsl(var(--stage-interview)),
-      hsl(var(--stage-approval)),
-      hsl(var(--stage-payment)),
-      hsl(var(--stage-accommodation)),
-      hsl(var(--stage-course))
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: rainbow-shimmer 2s linear infinite;
-  }
-
-  /* Nav link — rainbow underline grow */
+  /* Simple nav hover underline using brand color */
   .nav-hover {
     @apply relative transition-all duration-200 ease-out;
   }
@@ -530,14 +184,7 @@
     left: 50%;
     width: 0;
     height: 1px;
-    background: linear-gradient(
-      90deg,
-      hsl(var(--stage-leads)),
-      hsl(var(--stage-chemistry)),
-      hsl(var(--stage-approval)),
-      hsl(var(--stage-accommodation)),
-      hsl(var(--stage-course))
-    );
+    background: hsl(var(--primary));
     transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     transform: translateX(-50%);
     border-radius: 1px;
@@ -546,89 +193,18 @@
     width: 80%;
   }
 
-  /* ─── Cosmic frosted-glass active nav ─── */
+  /* Clean active nav — simple brand accent */
   .nav-active-cosmic {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(
-      135deg,
-      hsl(280 65% 75% / 0.09) 0%,
-      hsl(250 80% 55% / 0.06) 100%
-    );
-    backdrop-filter: blur(12px) saturate(1.4);
-    -webkit-backdrop-filter: blur(12px) saturate(1.4);
-    border: 1px solid hsl(270 50% 70% / 0.2);
-    box-shadow:
-      inset 0 1px 0 0 hsl(280 60% 85% / 0.2),
-      0 1px 3px 0 hsl(260 50% 40% / 0.08);
+    background: hsl(var(--primary) / 0.08);
+    border: 1px solid hsl(var(--primary) / 0.15);
   }
 
-  /* Starfield specks via radial gradients */
-  .nav-active-cosmic::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background:
-      radial-gradient(1px 1px at 15% 30%, hsl(0 0% 100% / 0.7), transparent),
-      radial-gradient(1px 1px at 45% 65%, hsl(0 0% 100% / 0.5), transparent),
-      radial-gradient(1px 1px at 70% 20%, hsl(0 0% 100% / 0.6), transparent),
-      radial-gradient(1.5px 1.5px at 85% 75%, hsl(0 0% 100% / 0.4), transparent),
-      radial-gradient(1px 1px at 25% 80%, hsl(0 0% 100% / 0.5), transparent),
-      radial-gradient(1px 1px at 60% 40%, hsl(0 0% 100% / 0.3), transparent),
-      radial-gradient(1.5px 1.5px at 35% 15%, hsl(0 0% 100% / 0.45), transparent),
-      radial-gradient(1px 1px at 90% 50%, hsl(0 0% 100% / 0.35), transparent);
-    animation: cosmic-twinkle 3s ease-in-out infinite alternate;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  /* Soft prismatic edge shine */
-  .nav-active-cosmic::after {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--stage-chemistry) / 0.5),
-      hsl(var(--stage-approval) / 0.4),
-      hsl(var(--stage-accommodation) / 0.5),
-      hsl(var(--stage-course) / 0.4)
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .nav-active-cosmic > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  @keyframes cosmic-twinkle {
-    0%   { opacity: 0.5; }
-    100% { opacity: 1; }
-  }
-
-  /* Dark mode cosmic variant */
   .dark .nav-active-cosmic {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--card) / 0.7) 0%,
-      hsl(var(--secondary) / 0.5) 100%
-    );
-    border-color: hsl(var(--border) / 0.6);
-    box-shadow:
-      inset 0 1px 0 0 hsl(0 0% 100% / 0.15),
-      0 1px 3px 0 hsl(var(--foreground) / 0.06),
-      0 0 30px -6px hsl(var(--stage-accommodation) / 0.15);
+    background: hsl(var(--primary) / 0.12);
+    border-color: hsl(var(--primary) / 0.2);
   }
 
-  /* Table row rainbow left-edge on hover */
+  /* Table row hover */
   .hover-row-rainbow {
     position: relative;
     transition: background-color 0.2s ease-out;
@@ -639,37 +215,24 @@
     left: 0;
     top: 0;
     bottom: 0;
-    width: 3px;
-    background: linear-gradient(
-      180deg,
-      hsl(var(--stage-leads)),
-      hsl(var(--stage-interview)),
-      hsl(var(--stage-approval)),
-      hsl(var(--stage-course))
-    );
+    width: 2px;
+    background: hsl(var(--primary));
     opacity: 0;
-    transition: opacity 0.25s ease-out;
+    transition: opacity 0.2s ease-out;
   }
   .hover-row-rainbow:hover::before {
     opacity: 1;
   }
   .hover-row-rainbow:hover {
-    background: linear-gradient(
-      90deg,
-      hsl(var(--stage-approval) / 0.03) 0%,
-      transparent 30%
-    );
+    background: hsl(var(--primary) / 0.03);
   }
 
-  /* Filter chip rainbow ring pulse on hover */
+  /* Filter chip hover */
   .hover-chip-rainbow {
     @apply transition-all duration-200 ease-out;
   }
   .hover-chip-rainbow:hover {
-    box-shadow:
-      0 0 0 1px hsl(var(--stage-approval) / 0.25),
-      0 0 8px -2px hsl(var(--stage-accommodation) / 0.15),
-      0 2px 6px -2px hsl(var(--stage-chemistry) / 0.10);
+    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.2);
     transform: translateY(-1px);
   }
 }
