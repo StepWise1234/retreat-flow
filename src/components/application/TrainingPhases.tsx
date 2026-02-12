@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
+
 
 const phases = [
   {
@@ -58,17 +58,11 @@ export default function TrainingPhases() {
 
   return (
     <section className="relative overflow-hidden bg-[#fafafa]">
-      {/* Animated grid background */}
-      <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]">
-        <AnimatedGridPattern
-          numSquares={30}
-          maxOpacity={0.08}
-          duration={4}
-          className="w-full h-full fill-black/5 stroke-black/5"
-        />
-      </div>
-
-      <div className="relative mx-auto max-w-3xl px-6 py-20 md:py-28">
+      <div className="mx-auto max-w-3xl px-6">
+        <motion.div
+          animate={{ paddingTop: activePhase ? '5rem' : '2.5rem', paddingBottom: activePhase ? '5rem' : '2.5rem' }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
         {/* Section heading */}
         <motion.h2
           className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-black/85 text-center mb-4"
@@ -142,17 +136,31 @@ export default function TrainingPhases() {
           })}
         </div>
 
-        {/* Content area */}
-        <div className="min-h-[280px] sm:min-h-[260px]">
+        {/* Default text */}
+        <motion.p
+          className="text-lg sm:text-xl leading-[1.9] text-black/50 text-center max-w-xl mx-auto mb-4"
+          animate={{ opacity: activePhase ? 0.4 : 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          Tap a circle above to explore each phase of the StepWise training journey.
+        </motion.p>
+
+        {/* Content area — smooth height expansion */}
+        <motion.div
+          animate={{ height: activePhase ? 'auto' : 0, opacity: activePhase ? 1 : 0 }}
+          initial={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="overflow-hidden"
+        >
           <AnimatePresence mode="wait">
-            {activePhase ? (
+            {activePhase && (
               <motion.div
                 key={activePhase.id}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -12 }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="space-y-6"
+                className="space-y-6 pt-4"
               >
                 <div>
                   <p className="text-sm font-medium uppercase tracking-widest mb-2" style={{ color: activePhase.accentColor }}>
@@ -195,20 +203,10 @@ export default function TrainingPhases() {
                   </motion.div>
                 )}
               </motion.div>
-            ) : (
-              <motion.p
-                key="default"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="text-lg sm:text-xl leading-[1.9] text-black/50 text-center max-w-xl mx-auto"
-              >
-                Tap a circle above to explore each phase of the StepWise training journey.
-              </motion.p>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
+        </motion.div>
       </div>
     </section>
   );
