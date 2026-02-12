@@ -10,10 +10,11 @@ export default function FloatingLogo() {
   const [expanded, setExpanded] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const isHomePage = location.pathname === '/';
   const isApplyPage = location.pathname === '/apply';
 
   useEffect(() => {
-    if (isApplyPage) return; // dots-only on /apply
+    if (!isHomePage) return; // dots-only on non-home pages
     const threshold = window.innerHeight * 0.65;
 
     const handleScroll = () => {
@@ -23,10 +24,10 @@ export default function FloatingLogo() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isApplyPage]);
+  }, [isHomePage]);
 
   const handleClick = () => {
-    if (isApplyPage) {
+    if (!isHomePage) {
       navigate('/');
     }
   };
@@ -40,7 +41,7 @@ export default function FloatingLogo() {
       onClick={handleClick}
     >
       {/* Text — slides in/out (hidden on /apply) */}
-      {!isApplyPage && (
+      {isHomePage && (
         <motion.span
           className="text-lg md:text-xl font-bold tracking-tight text-foreground overflow-hidden whitespace-nowrap"
           animate={{
