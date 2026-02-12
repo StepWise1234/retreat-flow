@@ -34,7 +34,7 @@ export default function RetreatCard({ retreat, registrations, colorIndex = 0, sh
   return (
     <Link
       to={`/retreat/${retreat.id}`}
-      className="group relative block animate-fade-in rounded-lg border bg-gradient-card p-5 pt-6 shadow-sm hover-lift hover-border-glow hover-shimmer hover-rainbow-bar overflow-hidden"
+      className="group relative block animate-fade-in rounded-lg border bg-card p-5 pt-6 shadow-sm hover-lift overflow-hidden"
       style={{ '--retreat-accent-from': retreatColor.from, '--retreat-accent-to': retreatColor.to } as React.CSSProperties}
     >
       {/* Gradient accent bar at top */}
@@ -44,7 +44,7 @@ export default function RetreatCard({ retreat, registrations, colorIndex = 0, sh
       />
       <div className="mb-3 flex items-start justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-card-foreground hover-rainbow-text transition-colors">
+          <h3 className="text-lg font-semibold text-card-foreground group-hover:text-primary transition-colors">
             {retreat.retreatName}
           </h3>
           <div className="mt-1 flex items-center gap-3 text-sm text-muted-foreground">

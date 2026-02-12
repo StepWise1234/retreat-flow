@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Mountain, LayoutDashboard, FileText, MessageSquareText, Archive, Users, LogOut, Inbox } from 'lucide-react';
+import { LayoutDashboard, FileText, MessageSquareText, Archive, Users, LogOut, Inbox } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,16 @@ const navItems = [
   { to: '/templates', label: 'Templates', icon: MessageSquareText },
   { to: '/archive', label: 'Archive', icon: Archive },
 ];
+
+function BrandDots({ className }: { className?: string }) {
+  return (
+    <span className={cn('inline-flex items-center gap-1', className)}>
+      <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#FFA500' }} />
+      <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#FF4500' }} />
+      <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: '#800080' }} />
+    </span>
+  );
+}
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
@@ -28,12 +38,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-page">
-      <header className="sticky top-0 z-30 border-b bg-gradient-header backdrop-blur-sm">
+    <div className="min-h-screen bg-background">
+      <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-screen-2xl items-center gap-6 px-4 sm:px-6">
-          <Link to="/dashboard" className="flex items-center gap-2 font-semibold text-primary hover-lift">
-            <Mountain className="h-5 w-5" />
-            <span className="hidden sm:inline">Retreat Ops</span>
+          <Link to="/dashboard" className="flex items-center gap-2.5 font-semibold text-foreground transition-opacity hover:opacity-80">
+            <BrandDots />
+            <span className="hidden sm:inline tracking-tight">StepWise</span>
           </Link>
 
           <nav className="flex items-center gap-1 flex-1">
@@ -44,9 +54,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   key={to}
                   to={to}
                   className={cn(
-                    'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-300',
+                    'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200',
                     isActive
-                      ? 'nav-active-cosmic text-muted-foreground'
+                      ? 'nav-active-cosmic text-foreground'
                       : 'text-muted-foreground nav-hover hover:text-foreground'
                   )}
                 >

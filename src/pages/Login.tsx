@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Mountain, Loader2, Lock, UserPlus } from 'lucide-react';
+import { Loader2, Lock, UserPlus } from 'lucide-react';
 import { z } from 'zod';
 
 const loginSchema = z.object({
@@ -74,15 +74,17 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-page px-4">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center text-center">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
-            <Mountain className="h-6 w-6 text-primary" />
+          <div className="mb-4 flex items-center gap-1.5">
+            <span className="h-3 w-3 rounded-full" style={{ backgroundColor: '#FFA500' }} />
+            <span className="h-3 w-3 rounded-full" style={{ backgroundColor: '#FF4500' }} />
+            <span className="h-3 w-3 rounded-full" style={{ backgroundColor: '#800080' }} />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Retreat Ops</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">StepWise</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {isSignUp ? 'Create your admin account' : 'Sign in to access the admin dashboard'}
+            {isSignUp ? 'Create your admin account' : 'Sign in to manage retreats'}
           </p>
         </div>
 
