@@ -60,7 +60,7 @@ export default function TrainingPhases() {
     <section className="relative overflow-hidden bg-[#fafafa]">
       <div className="mx-auto max-w-3xl px-6">
         <motion.div
-          animate={{ paddingTop: activePhase ? '5rem' : '2.5rem', paddingBottom: activePhase ? '5rem' : '2.5rem' }}
+          animate={{ paddingTop: activePhase ? '7rem' : '5rem', paddingBottom: activePhase ? '7rem' : '5rem' }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
         {/* Section heading */}
