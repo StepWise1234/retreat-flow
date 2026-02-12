@@ -8,7 +8,7 @@ const pillars = [
     accentColor: '#FFA500',
     subtitle: 'Your Nervous System Leads',
     description:
-      'Imagine a space where your body sets the pace. Not a clock, not a protocol, not someone else\'s idea of "ready." StepWise tracks the subtle language of your nervous system in real time, honoring each micro-signal of capacity. You never outrun your own ability to process. The result is a depth of safety that lets you open fully, because your body knows it\'s in control.',
+      'Imagine a space where your body sets the pace. Not a clock, not a protocol, not someone else\'s idea of "ready." StepWise tracks the subtle language of your nervous system in real time, honoring each micro-signal of capacity. You never outrun your own ability to process. The result is a depth of safety that lets you open fully, because your body knows.',
     details: [
       'Sessions paced by somatic markers, never arbitrary timelines',
       'Continuous nervous system monitoring by a trained facilitator',
