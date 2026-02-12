@@ -69,13 +69,16 @@ Deno.serve(async (req) => {
       .limit(1)
       .maybeSingle();
 
-    if (settings?.signal_api_token) {
-      const authHeader = req.headers.get("Authorization");
-      const expectedToken = `Bearer ${settings.signal_api_token}`;
-      if (authHeader !== expectedToken) {
-        console.warn("[signal-inbound] Invalid auth token");
-        return jsonResponse({ error: "Unauthorized" }, 401);
-      }
+    if (!settings?.signal_api_token) {
+      console.warn("[signal-inbound] Webhook authentication not configured");
+      return jsonResponse({ error: "Webhook authentication not configured" }, 503);
+    }
+
+    const authHeader = req.headers.get("Authorization");
+    const expectedToken = `Bearer ${settings.signal_api_token}`;
+    if (authHeader !== expectedToken) {
+      console.warn("[signal-inbound] Invalid auth token");
+      return jsonResponse({ error: "Unauthorized" }, 401);
     }
 
     // Route: delivery/read status update
