@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 
 const levels = [
   {
@@ -55,11 +56,17 @@ export default function MasteryLevels() {
 
   return (
     <section className="relative overflow-hidden">
-      <div className="mx-auto max-w-3xl px-6">
-        <motion.div
-          animate={{ paddingTop: activeLevel ? '5rem' : '2.5rem', paddingBottom: activeLevel ? '5rem' : '2.5rem' }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        >
+      {/* Animated grid background */}
+      <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]">
+        <AnimatedGridPattern
+          numSquares={30}
+          maxOpacity={0.08}
+          duration={4}
+          className="w-full h-full fill-foreground/5 stroke-foreground/5"
+        />
+      </div>
+
+      <div className="relative mx-auto max-w-3xl px-6 py-20 md:py-28">
         {/* Section heading */}
         <motion.h2
           className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground/85 text-center mb-4"
@@ -81,7 +88,7 @@ export default function MasteryLevels() {
         </motion.p>
 
         {/* Interactive circles */}
-        <div className="flex justify-center gap-12 sm:gap-16 md:gap-20 mb-8">
+        <div className="flex justify-center gap-12 sm:gap-16 md:gap-20 mb-16">
           {levels.map((level, i) => {
             const isActive = activeId === level.id;
 
@@ -133,34 +140,17 @@ export default function MasteryLevels() {
           })}
         </div>
 
-        {/* Default prompt */}
-        {!activeLevel && (
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg sm:text-xl leading-[1.9] text-foreground/50 text-center max-w-xl mx-auto"
-          >
-            Tap a circle above to explore each level of StepWise mastery.
-          </motion.p>
-        )}
-
-        {/* Content area — smooth height expansion */}
-        <motion.div
-          animate={{ height: activeLevel ? 'auto' : 0, opacity: activeLevel ? 1 : 0 }}
-          initial={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="overflow-hidden"
-        >
+        {/* Content area */}
+        <div className="min-h-[320px] sm:min-h-[300px]">
           <AnimatePresence mode="wait">
-            {activeLevel && (
+            {activeLevel ? (
               <motion.div
                 key={activeLevel.id}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -12 }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="space-y-6 pt-8"
+                className="space-y-6"
               >
                 <div>
                   <p className="text-sm font-medium uppercase tracking-widest mb-2" style={{ color: activeLevel.accentColor }}>
@@ -188,10 +178,20 @@ export default function MasteryLevels() {
                   ))}
                 </ul>
               </motion.div>
+            ) : (
+              <motion.p
+                key="default"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                className="text-lg sm:text-xl leading-[1.9] text-foreground/50 text-center max-w-xl mx-auto"
+              >
+                Tap a circle above to explore each level of StepWise mastery.
+              </motion.p>
             )}
           </AnimatePresence>
-        </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
