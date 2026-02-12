@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { useApp } from '@/contexts/AppContext';
+import { GridPattern } from '@/components/ui/grid-pattern';
 import IntegrationStatusBadge from './messaging/IntegrationStatusBadge';
 
 interface Props {
@@ -51,12 +52,16 @@ export default function ParticipantCard({ registration, participant, onClick, is
         type="button"
         onClick={onClick}
         className={cn(
-          'w-full rounded-md border bg-card p-3 text-left hover-lift transition-shadow',
+          'w-full rounded-md border bg-card p-3 text-left hover-lift transition-shadow relative overflow-hidden',
           isDragging && 'shadow-lg ring-2 ring-primary',
           selected && 'ring-2 ring-primary/50',
           selectable && 'pl-8'
         )}
       >
+        <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,white_50%,transparent_100%)]">
+          <GridPattern width={24} height={24} className="fill-primary/[0.015] stroke-primary/[0.03]" />
+        </div>
+        <div className="relative">
         <div className="flex items-start justify-between">
           <p className="text-sm font-medium text-card-foreground truncate">{participant.fullName}</p>
           {hasRisk && (
@@ -127,6 +132,7 @@ export default function ParticipantCard({ registration, participant, onClick, is
             ))}
           </div>
         )}
+        </div>
       </button>
     </div>
   );

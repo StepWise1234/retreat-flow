@@ -3,6 +3,7 @@ import { MapPin, Calendar, Users, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { Retreat, Registration, PIPELINE_STAGES, STAGE_STYLE_MAP, PipelineStage, STATUS_STYLES, getEnrolledCount, getRetreatColor, getEffectiveCapacity, getAvailableSpots } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { GridPattern } from '@/components/ui/grid-pattern';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -37,6 +38,10 @@ export default function RetreatCard({ retreat, registrations, colorIndex = 0, sh
       className="group relative block animate-fade-in rounded-lg border bg-card p-5 pt-6 shadow-sm hover-lift overflow-hidden"
       style={{ '--retreat-accent-from': retreatColor.from, '--retreat-accent-to': retreatColor.to } as React.CSSProperties}
     >
+      {/* Grid pattern background */}
+      <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,white_60%,transparent_100%)]">
+        <GridPattern width={32} height={32} className="fill-primary/[0.02] stroke-primary/[0.04]" />
+      </div>
       {/* Gradient accent bar at top */}
       <div
         className="absolute top-0 left-0 right-0 h-1 opacity-80"
