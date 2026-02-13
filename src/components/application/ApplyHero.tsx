@@ -40,7 +40,7 @@ export default function ApplyHero() {
         <div className="relative flex items-center justify-center">
           {/* Red circle */}
           <motion.div
-            className="absolute h-[15.6rem] w-[15.6rem] rounded-full sm:h-[17.7rem] sm:w-[17.7rem] md:h-[23.1rem] md:w-[23.1rem]"
+            className="absolute h-[12rem] w-[12rem] rounded-full sm:h-[17.7rem] sm:w-[17.7rem] md:h-[23.1rem] md:w-[23.1rem]"
             style={{
               left: 'calc(50% - 200px)',
               top: 'calc(50% - 200px)',
@@ -54,7 +54,7 @@ export default function ApplyHero() {
 
           {/* Silhouette */}
           <motion.div
-            className="relative z-10 h-[28rem] w-[23.2rem] sm:h-[33.6rem] sm:w-[28rem] md:h-[40.8rem] md:w-[33.6rem]"
+            className="relative z-10 h-[22rem] w-[18rem] sm:h-[33.6rem] sm:w-[28rem] md:h-[40.8rem] md:w-[33.6rem]"
             style={{ mixBlendMode: 'multiply' }}
             variants={imageVariants}
             initial="hidden"
