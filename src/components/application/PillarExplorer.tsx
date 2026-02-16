@@ -58,7 +58,7 @@ export default function PillarExplorer() {
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
           {/* Interactive circles */}
-          <div className="flex justify-center gap-12 sm:gap-16 md:gap-20 mb-4">
+          <div className="flex justify-center gap-16 sm:gap-20 md:gap-28 mb-8">
             {pillars.map((pillar, i) => {
               const isActive = activeId === pillar.id;
 
@@ -112,7 +112,7 @@ export default function PillarExplorer() {
 
           {/* Descriptor */}
           <motion.p
-            className="text-lg sm:text-xl leading-[1.9] text-foreground/50 text-center max-w-xl mx-auto mb-8"
+            className="text-lg sm:text-xl leading-[1.9] text-foreground/35 text-center max-w-xl mx-auto mb-8"
             animate={{ opacity: activePillar ? 0.4 : 1 }}
             transition={{ duration: 0.3 }}
           >
