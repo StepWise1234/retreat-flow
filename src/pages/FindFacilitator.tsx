@@ -43,15 +43,7 @@ export default function FindFacilitator() {
 
       {/* Intro copy */}
       <section className="relative overflow-hidden bg-[#fafafa]">
-        <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]">
-          <AnimatedGridPattern
-            numSquares={30}
-            maxOpacity={0.06}
-            duration={4}
-            className="w-full h-full fill-black/5 stroke-black/5"
-          />
-        </div>
-        <div className="relative mx-auto max-w-2xl px-6 pt-20 md:pt-28 pb-12 text-center">
+        <div className="mx-auto max-w-2xl px-6 pt-20 md:pt-28 pb-12 text-center">
           <motion.h2
             className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6"
             initial={{ opacity: 0, y: 20 }}
