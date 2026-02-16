@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
-import { MapPin, Users, Clock, ChevronRight } from 'lucide-react';
+import { MapPin, Users, Clock } from 'lucide-react';
 
 interface Training {
   id: string;
@@ -138,7 +138,7 @@ export default function TrainingStatusDashboard() {
               </div>
 
               {/* Training cards */}
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {level.items.map((training, i) => (
                   <motion.div
                     key={training.id}
@@ -146,29 +146,24 @@ export default function TrainingStatusDashboard() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: i * 0.06 }}
-                    className="group relative rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm px-5 py-3.5 hover:border-foreground/10 transition-all duration-300 cursor-pointer"
+                    className="rounded-lg border border-foreground/[0.06] bg-background/60 backdrop-blur-sm px-4 py-2.5"
                     style={{ boxShadow: `0 1px 3px ${level.color}08` }}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2.5">
-                          <h4 className="font-semibold text-foreground/80 text-base">{training.title}</h4>
-                          <StatusBadge status={training.status} color={level.color} />
-                        </div>
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-foreground/45">
-                          <span className="flex items-center gap-1.5">
-                            <Clock className="h-3.5 w-3.5" />
-                            {training.date}
-                          </span>
-                          <span className="flex items-center gap-1.5">
-                            <MapPin className="h-3.5 w-3.5" />
-                            {training.location}
-                          </span>
-                        </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <h4 className="font-semibold text-foreground/80 text-sm truncate">{training.title}</h4>
+                        <StatusBadge status={training.status} color={level.color} />
                       </div>
-                      <ChevronRight
-                        className="hidden sm:block h-5 w-5 text-foreground/20 group-hover:text-foreground/40 transition-colors shrink-0 mt-1"
-                      />
+                      <div className="flex items-center gap-3 text-xs text-foreground/45 shrink-0">
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {training.date}
+                        </span>
+                        <span className="hidden sm:flex items-center gap-1">
+                          <MapPin className="h-3 w-3" />
+                          {training.location}
+                        </span>
+                      </div>
                     </div>
                     <CapacityBar filled={training.spotsFilled} total={training.spotsTotal} color={level.color} />
                   </motion.div>
