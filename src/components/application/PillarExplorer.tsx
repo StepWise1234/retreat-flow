@@ -54,7 +54,7 @@ export default function PillarExplorer() {
     <section className="relative overflow-hidden bg-background">
       <div className="mx-auto max-w-3xl px-6">
         <motion.div
-          animate={{ paddingTop: activePillar ? '5rem' : '2.5rem', paddingBottom: activePillar ? '5rem' : '2.5rem' }}
+          animate={{ paddingTop: activePillar ? '5rem' : '2.5rem', paddingBottom: activePillar ? '5rem' : '4rem' }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
           {/* Interactive circles */}
