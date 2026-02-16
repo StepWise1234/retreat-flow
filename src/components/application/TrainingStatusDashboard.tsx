@@ -109,9 +109,9 @@ export default function TrainingStatusDashboard() {
         />
       </div>
 
-      <div className="relative mx-auto max-w-3xl px-6 py-20 md:py-28">
+      <div className="relative mx-auto max-w-3xl px-6 py-12 md:py-16">
         <motion.h2
-          className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground/85 text-center mb-4"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground/85 text-center mb-2"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -120,7 +120,7 @@ export default function TrainingStatusDashboard() {
           Upcoming Trainings
         </motion.h2>
         <motion.p
-          className="text-center text-lg text-foreground/50 mb-16 max-w-xl mx-auto"
+          className="text-center text-base text-foreground/50 mb-10 max-w-xl mx-auto"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -129,7 +129,7 @@ export default function TrainingStatusDashboard() {
           Find your cohort — seats fill quickly.
         </motion.p>
 
-        <div className="space-y-12">
+        <div className="space-y-8">
           {Object.entries(trainings).map(([key, level], levelIdx) => (
             <motion.div
               key={key}
@@ -139,15 +139,15 @@ export default function TrainingStatusDashboard() {
               transition={{ duration: 0.6, delay: levelIdx * 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Level header */}
-              <div className="flex items-center gap-3 mb-5">
-                <span className="h-4 w-4 rounded-full shrink-0" style={{ backgroundColor: level.color }} />
+              <div className="flex items-center gap-3 mb-3">
+                <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: level.color }} />
                 <h3 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground/80">
                   {level.label}
                 </h3>
               </div>
 
               {/* Training cards */}
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {level.items.map((training, i) => (
                   <motion.div
                     key={training.id}
@@ -155,11 +155,11 @@ export default function TrainingStatusDashboard() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: i * 0.06 }}
-                    className="group relative rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm p-5 hover:border-foreground/10 transition-all duration-300 cursor-pointer"
+                    className="group relative rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm px-5 py-3.5 hover:border-foreground/10 transition-all duration-300 cursor-pointer"
                     style={{ boxShadow: `0 1px 3px ${level.color}08` }}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
-                      <div className="space-y-1.5">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
+                      <div className="space-y-1">
                         <div className="flex items-center gap-2.5">
                           <h4 className="font-semibold text-foreground/80 text-base">{training.title}</h4>
                           <StatusBadge status={training.status} color={level.color} />
