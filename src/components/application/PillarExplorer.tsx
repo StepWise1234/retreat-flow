@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
 
 const pillars = [
   {
@@ -59,12 +58,13 @@ export default function PillarExplorer() {
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
           {/* Descriptor */}
-          <p className={cn(
-            "text-center text-sm tracking-wide text-foreground/40 mb-6 transition-opacity duration-300",
-            activePillar ? "opacity-30" : "opacity-100"
-          )}>
-            Tap a circle to explore
-          </p>
+          <motion.p
+            className="text-lg sm:text-xl leading-[1.9] text-foreground/50 text-center max-w-xl mx-auto mb-8"
+            animate={{ opacity: activePillar ? 0.4 : 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            Tap a circle below to explore each pillar of the StepWise approach.
+          </motion.p>
 
           {/* Interactive circles */}
           <div className="flex justify-center gap-12 sm:gap-16 md:gap-20 mb-8">
