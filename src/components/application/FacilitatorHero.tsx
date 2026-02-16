@@ -23,7 +23,7 @@ const descVariants = {
 
 export default function FacilitatorHero() {
   return (
-    <section className="relative bg-white">
+    <section className="relative bg-[#fafafa]">
       <div className="relative mx-auto flex max-w-6xl items-center justify-center px-6 pt-0 pb-8 md:pb-0 min-h-[70vh]">
 
         {/* Left text — description */}
