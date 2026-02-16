@@ -57,26 +57,6 @@ export default function PillarExplorer() {
           animate={{ paddingTop: activePillar ? '5rem' : '2.5rem', paddingBottom: activePillar ? '5rem' : '2.5rem' }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Section heading */}
-          <motion.h2
-            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground/85 text-center mb-4"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          >
-            Three Pillars of StepWise
-          </motion.h2>
-          <motion.p
-            className="text-center text-lg text-foreground/50 mb-16 max-w-xl mx-auto"
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          >
-            A framework built around your nervous system — not a one-size-fits-all protocol.
-          </motion.p>
-
           {/* Interactive circles */}
           <div className="flex justify-center gap-12 sm:gap-16 md:gap-20 mb-8">
             {pillars.map((pillar, i) => {
