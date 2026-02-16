@@ -56,7 +56,7 @@ export default function MasteryLevels() {
 
   return (
     <section className="relative overflow-hidden">
-      <div className="relative mx-auto max-w-3xl px-6 py-16 md:py-22">
+      <div className="relative mx-auto max-w-3xl px-6 py-12 md:py-16">
         {/* Section heading */}
         <motion.h2
           className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground/85 text-center mb-4"
