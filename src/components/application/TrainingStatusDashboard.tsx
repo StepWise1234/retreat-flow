@@ -119,15 +119,6 @@ export default function TrainingStatusDashboard() {
         >
           Upcoming Trainings
         </motion.h2>
-        <motion.p
-          className="text-center text-base text-foreground/50 mb-10 max-w-xl mx-auto"
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        >
-          Find your cohort — seats fill quickly.
-        </motion.p>
 
         <div className="space-y-8">
           {Object.entries(trainings).map(([key, level], levelIdx) => (
