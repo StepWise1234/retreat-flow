@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
+
 
 const levels = [
   {
@@ -56,17 +56,7 @@ export default function MasteryLevels() {
 
   return (
     <section className="relative overflow-hidden">
-      {/* Animated grid background */}
-      <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]">
-        <AnimatedGridPattern
-          numSquares={30}
-          maxOpacity={0.08}
-          duration={4}
-          className="w-full h-full fill-foreground/5 stroke-foreground/5"
-        />
-      </div>
-
-      <div className="relative mx-auto max-w-3xl px-6 py-20 md:py-28">
+      <div className="relative mx-auto max-w-3xl px-6 py-12 md:py-16">
         {/* Section heading */}
         <motion.h2
           className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground/85 text-center mb-4"
@@ -141,7 +131,12 @@ export default function MasteryLevels() {
         </div>
 
         {/* Content area */}
-        <div className="min-h-[320px] sm:min-h-[300px]">
+        <motion.div
+          animate={{ height: activeLevel ? 'auto' : 60 }}
+          initial={false}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="overflow-hidden"
+        >
           <AnimatePresence mode="wait">
             {activeLevel ? (
               <motion.div
@@ -191,7 +186,7 @@ export default function MasteryLevels() {
               </motion.p>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
