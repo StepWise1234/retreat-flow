@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
 
 const BRAND_COLORS = ['#FFA500', '#FF4500', '#800080'];
 const DOT_SIZE_SM = 'h-4 w-4';
@@ -18,7 +17,6 @@ export default function FloatingLogo() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const isHome = location.pathname === '/';
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -47,14 +45,6 @@ export default function FloatingLogo() {
     setMenuOpen(false);
   }, [location.pathname]);
 
-  const handleLogoClick = () => {
-    if (isHome) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      navigate('/');
-    }
-  };
-
   const handleNavClick = (path: string) => {
     setMenuOpen(false);
     if (path === location.pathname) {
@@ -67,55 +57,38 @@ export default function FloatingLogo() {
   return (
     <div ref={menuRef} className="fixed top-6 left-6 md:top-8 md:left-8 z-50">
       <motion.div
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 cursor-pointer"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        onClick={() => setMenuOpen((prev) => !prev)}
       >
-        {/* Logo area — clickable to go home */}
-        <div className="flex items-center gap-2 cursor-pointer" onClick={handleLogoClick}>
-          {/* Text — slides in/out */}
-          <motion.span
-            className="text-lg md:text-xl font-bold tracking-tight text-foreground overflow-hidden whitespace-nowrap"
-            animate={{
-              width: expanded ? 'auto' : 0,
-              opacity: expanded ? 1 : 0,
-              marginRight: expanded ? 4 : 0,
-            }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          >
-            StepWise
-          </motion.span>
-
-          {/* Dots */}
-          <div className="flex items-center gap-1.5">
-            {BRAND_COLORS.map((color, i) => (
-              <motion.span
-                key={i}
-                className={`block rounded-full ${DOT_SIZE_SM} ${DOT_SIZE_MD}`}
-                style={{ backgroundColor: color }}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.5 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Menu toggle */}
-        <motion.button
-          className="ml-1 p-1 rounded-full hover:bg-foreground/5 transition-colors cursor-pointer"
-          onClick={() => setMenuOpen((prev) => !prev)}
-          aria-label="Navigation menu"
-          whileTap={{ scale: 0.9 }}
+        {/* Text — slides in/out */}
+        <motion.span
+          className="text-lg md:text-xl font-bold tracking-tight text-foreground overflow-hidden whitespace-nowrap"
+          animate={{
+            width: expanded ? 'auto' : 0,
+            opacity: expanded ? 1 : 0,
+            marginRight: expanded ? 4 : 0,
+          }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         >
-          <motion.div
-            animate={{ rotate: menuOpen ? 180 : 0 }}
-            transition={{ duration: 0.25 }}
-          >
-            <ChevronDown className="h-4 w-4 text-foreground/60" />
-          </motion.div>
-        </motion.button>
+          StepWise
+        </motion.span>
+
+        {/* Dots */}
+        <div className="flex items-center gap-1.5">
+          {BRAND_COLORS.map((color, i) => (
+            <motion.span
+              key={i}
+              className={`block rounded-full ${DOT_SIZE_SM} ${DOT_SIZE_MD}`}
+              style={{ backgroundColor: color }}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.5 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+            />
+          ))}
+        </div>
       </motion.div>
 
       {/* Dropdown menu */}
