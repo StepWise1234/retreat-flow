@@ -57,17 +57,8 @@ export default function PillarExplorer() {
           animate={{ paddingTop: activePillar ? '5rem' : '2.5rem', paddingBottom: activePillar ? '5rem' : '2.5rem' }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Descriptor */}
-          <motion.p
-            className="text-lg sm:text-xl leading-[1.9] text-foreground/50 text-center max-w-xl mx-auto mb-8"
-            animate={{ opacity: activePillar ? 0.4 : 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            Tap a circle below to explore the StepWise approach.
-          </motion.p>
-
           {/* Interactive circles */}
-          <div className="flex justify-center gap-12 sm:gap-16 md:gap-20 mb-8">
+          <div className="flex justify-center gap-12 sm:gap-16 md:gap-20 mb-4">
             {pillars.map((pillar, i) => {
               const isActive = activeId === pillar.id;
 
@@ -118,6 +109,15 @@ export default function PillarExplorer() {
               );
             })}
           </div>
+
+          {/* Descriptor */}
+          <motion.p
+            className="text-lg sm:text-xl leading-[1.9] text-foreground/50 text-center max-w-xl mx-auto mb-8"
+            animate={{ opacity: activePillar ? 0.4 : 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            Tap a circle above to explore the StepWise approach.
+          </motion.p>
 
           {/* Content area — smooth height expansion */}
           <motion.div
