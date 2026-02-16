@@ -91,7 +91,7 @@ function CapacityBar({ filled, total, color }: { filled: number; total: number; 
         />
       </div>
       <span className="text-xs font-medium text-foreground/50 tabular-nums whitespace-nowrap">
-        {Math.max(total - filled, 0)} of {total} spots
+        {total - filled > 0 ? `${total - filled} available` : 'waitlist'}
       </span>
     </div>
   );
