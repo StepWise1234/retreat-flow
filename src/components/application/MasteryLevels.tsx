@@ -78,7 +78,7 @@ export default function MasteryLevels() {
         </motion.p>
 
         {/* Interactive circles */}
-        <div className="flex justify-center gap-12 sm:gap-16 md:gap-20 mb-16">
+        <div className="flex justify-center gap-16 sm:gap-20 md:gap-28 mb-16">
           {levels.map((level, i) => {
             const isActive = activeId === level.id;
 
