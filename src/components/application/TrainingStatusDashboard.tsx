@@ -17,9 +17,9 @@ const trainings: Record<string, { color: string; label: string; items: Training[
     color: '#FFA500',
     label: 'Beginning',
     items: [
-      { id: 'b1', title: 'Beginning Level — Cohort 7', date: 'Sep 12–18, 2026', location: 'Tulum, Mexico', spotsTotal: 6, spotsFilled: 2, status: 'open' },
-      { id: 'b2', title: 'Beginning Level — Cohort 8', date: 'Nov 6–12, 2026', location: 'Oaxaca, Mexico', spotsTotal: 6, spotsFilled: 5, status: 'limited' },
-      { id: 'b3', title: 'Beginning Level — Cohort 9', date: 'Jan 15–21, 2027', location: 'Playa del Carmen, Mexico', spotsTotal: 6, spotsFilled: 6, status: 'waitlist' },
+      { id: 'b1', title: 'Beginning Level — Cohort 7', date: 'Jun 1–4, 2026', location: 'Tulum, Mexico', spotsTotal: 6, spotsFilled: 2, status: 'open' },
+      { id: 'b2', title: 'Beginning Level — Cohort 8', date: 'Jul 20–23, 2026', location: 'Oaxaca, Mexico', spotsTotal: 6, spotsFilled: 2, status: 'open' },
+      { id: 'b3', title: 'Beginning Level — Cohort 9', date: 'Aug 24–27, 2026', location: 'Playa del Carmen, Mexico', spotsTotal: 6, spotsFilled: 0, status: 'open' },
     ],
   },
   intermediate: {
