@@ -346,8 +346,8 @@ export default function Apply() {
     <div className="min-h-screen bg-background">
       <FloatingLogo />
       <ApplyHero />
-      <TrainingPhases />
       <MasteryLevels />
+      <TrainingPhases />
 
       {submitted ? (
         <section className="relative overflow-hidden bg-[#fafafa]">
