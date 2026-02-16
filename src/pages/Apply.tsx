@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ApplyHero from '@/components/application/ApplyHero';
 import TrainingPhases from '@/components/application/TrainingPhases';
 import MasteryLevels from '@/components/application/MasteryLevels';
+import TrainingStatusDashboard from '@/components/application/TrainingStatusDashboard';
 import { useApplicationRetreats } from '@/hooks/useApplicationRetreats';
 
 import FormHeader from '@/components/application/FormHeader';
@@ -347,6 +348,7 @@ export default function Apply() {
       <FloatingLogo />
       <ApplyHero />
       <MasteryLevels />
+      <TrainingStatusDashboard />
       <TrainingPhases />
 
       {submitted ? (
