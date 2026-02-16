@@ -116,7 +116,7 @@ export default function PillarExplorer() {
             animate={{ opacity: activePillar ? 0.4 : 1 }}
             transition={{ duration: 0.3 }}
           >
-            Tap a circle above to explore the StepWise approach.
+            Tap a circle to explore the StepWise approach.
           </motion.p>
 
           {/* Content area — smooth height expansion */}
