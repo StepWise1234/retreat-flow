@@ -777,8 +777,8 @@ export default function Apply() {
                   whileTap={{ scale: 0.96 }}
                   className="group relative px-10 py-3.5 rounded-full text-lg font-semibold tracking-wide text-white overflow-hidden cursor-pointer transition-all duration-300"
                 >
-                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FF4500] via-[#FF4500] to-[#800080]" />
-                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_rgba(255,69,0,0)] group-hover:shadow-[0_0_30px_-4px_rgba(255,69,0,0.4)] transition-shadow duration-500" />
+                  <span className="absolute inset-0 rounded-full bg-[#800080]" />
+                  <span className="absolute inset-0 rounded-full shadow-[0_0_0_0_rgba(128,0,128,0)] group-hover:shadow-[0_0_30px_-4px_rgba(128,0,128,0.4)] transition-shadow duration-500" />
                   <span className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 ease-out" />
                   <span className="relative z-10 flex items-center gap-2">
                     <Check className="h-5 w-5" /> Submit Application
