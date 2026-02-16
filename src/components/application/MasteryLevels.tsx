@@ -1,8 +1,22 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 
 const levels = [
+  {
+    id: 'foundations',
+    title: 'Foundations',
+    accentColor: '#6366F1',
+    subtitle: 'Core Principles',
+    description:
+      'The bedrock of StepWise training. Foundations-level focuses on the core principles of safe, ethical, and effective 5-MeO-DMT administration. You’ll learn about harm reduction, contraindications, client preparation, and the art of holding space. This is where you build the groundwork for transformative experiences.',
+    details: [
+      'Informed consent & ethical considerations',
+      'Contraindication screening & risk management',
+      'Client preparation & intention setting',
+      'The art of holding space: presence, empathy, non-judgment',
+      'Integration planning & aftercare support',
+    ],
+  },
   {
     id: 'beginning',
     title: 'Beginning',
@@ -56,20 +70,10 @@ export default function MasteryLevels() {
 
   return (
     <section className="relative overflow-hidden">
-      {/* Animated grid background */}
-      <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]">
-        <AnimatedGridPattern
-          numSquares={30}
-          maxOpacity={0.08}
-          duration={4}
-          className="w-full h-full fill-foreground/5 stroke-foreground/5"
-        />
-      </div>
-
-      <div className="relative mx-auto max-w-3xl px-6 py-20 md:py-28">
+      <div className="relative mx-auto max-w-3xl px-6 py-12 md:py-16">
         {/* Section heading */}
         <motion.h2
-          className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground/85 text-center mb-4"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground/85 text-center mb-2"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -78,7 +82,7 @@ export default function MasteryLevels() {
           Three Levels of Mastery
         </motion.h2>
         <motion.p
-          className="text-center text-lg text-foreground/50 mb-16 max-w-xl mx-auto"
+          className="text-center text-base text-foreground/50 mb-10 max-w-xl mx-auto"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -88,7 +92,7 @@ export default function MasteryLevels() {
         </motion.p>
 
         {/* Interactive circles */}
-        <div className="flex justify-center gap-12 sm:gap-16 md:gap-20 mb-16">
+        <div className="flex justify-center gap-12 sm:gap-16 md:gap-20 mb-8">
           {levels.map((level, i) => {
             const isActive = activeId === level.id;
 
@@ -140,18 +144,18 @@ export default function MasteryLevels() {
           })}
         </div>
 
-        {/* Content area */}
-        <div className="min-h-[320px] sm:min-h-[300px]">
-          <AnimatePresence mode="wait">
-            {activeLevel ? (
-              <motion.div
-                key={activeLevel.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="space-y-6"
-              >
+        {/* Content area — smooth height animation */}
+        <AnimatePresence initial={false}>
+          {activeLevel ? (
+            <motion.div
+              key={activeLevel.id}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ height: { duration: 0.45, ease: [0.22, 1, 0.36, 1] }, opacity: { duration: 0.3 } }}
+              className="overflow-hidden"
+            >
+              <div className="space-y-6 pb-4">
                 <div>
                   <p className="text-sm font-medium uppercase tracking-widest mb-2" style={{ color: activeLevel.accentColor }}>
                     {activeLevel.subtitle}
@@ -177,21 +181,21 @@ export default function MasteryLevels() {
                     </motion.li>
                   ))}
                 </ul>
-              </motion.div>
-            ) : (
-              <motion.p
-                key="default"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="text-lg sm:text-xl leading-[1.9] text-foreground/50 text-center max-w-xl mx-auto"
-              >
-                Tap a circle above to explore each level of StepWise mastery.
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </div>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.p
+              key="default"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="text-base sm:text-lg leading-[1.9] text-foreground/50 text-center max-w-xl mx-auto"
+            >
+              Tap a circle above to explore each level of StepWise mastery.
+            </motion.p>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
