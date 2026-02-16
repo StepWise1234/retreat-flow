@@ -76,12 +76,12 @@ export default function FindFacilitator() {
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             {[
-              { num: '01', title: 'Share Your Story', desc: 'Complete the brief intake form below so our concierge team understands your background, goals, and any clinical considerations.' },
-              { num: '02', title: 'Concierge Consultation', desc: 'A member of our team will reach out within 72 hours to discuss your needs, answer questions, and determine if StepWise is a good fit.' },
-              { num: '03', title: 'Facilitator Match', desc: 'Based on your profile and preferences, we connect you with a vetted StepWise-trained practitioner in a permitted jurisdiction.' },
+              { num: '01', color: '#FFA500', title: 'Share Your Story', desc: 'Complete the brief intake form below so our concierge team understands your background, goals, and any clinical considerations.' },
+              { num: '02', color: '#FF4500', title: 'Concierge Consultation', desc: 'A member of our team will reach out within 72 hours to discuss your needs, answer questions, and determine if StepWise is a good fit.' },
+              { num: '03', color: '#800080', title: 'Facilitator Match', desc: 'Based on your profile and preferences, we connect you with a vetted StepWise-trained practitioner in a permitted jurisdiction.' },
             ].map((step) => (
               <div key={step.num} className="text-center md:text-left">
-                <span className="text-5xl font-bold tracking-tight" style={{ color: '#800080' }}>{step.num}</span>
+                <span className="text-5xl font-bold tracking-tight" style={{ color: step.color }}>{step.num}</span>
                 <h3 className="text-lg font-semibold text-foreground mt-2 mb-2">{step.title}</h3>
                 <p className="text-sm text-foreground/50 leading-relaxed">{step.desc}</p>
               </div>
