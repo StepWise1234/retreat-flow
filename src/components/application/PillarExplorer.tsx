@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 const pillars = [
   {
@@ -57,6 +58,14 @@ export default function PillarExplorer() {
           animate={{ paddingTop: activePillar ? '5rem' : '2.5rem', paddingBottom: activePillar ? '5rem' : '2.5rem' }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
+          {/* Descriptor */}
+          <p className={cn(
+            "text-center text-sm tracking-wide text-foreground/40 mb-6 transition-opacity duration-300",
+            activePillar ? "opacity-30" : "opacity-100"
+          )}>
+            Tap a circle to explore
+          </p>
+
           {/* Interactive circles */}
           <div className="flex justify-center gap-12 sm:gap-16 md:gap-20 mb-8">
             {pillars.map((pillar, i) => {
