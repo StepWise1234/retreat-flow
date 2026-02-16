@@ -71,7 +71,7 @@ export default function TrainingPhases() {
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          Three Phases of Each Level
+          Three Phases Per Level
         </motion.h2>
         <motion.p
           className="text-center text-lg text-black/50 mb-16 max-w-xl mx-auto"
