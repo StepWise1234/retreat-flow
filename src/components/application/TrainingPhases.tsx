@@ -5,16 +5,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 const phases = [
   {
     id: 'online',
-    title: 'Online Class',
+    title: 'Online Learning',
     accentColor: '#FFA500',
-    subtitle: 'Foundation & Theory',
+    subtitle: 'Preparation & Context',
     description:
-      'Begin your journey with a comprehensive online curriculum covering the science of nervous system regulation, capacity-based dosing theory, and the pharmacology of titrated 5-MeO-DMT. Weekly live sessions connect you with faculty and fellow trainees as you build the conceptual framework for safe, effective practice.',
+      'Before every in-person training or workshop, you\'ll complete an online course designed to prepare your mind and body for the experiential work ahead. This isn\'t passive lecture — it\'s an active foundation-building process that ensures you arrive with shared language, conceptual clarity, and the somatic awareness to make the most of every hour in the room.\n\nBy front-loading theory, science, and self-assessment online, the in-person experience can focus entirely on what can\'t be learned through a screen: embodied practice, real-time facilitation, and nervous system development under expert guidance.',
     details: [
-      'Self-paced video modules with somatic exercises',
-      'Weekly live cohort sessions with Q&A',
-      'Foundational neuroscience & psychopharmacology',
-      'Case study analysis & ethical frameworks',
+      'Foundational neuroscience, pharmacology & dosing theory',
+      'Self-paced modules with integrated somatic exercises',
+      'Pre-training self-assessment & readiness preparation',
+      'Shared vocabulary so in-person time is maximized',
     ],
   },
   {
