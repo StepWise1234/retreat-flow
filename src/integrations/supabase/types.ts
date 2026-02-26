@@ -271,6 +271,7 @@ export type Database = {
           description: string | null
           id: string
           is_published: boolean
+          pdf_path: string | null
           sort_order: number
           title: string
           training_level: string
@@ -282,6 +283,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_published?: boolean
+          pdf_path?: string | null
           sort_order?: number
           title: string
           training_level: string
@@ -293,6 +295,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_published?: boolean
+          pdf_path?: string | null
           sort_order?: number
           title?: string
           training_level?: string
