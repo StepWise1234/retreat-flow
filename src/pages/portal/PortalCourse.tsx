@@ -4,7 +4,7 @@ import { useApplication } from '@/hooks/useApplication';
 import { useCourseVideos } from '@/hooks/useCourseVideos';
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 import CourseVideoSection from '@/components/portal/CourseVideoSection';
-import CoursePlaceholder from '@/components/portal/CoursePlaceholder';
+import CoursePlaceholder, { BeginningTrainingCards } from '@/components/portal/CoursePlaceholder';
 
 const levels = ['beginning', 'intermediate', 'advanced'] as const;
 type Level = (typeof levels)[number];
@@ -153,12 +153,14 @@ export default function PortalCourse() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="space-y-6"
             >
               <CourseVideoSection
                 videos={videos}
                 videosLoading={videosLoading}
                 config={levelMeta.beginning}
               />
+              <BeginningTrainingCards />
             </motion.div>
           ) : (
             <motion.div
