@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { label: 'Home', path: '/' },
   { label: 'Find a Facilitator', path: '/facilitators' },
   { label: 'Apply', path: '/apply' },
+  { label: 'Portal', path: '/portal' },
 ];
 
 export default function FloatingLogo() {
