@@ -26,15 +26,16 @@ const trainings: Record<string, { color: string; label: string; items: Training[
     color: '#FF4500',
     label: 'Intermediate',
     items: [
-      { id: 'i1', title: 'Intermediate Level — Cohort 3', date: 'Oct 3–10, 2026', location: 'Nelson, B.C. Canada', spotsTotal: 6, spotsFilled: 3, status: 'open' },
-      { id: 'i2', title: 'Intermediate Level — Cohort 4', date: 'Feb 7–14, 2027', location: 'Revelstoke, B.C. Canada', spotsTotal: 6, spotsFilled: 6, status: 'waitlist' },
+      { id: 'i1', title: 'Nervous System + PTSD', date: 'Oct 3–5, 2026', location: 'Nelson, B.C. Canada', spotsTotal: 6, spotsFilled: 3, status: 'open' },
+      { id: 'i2', title: 'Touch + Parts-Work', date: 'Nov 14–16, 2026', location: 'Revelstoke, B.C. Canada', spotsTotal: 6, spotsFilled: 6, status: 'waitlist' },
+      { id: 'i3', title: 'Relational Intelligence', date: 'Feb 7–9, 2027', location: 'Whistler, B.C. Canada', spotsTotal: 6, spotsFilled: 1, status: 'open' },
     ],
   },
   advanced: {
     color: '#800080',
     label: 'Advanced',
     items: [
-      { id: 'a1', title: 'Advanced Level — Cohort 1', date: 'Dec 5–14, 2026', location: 'Nosara, Costa Rica', spotsTotal: 6, spotsFilled: 4, status: 'limited' },
+      { id: 'a1', title: 'Advanced Level', date: 'Dec 5–14, 2026', location: 'Nosara, Costa Rica', spotsTotal: 6, spotsFilled: 4, status: 'limited' },
     ],
   },
 };
