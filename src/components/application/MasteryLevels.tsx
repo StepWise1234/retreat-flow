@@ -54,7 +54,7 @@ const levels = [
     accentColor: '#800080',
     subtitle: 'Full-Release Mastery',
     description:
-      'The culmination of the StepWise path. Advanced training prepares you for full-release 5-MeO-DMT sessions — the most profound and demanding work in the field. By this stage, your nervous system has been trained alongside your clinical skills. You\'ll learn to facilitate complete ego-dissolution experiences with the confidence that comes from hundreds of hours of graduated practice. This is where art meets science.',
+      'The culmination of the StepWise path. Advanced training prepares you for full-release 5-MeO-DMT sessions — the most profound and demanding work in the field. By this stage, your nervous system has been trained alongside your clinical skills. You\'ll learn to facilitate complete ego-dissolution experiences with the confidence that comes from hundreds of hours of graduated practice. This is where art meets science.\n\nAdvanced training is invitation only. Your trainers will assess your readiness based on demonstrated competence, nervous system capacity, and clinical maturity. In some cases, they may recommend additional Intermediate workshops to further develop specific areas of mastery before extending an invitation to this level.',
     details: [
       'Full-release session facilitation with complete dissolution protocols',
       'Crisis navigation & deep-state support techniques',
