@@ -14,21 +14,21 @@ interface TestimonialCardTarget {
 
 /* ─── Testimonials with background images ─── */
 const TESTIMONIALS = [
-  { quote: 'Transformed my entire clinical approach.', author: 'Dr. Sarah K.', role: 'Psychiatrist', img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=300&q=80' },
-  { quote: 'The depth of training is unmatched.', author: 'James R.', role: 'Therapist', img: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&q=80' },
-  { quote: 'I found my community here.', author: 'Maria L.', role: 'Social Worker', img: 'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=300&q=80' },
-  { quote: 'Rigorous, safe, and deeply impactful.', author: 'Dr. Chen W.', role: 'Physician', img: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&q=80' },
-  { quote: 'Every clinician should experience this.', author: 'Ava M.', role: 'Counselor', img: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&q=80' },
-  { quote: 'Changed the trajectory of my practice.', author: 'Noah P.', role: 'Psychologist', img: 'https://images.unsplash.com/photo-1500485035595-cbe6f645feb1?w=300&q=80' },
-  { quote: 'Held and supported through every step.', author: 'Elena V.', role: 'Nurse Practitioner', img: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&q=80' },
-  { quote: 'A masterclass in facilitation.', author: 'Dr. Obi A.', role: 'Researcher', img: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=300&q=80' },
-  { quote: 'The screening process shows they care.', author: 'Sophie T.', role: 'Therapist', img: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=300&q=80' },
-  { quote: 'Profoundly rewired how I hold space.', author: 'Raj S.', role: 'Facilitator', img: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=300&q=80' },
-  { quote: 'World-class training, intimate setting.', author: 'Dr. Kim J.', role: 'Psychiatrist', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?w=300&q=80' },
-  { quote: 'The community stays with you forever.', author: 'Lena C.', role: 'Coach', img: 'https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=300&q=80' },
-  { quote: 'Science-backed and heart-led.', author: 'Marcus D.', role: 'Physician', img: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=300&q=80' },
-  { quote: 'Exactly the training I was searching for.', author: 'Priya N.', role: 'Therapist', img: 'https://images.unsplash.com/photo-1523961131990-5ea7c61b2107?w=300&q=80' },
-  { quote: 'Safe container, exceptional mentors.', author: 'Dr. Alex F.', role: 'Clinician', img: 'https://images.unsplash.com/photo-1496568816309-51d7c20e3b21?w=300&q=80' },
+  { quote: 'Transformed my entire clinical approach.', author: 'Dr. Sarah K.', role: 'Psychiatrist', img: 'https://picsum.photos/seed/stepwise1/300/200' },
+  { quote: 'The depth of training is unmatched.', author: 'James R.', role: 'Therapist', img: 'https://picsum.photos/seed/stepwise2/300/200' },
+  { quote: 'I found my community here.', author: 'Maria L.', role: 'Social Worker', img: 'https://picsum.photos/seed/stepwise3/300/200' },
+  { quote: 'Rigorous, safe, and deeply impactful.', author: 'Dr. Chen W.', role: 'Physician', img: 'https://picsum.photos/seed/stepwise4/300/200' },
+  { quote: 'Every clinician should experience this.', author: 'Ava M.', role: 'Counselor', img: 'https://picsum.photos/seed/stepwise5/300/200' },
+  { quote: 'Changed the trajectory of my practice.', author: 'Noah P.', role: 'Psychologist', img: 'https://picsum.photos/seed/stepwise6/300/200' },
+  { quote: 'Held and supported through every step.', author: 'Elena V.', role: 'Nurse Practitioner', img: 'https://picsum.photos/seed/stepwise7/300/200' },
+  { quote: 'A masterclass in facilitation.', author: 'Dr. Obi A.', role: 'Researcher', img: 'https://picsum.photos/seed/stepwise8/300/200' },
+  { quote: 'The screening process shows they care.', author: 'Sophie T.', role: 'Therapist', img: 'https://picsum.photos/seed/stepwise9/300/200' },
+  { quote: 'Profoundly rewired how I hold space.', author: 'Raj S.', role: 'Facilitator', img: 'https://picsum.photos/seed/stepwise10/300/200' },
+  { quote: 'World-class training, intimate setting.', author: 'Dr. Kim J.', role: 'Psychiatrist', img: 'https://picsum.photos/seed/stepwise11/300/200' },
+  { quote: 'The community stays with you forever.', author: 'Lena C.', role: 'Coach', img: 'https://picsum.photos/seed/stepwise12/300/200' },
+  { quote: 'Science-backed and heart-led.', author: 'Marcus D.', role: 'Physician', img: 'https://picsum.photos/seed/stepwise13/300/200' },
+  { quote: 'Exactly the training I was searching for.', author: 'Priya N.', role: 'Therapist', img: 'https://picsum.photos/seed/stepwise14/300/200' },
+  { quote: 'Safe container, exceptional mentors.', author: 'Dr. Alex F.', role: 'Clinician', img: 'https://picsum.photos/seed/stepwise15/300/200' },
 ];
 
 const TOTAL_CARDS = TESTIMONIALS.length;
