@@ -3,10 +3,58 @@ import { motion } from 'framer-motion';
 import { Save, Check, ExternalLink, BedDouble, UtensilsCrossed, Accessibility } from 'lucide-react';
 import { toast } from 'sonner';
 import { useApplication } from '@/hooks/useApplication';
+import { cn } from '@/lib/utils';
+
+const DIETARY_OPTIONS = ['Gluten Free', 'Dairy Free', 'Vegetarian', 'Vegan', 'Other Allergy'];
+
+const DIETARY_COLORS: Record<string, { bg: string; border: string; text: string; glow: string }> = {
+  'Gluten Free':   { bg: '#FFA500', border: '#FFA500', text: '#FFA500', glow: 'rgba(255,165,0,0.15)' },
+  'Dairy Free':    { bg: '#FF4500', border: '#FF4500', text: '#FF4500', glow: 'rgba(255,69,0,0.15)' },
+  'Vegetarian':    { bg: '#22C55E', border: '#22C55E', text: '#22C55E', glow: 'rgba(34,197,94,0.15)' },
+  'Vegan':         { bg: '#800080', border: '#800080', text: '#800080', glow: 'rgba(128,0,128,0.15)' },
+  'Other Allergy': { bg: '#3B82F6', border: '#3B82F6', text: '#3B82F6', glow: 'rgba(59,130,246,0.15)' },
+};
+
+function DietaryPill({ checked, label, onToggle }: { checked: boolean; label: string; onToggle: () => void }) {
+  const colors = DIETARY_COLORS[label] || DIETARY_COLORS['Other Allergy'];
+  return (
+    <motion.button
+      type="button"
+      onClick={onToggle}
+      whileTap={{ scale: 0.95 }}
+      className={cn(
+        'flex items-center gap-2.5 rounded-full px-5 py-3 text-sm font-medium cursor-pointer transition-all duration-300 border',
+        checked
+          ? 'text-foreground'
+          : 'border-foreground/10 bg-foreground/[0.02] text-foreground/50 hover:border-foreground/20',
+      )}
+      style={checked ? {
+        borderColor: colors.border,
+        backgroundColor: colors.glow,
+        boxShadow: `0 0 16px ${colors.glow}`,
+      } : undefined}
+    >
+      <span
+        className={cn(
+          'flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200',
+        )}
+        style={{
+          borderColor: checked ? colors.border : 'hsl(var(--foreground) / 0.2)',
+          backgroundColor: checked ? colors.bg : 'transparent',
+        }}
+      >
+        {checked && <Check className="h-3.5 w-3.5 text-white" />}
+      </span>
+      {label}
+    </motion.button>
+  );
+}
 
 export default function PortalAccommodation() {
   const { application, isLoading, updateApplication } = useApplication();
   const [bedroomChoice, setBedroomChoice] = useState('');
+  const [dietaryPreferences, setDietaryPreferences] = useState<string[]>([]);
+  const [dietaryOther, setDietaryOther] = useState('');
   const [dietaryNotes, setDietaryNotes] = useState('');
   const [specialAccommodations, setSpecialAccommodations] = useState('');
   const [saving, setSaving] = useState(false);
@@ -14,16 +62,26 @@ export default function PortalAccommodation() {
   useEffect(() => {
     if (application) {
       setBedroomChoice(application.bedroom_choice || '');
+      setDietaryPreferences(Array.isArray(application.dietary_preferences) ? application.dietary_preferences as string[] : []);
+      setDietaryOther(application.dietary_other || '');
       setDietaryNotes(application.dietary_notes || '');
       setSpecialAccommodations(application.special_accommodations || '');
     }
   }, [application]);
+
+  const toggleDietary = (item: string) => {
+    setDietaryPreferences((prev) =>
+      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
+    );
+  };
 
   const handleSave = async () => {
     setSaving(true);
     try {
       await updateApplication.mutateAsync({
         bedroom_choice: bedroomChoice,
+        dietary_preferences: dietaryPreferences,
+        dietary_other: dietaryOther,
         dietary_notes: dietaryNotes,
         special_accommodations: specialAccommodations,
       });
@@ -124,7 +182,7 @@ export default function PortalAccommodation() {
           </div>
         </motion.div>
 
-        {/* Dietary */}
+        {/* Dietary Preferences */}
         <motion.div
           className="rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm p-6 sm:p-8 space-y-4"
           initial={{ opacity: 0, y: 12 }}
@@ -136,17 +194,52 @@ export default function PortalAccommodation() {
               <UtensilsCrossed className="h-5 w-5 text-[#FFA500]" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-foreground/80">Dietary Considerations</h2>
-              <p className="text-sm text-foreground/40">Allergies, restrictions, or preferences we should know about.</p>
+              <h2 className="text-lg font-semibold tracking-tight text-foreground/80">Dietary Preferences</h2>
+              <p className="text-sm text-foreground/40">Select all that apply so we can plan meals accordingly.</p>
             </div>
           </div>
-          <textarea
-            value={dietaryNotes}
-            onChange={(e) => setDietaryNotes(e.target.value)}
-            rows={4}
-            placeholder="e.g. Vegetarian, no tree nuts, lactose intolerant…"
-            className="w-full rounded-lg border border-foreground/10 bg-background/80 px-4 py-3 text-foreground placeholder:text-foreground/25 focus:outline-none focus:ring-2 focus:ring-[#FFA500]/25 focus:border-[#FFA500]/40 transition-all text-sm"
-          />
+
+          <div className="flex flex-wrap gap-2.5">
+            {DIETARY_OPTIONS.map((opt) => (
+              <DietaryPill
+                key={opt}
+                checked={dietaryPreferences.includes(opt)}
+                label={opt}
+                onToggle={() => toggleDietary(opt)}
+              />
+            ))}
+          </div>
+
+          {dietaryPreferences.includes('Other Allergy') && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+            >
+              <label className="block text-xs font-medium text-foreground/45 mb-1.5 uppercase tracking-wider">
+                Please Specify
+              </label>
+              <input
+                value={dietaryOther}
+                onChange={(e) => setDietaryOther(e.target.value)}
+                placeholder="e.g. Tree nut allergy, shellfish…"
+                className="w-full rounded-lg border border-[#3B82F6]/30 bg-[#3B82F6]/5 px-4 py-3 text-foreground placeholder:text-foreground/25 focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/25 focus:border-[#3B82F6]/40 transition-all text-sm"
+              />
+            </motion.div>
+          )}
+
+          <div>
+            <label className="block text-xs font-medium text-foreground/45 mb-1.5 uppercase tracking-wider">
+              Additional Notes
+            </label>
+            <textarea
+              value={dietaryNotes}
+              onChange={(e) => setDietaryNotes(e.target.value)}
+              rows={3}
+              placeholder="Allergies, restrictions, or preferences we should know about…"
+              className="w-full rounded-lg border border-foreground/10 bg-background/80 px-4 py-3 text-foreground placeholder:text-foreground/25 focus:outline-none focus:ring-2 focus:ring-[#FFA500]/25 focus:border-[#FFA500]/40 transition-all text-sm"
+            />
+          </div>
         </motion.div>
 
         {/* Special Accommodations */}
