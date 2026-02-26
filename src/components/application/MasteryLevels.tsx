@@ -9,13 +9,17 @@ const levels = [
     accentColor: '#FFA500',
     subtitle: 'Nervous System Foundations',
     description:
-      'Where every practitioner starts — and where the most important skills are forged. Beginning-level training grounds you in the science of titrated, sub-perceptual 5-MeO-DMT administration. You\'ll learn to read the nervous system in real time, recognize micro-signals of capacity, and guide clients through ultra-low dose sessions where safety and trust are the only objectives. This is not about intensity — it\'s about precision.',
+      'Where every practitioner starts — and where the most important skills are forged. Beginning-level training grounds you in the science of titrated, sub-perceptual 5-MeO-DMT administration. You\'ll learn to read the nervous system in real time, recognize micro-signals of capacity, and guide clients through ultra-low dose sessions where safety and trust are the only objectives. This is not about intensity — it\'s about precision.\n\nWith a solid foundation in nervous system literacy, you\'re ready to expand. Beginning training introduces moderate-dose protocols where clients begin to access altered states while maintaining somatic coherence. You\'ll develop advanced tracking skills — learning to hold space as the body processes stored tension, emotion, and trauma at a pace it can integrate. The emphasis shifts from containment to guided expansion.',
     details: [
       'Ultra-low dose protocols with sub-perceptual thresholds',
-      'Somatic marker recognition & real-time nervous system tracking',
+      'Advanced somatic tracking through emotional release cycles',
       'Building the therapeutic container: safety, trust, attunement',
       'Contraindication screening & client readiness assessment',
       'Foundational breathwork & co-regulation techniques',
+      'Moderate-dose titration with maintained consciousness',
+      'Working with resistance, dissociation & trauma responses',
+      'Multi-session arc design & progressive capacity building',
+      'Peer consultation & supervised client sessions',
     ],
   },
   {
