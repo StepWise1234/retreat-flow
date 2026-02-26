@@ -33,17 +33,17 @@ const levels = [
       {
         number: '01',
         title: 'Nervous System + PTSD',
-        description: 'Advanced protocols for working with dysregulated nervous systems, complex trauma, and PTSD. Learn to track freeze, fawn, and flight responses in real time and guide clients through titrated release without overwhelm.',
+        description: 'Advanced protocols for working with dysregulated nervous systems, complex trauma, and PTSD. Learn to track freeze, fawn, and flight responses in real time and guide clients through titrated release without overwhelm. This workshop deepens your understanding of ultra-low dose application as a tool for gradual nervous system capacity building — expanding each client\'s window of tolerance session by session, rather than pushing past it. You\'ll learn to calibrate dosing to the precise edge of a client\'s regulation capacity, building resilience and trust in the body\'s ability to process what it has stored.',
       },
       {
         number: '02',
         title: 'Touch + Parts-Work',
-        description: 'Somatic touch techniques integrated with parts-work (IFS-informed). Develop the sensitivity to work with wounded inner-child states, body-held memories, and the delicate negotiation between protector and exile parts during session.',
+        description: 'Somatic touch techniques integrated with parts-work (IFS-informed). Develop the sensitivity to work with wounded inner-child states, body-held memories, and the delicate negotiation between protector and exile parts during session. This workshop also introduces energy work modalities — learning to read and respond to subtle energetic shifts in the client\'s field, work with blocked or stagnant energy patterns, and use intentional touch and energetic attunement as vehicles for deep somatic release and integration.',
       },
       {
         number: '03',
         title: 'Relational Intelligence',
-        description: 'Attachment wound repair through the relational field. Explore how facilitator-client dynamics mirror early attachment patterns, and learn to use the therapeutic relationship itself as the vehicle for healing insecure attachment.',
+        description: 'Attachment wound repair through the relational field. Explore how facilitator-client dynamics mirror early attachment patterns, and learn to use the therapeutic relationship itself as the vehicle for healing insecure attachment. This workshop extends into group facilitation — teaching you to hold relational repair work in a group container where each participant moves at the pace of their own unique nervous system. You\'ll develop the skill to track multiple relational threads simultaneously, creating a field where co-regulation and witnessed vulnerability become catalysts for deep attachment healing.',
       },
     ],
     details: [],
