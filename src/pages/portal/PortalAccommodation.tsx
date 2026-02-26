@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Save, Check, ExternalLink, BedDouble, UtensilsCrossed, Accessibility, Crown } from 'lucide-react';
+import { Save, Check, ExternalLink, BedDouble, UtensilsCrossed, Accessibility, Crown, Lock, Heart } from 'lucide-react';
 import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
 import { useApplication } from '@/hooks/useApplication';
+import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
 import roomMaster from '@/assets/rooms/room-master.avif';
@@ -13,12 +15,12 @@ import room4 from '@/assets/rooms/room-4.avif';
 import room5 from '@/assets/rooms/room-5.avif';
 
 const ROOMS = [
-  { id: 'master', name: 'Master Suite', image: roomMaster, description: 'King bed · En-suite bath · Walk-in closet', badge: 'Premier' },
-  { id: 'bedroom-1', name: 'Bedroom 1', image: room1, description: 'Queen bed · Garden view · Private bath' },
-  { id: 'bedroom-2', name: 'Bedroom 2', image: room2, description: 'Queen bed · Mountain view · Shared bath' },
-  { id: 'bedroom-3', name: 'Bedroom 3', image: room3, description: 'Full bed · Courtyard view · Shared bath' },
-  { id: 'bedroom-4', name: 'Bedroom 4', image: room4, description: 'Full bed · Quiet corner · Shared bath' },
-  { id: 'bedroom-5', name: 'Bedroom 5', image: room5, description: 'Twin beds · Flexible layout · Shared bath' },
+  { id: 'master', name: 'Master Suite', image: roomMaster, bed: 'King bed', bath: 'En-suite bath & tub', price: 500, badge: 'Premier' },
+  { id: 'bedroom-1', name: 'Bedroom 1', image: room1, bed: 'Queen bed', bath: 'Shared bath' },
+  { id: 'bedroom-2', name: 'Bedroom 2', image: room2, bed: 'Queen bed', bath: 'Shared bath' },
+  { id: 'bedroom-3', name: 'Bedroom 3', image: room3, bed: 'Queen bed', bath: 'Shared bath' },
+  { id: 'bedroom-4', name: 'Bedroom 4', image: room4, bed: 'Queen bed', bath: 'Shared bath' },
+  { id: 'bedroom-5', name: 'Bedroom 5', image: room5, bed: 'Double bed', bath: 'Shared bath' },
 ];
 
 const DIETARY_OPTIONS = ['Gluten Free', 'Dairy Free', 'Vegetarian', 'Vegan', 'Other Allergy'];
@@ -64,22 +66,27 @@ function DietaryPill({ checked, label, onToggle }: { checked: boolean; label: st
   );
 }
 
-function RoomCard({ room, selected, onSelect }: {
+function RoomCard({ room, selected, soldOut, onSelect }: {
   room: typeof ROOMS[0];
   selected: boolean;
+  soldOut: boolean;
   onSelect: () => void;
 }) {
+  const disabled = soldOut && !selected;
   return (
     <motion.button
       type="button"
-      onClick={onSelect}
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.98 }}
+      onClick={disabled ? undefined : onSelect}
+      whileHover={disabled ? undefined : { y: -4 }}
+      whileTap={disabled ? undefined : { scale: 0.98 }}
       className={cn(
         'group relative rounded-2xl overflow-hidden text-left transition-all duration-400 border-2',
+        disabled && 'cursor-not-allowed opacity-60',
         selected
           ? 'border-[#FFA500] shadow-[0_8px_30px_rgba(255,165,0,0.2)]'
-          : 'border-transparent hover:border-foreground/10 shadow-md hover:shadow-xl',
+          : disabled
+            ? 'border-transparent'
+            : 'border-transparent hover:border-foreground/10 shadow-md hover:shadow-xl',
       )}
     >
       {/* Image */}
@@ -87,16 +94,35 @@ function RoomCard({ room, selected, onSelect }: {
         <img
           src={room.image}
           alt={room.name}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className={cn(
+            'h-full w-full object-cover transition-transform duration-700',
+            disabled ? 'grayscale' : 'group-hover:scale-110',
+          )}
         />
-        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
+        {/* Sold out overlay */}
+        {disabled && (
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <div className="flex items-center gap-2 rounded-full bg-black/70 backdrop-blur-sm px-4 py-2">
+              <Lock className="h-4 w-4 text-white/80" />
+              <span className="text-sm font-bold text-white/90 uppercase tracking-wider">Reserved</span>
+            </div>
+          </div>
+        )}
+
         {/* Badge */}
-        {room.badge && (
+        {room.badge && !disabled && (
           <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-[#FFA500]/90 backdrop-blur-sm px-3 py-1">
             <Crown className="h-3 w-3 text-white" />
             <span className="text-[11px] font-bold text-white uppercase tracking-wider">{room.badge}</span>
+          </div>
+        )}
+
+        {/* Price badge for master */}
+        {room.price && !disabled && (
+          <div className="absolute top-3 right-3 rounded-full bg-black/60 backdrop-blur-sm px-3 py-1">
+            <span className="text-[11px] font-bold text-[#FFA500]">+${room.price}</span>
           </div>
         )}
 
@@ -121,7 +147,7 @@ function RoomCard({ room, selected, onSelect }: {
         {/* Room info overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-4">
           <h3 className="text-lg font-bold text-white tracking-tight">{room.name}</h3>
-          <p className="text-xs text-white/70 mt-0.5">{room.description}</p>
+          <p className="text-xs text-white/70 mt-0.5">{room.bed} · {room.bath}</p>
         </div>
       </div>
 
@@ -131,10 +157,12 @@ function RoomCard({ room, selected, onSelect }: {
           'px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-widest transition-all duration-300',
           selected
             ? 'bg-gradient-to-r from-[#FFA500] to-[#FF4500] text-white'
-            : 'bg-foreground/[0.03] text-foreground/40 group-hover:text-foreground/60',
+            : disabled
+              ? 'bg-foreground/[0.05] text-foreground/25'
+              : 'bg-foreground/[0.03] text-foreground/40 group-hover:text-foreground/60',
         )}
       >
-        {selected ? 'Selected' : 'Select Room'}
+        {selected ? 'Selected' : disabled ? 'Reserved' : 'Select Room'}
       </div>
     </motion.button>
   );
@@ -148,6 +176,19 @@ export default function PortalAccommodation() {
   const [dietaryNotes, setDietaryNotes] = useState('');
   const [specialAccommodations, setSpecialAccommodations] = useState('');
   const [saving, setSaving] = useState(false);
+
+  // Fetch reserved rooms for this retreat
+  const retreatId = application?.retreat_id;
+  const { data: reservedRooms = [] } = useQuery({
+    queryKey: ['reserved-rooms', retreatId],
+    queryFn: async () => {
+      if (!retreatId) return [];
+      const { data, error } = await supabase.rpc('get_reserved_rooms', { p_retreat_id: retreatId });
+      if (error) throw error;
+      return (data as string[]) || [];
+    },
+    enabled: !!retreatId,
+  });
 
   useEffect(() => {
     if (application) {
@@ -180,6 +221,11 @@ export default function PortalAccommodation() {
       toast.error('Failed to save');
     }
     setSaving(false);
+  };
+
+  // A room is sold out if someone else reserved it (not the current user)
+  const isRoomSoldOut = (roomId: string) => {
+    return reservedRooms.includes(roomId) && bedroomChoice !== roomId && application?.bedroom_choice !== roomId;
   };
 
   if (isLoading) {
@@ -265,11 +311,33 @@ export default function PortalAccommodation() {
               <RoomCard
                 room={room}
                 selected={bedroomChoice === room.id}
-                onSelect={() => setBedroomChoice(room.id)}
+                soldOut={isRoomSoldOut(room.id)}
+                onSelect={() => setBedroomChoice(bedroomChoice === room.id ? '' : room.id)}
               />
             </motion.div>
           ))}
         </div>
+
+        {/* Master Suite upsell note */}
+        <motion.div
+          className="rounded-xl border border-[#FFA500]/15 bg-gradient-to-br from-[#FFA500]/5 to-[#FF4500]/5 p-5 flex items-start gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <div className="w-9 h-9 rounded-full bg-[#FFA500]/15 flex items-center justify-center shrink-0 mt-0.5">
+            <Heart className="h-4 w-4 text-[#FFA500]" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-foreground/70">About the Master Suite upgrade</p>
+            <p className="text-sm text-foreground/45 mt-1 leading-relaxed">
+              The +$500 Master Suite fee goes directly toward funding scholarship spots for participants
+              who otherwise couldn't attend. By investing in your own comfort, you're making this
+              experience accessible to someone else. Taking better care of yourself truly allows us
+              to take better care of those in need.
+            </p>
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* Dietary Preferences */}
