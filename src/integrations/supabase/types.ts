@@ -14,6 +14,212 @@ export type Database = {
   }
   public: {
     Tables: {
+      applications: {
+        Row: {
+          allergies: string | null
+          anything_else: string | null
+          bedroom_choice: string | null
+          birth_day: string | null
+          birth_month: string | null
+          birth_year: string | null
+          city: string | null
+          cognitive_symptoms: Json | null
+          cognitive_symptoms_other: string | null
+          coping_mechanisms: Json | null
+          coping_other: string | null
+          country: string | null
+          created_at: string
+          dietary_notes: string | null
+          dietary_other: string | null
+          dietary_preferences: Json | null
+          dsm_diagnosis: string | null
+          email: string
+          emergency_first_name: string | null
+          emergency_last_name: string | null
+          emergency_phone: string | null
+          first_name: string
+          id: string
+          integration_support: string | null
+          journey_work_experience: string | null
+          last_name: string
+          life_circumstances: string | null
+          life_experiences: Json | null
+          medicine_experience: string | null
+          mental_health_issues: string | null
+          mental_health_professional: string | null
+          phone: string | null
+          physical_health_issues: string | null
+          physical_medications: string | null
+          physical_symptoms: Json | null
+          physical_symptoms_other: string | null
+          postal_code: string | null
+          preferred_name: string | null
+          psych_medications: string | null
+          recreational_drug_use: string | null
+          retreat_id: string | null
+          self_care: string | null
+          self_care_other: string | null
+          serving_experience: string | null
+          signal_handle: string | null
+          special_accommodations: string | null
+          state_province: string | null
+          status: string
+          street_address: string | null
+          street_address_2: string | null
+          strengths_hobbies: string | null
+          stress_level: number | null
+          stress_sources: string | null
+          suicide_consideration: string | null
+          supplements: string | null
+          support_network: Json | null
+          support_other: string | null
+          training_goals: string | null
+          training_level: string
+          trauma_details: string | null
+          updated_at: string
+          user_id: string
+          vrbo_listing_url: string | null
+        }
+        Insert: {
+          allergies?: string | null
+          anything_else?: string | null
+          bedroom_choice?: string | null
+          birth_day?: string | null
+          birth_month?: string | null
+          birth_year?: string | null
+          city?: string | null
+          cognitive_symptoms?: Json | null
+          cognitive_symptoms_other?: string | null
+          coping_mechanisms?: Json | null
+          coping_other?: string | null
+          country?: string | null
+          created_at?: string
+          dietary_notes?: string | null
+          dietary_other?: string | null
+          dietary_preferences?: Json | null
+          dsm_diagnosis?: string | null
+          email?: string
+          emergency_first_name?: string | null
+          emergency_last_name?: string | null
+          emergency_phone?: string | null
+          first_name?: string
+          id?: string
+          integration_support?: string | null
+          journey_work_experience?: string | null
+          last_name?: string
+          life_circumstances?: string | null
+          life_experiences?: Json | null
+          medicine_experience?: string | null
+          mental_health_issues?: string | null
+          mental_health_professional?: string | null
+          phone?: string | null
+          physical_health_issues?: string | null
+          physical_medications?: string | null
+          physical_symptoms?: Json | null
+          physical_symptoms_other?: string | null
+          postal_code?: string | null
+          preferred_name?: string | null
+          psych_medications?: string | null
+          recreational_drug_use?: string | null
+          retreat_id?: string | null
+          self_care?: string | null
+          self_care_other?: string | null
+          serving_experience?: string | null
+          signal_handle?: string | null
+          special_accommodations?: string | null
+          state_province?: string | null
+          status?: string
+          street_address?: string | null
+          street_address_2?: string | null
+          strengths_hobbies?: string | null
+          stress_level?: number | null
+          stress_sources?: string | null
+          suicide_consideration?: string | null
+          supplements?: string | null
+          support_network?: Json | null
+          support_other?: string | null
+          training_goals?: string | null
+          training_level?: string
+          trauma_details?: string | null
+          updated_at?: string
+          user_id: string
+          vrbo_listing_url?: string | null
+        }
+        Update: {
+          allergies?: string | null
+          anything_else?: string | null
+          bedroom_choice?: string | null
+          birth_day?: string | null
+          birth_month?: string | null
+          birth_year?: string | null
+          city?: string | null
+          cognitive_symptoms?: Json | null
+          cognitive_symptoms_other?: string | null
+          coping_mechanisms?: Json | null
+          coping_other?: string | null
+          country?: string | null
+          created_at?: string
+          dietary_notes?: string | null
+          dietary_other?: string | null
+          dietary_preferences?: Json | null
+          dsm_diagnosis?: string | null
+          email?: string
+          emergency_first_name?: string | null
+          emergency_last_name?: string | null
+          emergency_phone?: string | null
+          first_name?: string
+          id?: string
+          integration_support?: string | null
+          journey_work_experience?: string | null
+          last_name?: string
+          life_circumstances?: string | null
+          life_experiences?: Json | null
+          medicine_experience?: string | null
+          mental_health_issues?: string | null
+          mental_health_professional?: string | null
+          phone?: string | null
+          physical_health_issues?: string | null
+          physical_medications?: string | null
+          physical_symptoms?: Json | null
+          physical_symptoms_other?: string | null
+          postal_code?: string | null
+          preferred_name?: string | null
+          psych_medications?: string | null
+          recreational_drug_use?: string | null
+          retreat_id?: string | null
+          self_care?: string | null
+          self_care_other?: string | null
+          serving_experience?: string | null
+          signal_handle?: string | null
+          special_accommodations?: string | null
+          state_province?: string | null
+          status?: string
+          street_address?: string | null
+          street_address_2?: string | null
+          strengths_hobbies?: string | null
+          stress_level?: number | null
+          stress_sources?: string | null
+          suicide_consideration?: string | null
+          supplements?: string | null
+          support_network?: Json | null
+          support_other?: string | null
+          training_goals?: string | null
+          training_level?: string
+          trauma_details?: string | null
+          updated_at?: string
+          user_id?: string
+          vrbo_listing_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_retreat_id_fkey"
+            columns: ["retreat_id"]
+            isOneToOne: false
+            referencedRelation: "retreats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversations: {
         Row: {
           assigned_to: string | null
@@ -56,6 +262,42 @@ export type Database = {
           retreat_id?: string | null
           unread_count?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      course_videos: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_published: boolean
+          sort_order: number
+          title: string
+          training_level: string
+          updated_at: string
+          vimeo_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          sort_order?: number
+          title: string
+          training_level: string
+          updated_at?: string
+          vimeo_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          sort_order?: number
+          title?: string
+          training_level?: string
+          updated_at?: string
+          vimeo_id?: string
         }
         Relationships: []
       }

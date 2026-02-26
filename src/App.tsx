@@ -17,6 +17,12 @@ import ContactGroups from "./pages/ContactGroups";
 import MessageCenter from "./pages/MessageCenter";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PortalLogin from "./pages/PortalLogin";
+import PortalLayout from "./components/portal/PortalLayout";
+import PortalDashboard from "./pages/portal/PortalDashboard";
+import PortalApplication from "./pages/portal/PortalApplication";
+import PortalAccommodation from "./pages/portal/PortalAccommodation";
+import PortalCourse from "./pages/portal/PortalCourse";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -40,6 +46,15 @@ const App = () => (
             <Route path="/apply" element={<Apply />} />
             <Route path="/facilitators" element={<FindFacilitator />} />
             <Route path="/login" element={<Login />} />
+
+            {/* Participant Portal */}
+            <Route path="/portal/login" element={<PortalLogin />} />
+            <Route path="/portal" element={<PortalLayout />}>
+              <Route index element={<PortalDashboard />} />
+              <Route path="application" element={<PortalApplication />} />
+              <Route path="accommodation" element={<PortalAccommodation />} />
+              <Route path="course" element={<PortalCourse />} />
+            </Route>
 
             {/* Protected: Admin-only routes */}
             <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
