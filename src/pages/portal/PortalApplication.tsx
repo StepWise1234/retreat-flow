@@ -183,12 +183,12 @@ function StressSlider({ value, onChange }: { value: number; onChange: (v: number
 interface SectionProps {
   title: string;
   color: string;
-  icon?: string;
+  
   defaultOpen?: boolean;
   children: React.ReactNode;
 }
 
-function Section({ title, color, icon, defaultOpen = false, children }: SectionProps) {
+function Section({ title, color, defaultOpen = false, children }: SectionProps) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <motion.div
@@ -200,7 +200,7 @@ function Section({ title, color, icon, defaultOpen = false, children }: SectionP
         className="w-full flex items-center gap-3 px-6 py-5 text-left hover:bg-foreground/[0.02] transition-colors"
       >
         <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: color }} />
-        {icon && <span className="text-lg">{icon}</span>}
+        
         <h3 className="text-lg font-semibold tracking-tight text-foreground/80 flex-1">{title}</h3>
         <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
           <ChevronDown className="h-5 w-5 text-foreground/30" />
@@ -374,7 +374,7 @@ export default function PortalApplication() {
       </div>
 
       {/* Sections */}
-      <Section title="About You" color="#FFA500" icon="👋" defaultOpen>
+      <Section title="About You" color="#FFA500" defaultOpen>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="First Name" value={form.first_name || ''} onChange={(v) => update('first_name', v)} />
           <Field label="Last Name" value={form.last_name || ''} onChange={(v) => update('last_name', v)} />
@@ -387,7 +387,7 @@ export default function PortalApplication() {
         </div>
       </Section>
 
-      <Section title="Contact" color="#FF4500" icon="📱">
+      <Section title="Contact" color="#FF4500">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Email" value={form.email || ''} onChange={(v) => update('email', v)} type="email" />
           <Field label="Phone" value={form.phone || ''} onChange={(v) => update('phone', v)} type="tel" />
@@ -395,7 +395,7 @@ export default function PortalApplication() {
         </div>
       </Section>
 
-      <Section title="Address" color="#800080" icon="🏠">
+      <Section title="Address" color="#800080">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Street Address" value={form.street_address || ''} onChange={(v) => update('street_address', v)} full />
           <Field label="Apt / Suite" value={form.street_address_2 || ''} onChange={(v) => update('street_address_2', v)} full />
@@ -406,7 +406,7 @@ export default function PortalApplication() {
         </div>
       </Section>
 
-      <Section title="Emergency Contact" color="#FFA500" icon="🚨">
+      <Section title="Emergency Contact" color="#FFA500">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="First Name" value={form.emergency_first_name || ''} onChange={(v) => update('emergency_first_name', v)} />
           <Field label="Last Name" value={form.emergency_last_name || ''} onChange={(v) => update('emergency_last_name', v)} />
@@ -414,7 +414,7 @@ export default function PortalApplication() {
         </div>
       </Section>
 
-      <Section title="Experience & Background" color="#FF4500" icon="🧭">
+      <Section title="Experience & Background" color="#FF4500">
         <div className="grid gap-4 sm:grid-cols-1">
           <Field label="Journey Work Experience" value={form.journey_work_experience || ''} onChange={(v) => update('journey_work_experience', v)} multiline full />
           <Field label="Medicine Experience" value={form.medicine_experience || ''} onChange={(v) => update('medicine_experience', v)} multiline full />
@@ -424,7 +424,7 @@ export default function PortalApplication() {
         </div>
       </Section>
 
-      <Section title="My Body" color="#800080" icon="🫀">
+      <Section title="My Body" color="#800080">
         <div className="space-y-5">
           <div className="grid gap-4 sm:grid-cols-1">
             <Field label="Physical Health Issues" value={form.physical_health_issues || ''} onChange={(v) => update('physical_health_issues', v)} multiline full />
@@ -442,20 +442,10 @@ export default function PortalApplication() {
               onOtherChange={(v) => update('physical_symptoms_other', v)}
             />
           </div>
-          <div>
-            <p className="text-xs font-medium text-foreground/45 mb-2 uppercase tracking-wider">Dietary Preferences</p>
-            <CheckboxGroup
-              items={DIETARY_OPTIONS}
-              selected={form.dietary_preferences || []}
-              onChange={(v) => update('dietary_preferences', v)}
-              otherValue={form.dietary_other}
-              onOtherChange={(v) => update('dietary_other', v)}
-            />
-          </div>
         </div>
       </Section>
 
-      <Section title="My Mind" color="#FFA500" icon="🧠">
+      <Section title="My Mind" color="#FFA500">
         <div className="grid gap-4 sm:grid-cols-1">
           <Field label="Mental Health Diagnoses" value={form.dsm_diagnosis || ''} onChange={(v) => update('dsm_diagnosis', v)} multiline full />
           <Field label="Current Mental Health Concerns" value={form.mental_health_issues || ''} onChange={(v) => update('mental_health_issues', v)} multiline full />
@@ -466,7 +456,7 @@ export default function PortalApplication() {
         </div>
       </Section>
 
-      <Section title="Stress & Coping" color="#FF4500" icon="🌊">
+      <Section title="Stress & Coping" color="#FF4500">
         <div className="space-y-5">
           <div>
             <p className="text-xs font-medium text-foreground/45 mb-2 uppercase tracking-wider">Stress Level</p>
@@ -505,7 +495,7 @@ export default function PortalApplication() {
         </div>
       </Section>
 
-      <Section title="Self-Care & Goals" color="#800080" icon="✨">
+      <Section title="Self-Care & Goals" color="#800080">
         <div className="space-y-5">
           <div>
             <p className="text-xs font-medium text-foreground/45 mb-2 uppercase tracking-wider">How I Take Care of Myself</p>
