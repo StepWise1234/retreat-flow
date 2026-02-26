@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.signal-inbound]
 verify_jwt = false
+
+[functions.sync-vimeo]
+verify_jwt = false
