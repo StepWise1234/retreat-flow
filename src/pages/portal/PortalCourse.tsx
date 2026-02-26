@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Lock } from 'lucide-react';
+import { Play, Lock, FileText, Download } from 'lucide-react';
 import { useApplication } from '@/hooks/useApplication';
 import { useCourseVideos } from '@/hooks/useCourseVideos';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
 
 const levelConfig: Record<string, { label: string; color: string }> = {
   beginning: { label: 'Beginning', color: '#FFA500' },
@@ -92,10 +93,25 @@ export default function PortalCourse() {
                     />
                   </div>
                   <div className="p-4 bg-background/60">
-                    <h3 className="font-semibold text-foreground/80">{activeVideo.title}</h3>
-                    {activeVideo.description && (
-                      <p className="text-sm text-foreground/45 mt-1">{activeVideo.description}</p>
-                    )}
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <h3 className="font-semibold text-foreground/80">{activeVideo.title}</h3>
+                        {activeVideo.description && (
+                          <p className="text-sm text-foreground/45 mt-1">{activeVideo.description}</p>
+                        )}
+                      </div>
+                      {(activeVideo as any).pdf_path && (
+                        <a
+                          href={supabase.storage.from('course-pdfs').getPublicUrl((activeVideo as any).pdf_path).data.publicUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="shrink-0 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors bg-foreground/[0.06] hover:bg-foreground/[0.1] text-foreground/70"
+                        >
+                          <Download className="h-4 w-4" />
+                          PDF
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -135,13 +151,16 @@ export default function PortalCourse() {
                     >
                       {isActive ? <Play className="h-3 w-3" /> : i + 1}
                     </span>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex items-center gap-1.5">
                       <p className={cn(
                         'text-sm font-medium truncate',
                         isActive ? 'text-foreground/90' : 'text-foreground/60'
                       )}>
                         {video.title}
                       </p>
+                      {(video as any).pdf_path && (
+                        <FileText className="h-3.5 w-3.5 shrink-0 text-foreground/30" />
+                      )}
                     </div>
                   </button>
                 );
