@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Lock, FileText, Download, ChevronRight, BookOpen } from 'lucide-react';
+import { Play, Lock, FileText, Download, ChevronRight, ChevronLeft, BookOpen } from 'lucide-react';
 import { useApplication } from '@/hooks/useApplication';
 import { useCourseVideos } from '@/hooks/useCourseVideos';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
+import CourseLevelNav from '@/components/portal/CourseLevelNav';
 
 const levelConfig: Record<string, { label: string; color: string; gradient: string }> = {
   beginning: {
@@ -35,6 +36,16 @@ export default function PortalCourse() {
 
   const activeVideo = videos.find((v) => v.id === activeVideoId) ?? videos[0] ?? null;
   const activeIndex = activeVideo ? videos.findIndex((v) => v.id === activeVideo.id) : 0;
+
+  const hasPrev = activeIndex > 0;
+  const hasNext = activeIndex < videos.length - 1;
+
+  const goToPrev = () => {
+    if (hasPrev) setActiveVideoId(videos[activeIndex - 1].id);
+  };
+  const goToNext = () => {
+    if (hasNext) setActiveVideoId(videos[activeIndex + 1].id);
+  };
 
   if (appLoading) {
     return <div className="text-center py-20 text-foreground/40">Loading…</div>;
@@ -69,12 +80,11 @@ export default function PortalCourse() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
+            {/* Brand circle icon */}
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{ background: config.gradient }}
-            >
-              <BookOpen className="h-5 w-5 text-white" />
-            </div>
+              className="w-10 h-10 rounded-full shrink-0"
+              style={{ backgroundColor: config.color }}
+            />
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-foreground/35">
                 Pre-Training Curriculum
@@ -103,6 +113,9 @@ export default function PortalCourse() {
           </motion.p>
         </div>
       </div>
+
+      {/* Level Navigation */}
+      <CourseLevelNav currentLevel={level} />
 
       {/* Content */}
       <div className="px-4 sm:px-6 lg:px-8 pb-8">
@@ -150,15 +163,15 @@ export default function PortalCourse() {
                     </div>
                     <div className="bg-background/80 backdrop-blur-sm px-6 py-5">
                       <div className="flex items-start justify-between gap-4">
-                        <div className="space-y-1.5">
+                        <div className="space-y-1.5 min-w-0 flex-1">
                           <div className="flex items-center gap-3">
                             <span
-                              className="inline-flex items-center justify-center h-7 w-7 rounded-lg text-xs font-bold text-white"
+                              className="inline-flex items-center justify-center h-7 w-7 rounded-lg text-xs font-bold text-white shrink-0"
                               style={{ background: config.gradient }}
                             >
                               {activeIndex + 1}
                             </span>
-                            <h3 className="text-lg font-bold tracking-tight text-foreground/85">
+                            <h3 className="text-lg font-bold tracking-tight text-foreground/85 truncate">
                               {activeVideo.title}
                             </h3>
                           </div>
@@ -179,6 +192,47 @@ export default function PortalCourse() {
                             PDF
                           </a>
                         )}
+                      </div>
+
+                      {/* Prev / Next navigation */}
+                      <div className="flex items-center justify-between mt-4 pt-4 border-t border-foreground/[0.06]">
+                        <button
+                          onClick={goToPrev}
+                          disabled={!hasPrev}
+                          className={cn(
+                            'flex items-center gap-2 text-sm font-medium transition-all rounded-lg px-3 py-2',
+                            hasPrev
+                              ? 'text-foreground/60 hover:text-foreground/90 hover:bg-foreground/[0.04]'
+                              : 'text-foreground/20 cursor-not-allowed'
+                          )}
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                          <span className="hidden sm:inline">
+                            {hasPrev ? videos[activeIndex - 1].title : 'Previous'}
+                          </span>
+                          <span className="sm:hidden">Prev</span>
+                        </button>
+
+                        <span className="text-xs text-foreground/30 tabular-nums">
+                          {activeIndex + 1} / {videos.length}
+                        </span>
+
+                        <button
+                          onClick={goToNext}
+                          disabled={!hasNext}
+                          className={cn(
+                            'flex items-center gap-2 text-sm font-medium transition-all rounded-lg px-3 py-2',
+                            hasNext
+                              ? 'text-foreground/60 hover:text-foreground/90 hover:bg-foreground/[0.04]'
+                              : 'text-foreground/20 cursor-not-allowed'
+                          )}
+                        >
+                          <span className="hidden sm:inline">
+                            {hasNext ? videos[activeIndex + 1].title : 'Next'}
+                          </span>
+                          <span className="sm:hidden">Next</span>
+                          <ChevronRight className="h-4 w-4" />
+                        </button>
                       </div>
                     </div>
                   </motion.div>
@@ -217,7 +271,6 @@ export default function PortalCourse() {
                           : 'hover:bg-foreground/[0.02]'
                       )}
                     >
-                      {/* Number circle */}
                       <span
                         className={cn(
                           'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold transition-all duration-300',
@@ -228,7 +281,6 @@ export default function PortalCourse() {
                         {isActive ? <Play className="h-4 w-4" /> : i + 1}
                       </span>
 
-                      {/* Info */}
                       <div className="min-w-0 flex-1">
                         <p className={cn(
                           'text-sm font-semibold truncate transition-colors',
@@ -243,7 +295,6 @@ export default function PortalCourse() {
                         )}
                       </div>
 
-                      {/* PDF indicator + Arrow */}
                       <div className="flex items-center gap-2 shrink-0">
                         {(video as any).pdf_path && (
                           <FileText className="h-4 w-4 text-foreground/25" />
