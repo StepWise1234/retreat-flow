@@ -78,13 +78,15 @@ export default function PortalCourse() {
                         layoutId={`circle-${lvl}`}
                         onClick={() => setActiveLevel(lvl)}
                         className="shrink-0 rounded-full border-none outline-none cursor-pointer relative"
-                        style={{ backgroundColor: m.color }}
+                        style={{
+                          backgroundColor: m.color,
+                          boxShadow: isActive ? `0 0 18px 4px ${m.color}35, 0 0 6px 1px ${m.color}20` : 'none',
+                        }}
                         animate={{
                           width: isActive ? 44 : 28,
                           height: isActive ? 44 : 28,
-                          opacity: isActive ? 1 : 0.5,
                         }}
-                        whileHover={{ opacity: 1, scale: isActive ? 1 : 1.15 }}
+                        whileHover={{ scale: isActive ? 1 : 1.15 }}
                         whileTap={{ scale: 0.92 }}
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                         title={m.label}
