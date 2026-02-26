@@ -26,16 +26,27 @@ const levels = [
     id: 'intermediate',
     title: 'Intermediate',
     accentColor: '#FF4500',
-    subtitle: 'Deeper Exploration',
+    subtitle: 'Specialty Workshops',
     description:
-      'With a solid foundation in nervous system literacy, you\'re ready to expand. Intermediate training introduces moderate-dose protocols where clients begin to access altered states while maintaining somatic coherence. You\'ll develop advanced tracking skills — learning to hold space as the body processes stored tension, emotion, and trauma at a pace it can integrate. The emphasis shifts from containment to guided expansion.',
-    details: [
-      'Moderate-dose titration with maintained consciousness',
-      'Advanced somatic tracking through emotional release cycles',
-      'Working with resistance, dissociation & trauma responses',
-      'Multi-session arc design & progressive capacity building',
-      'Peer consultation & supervised client sessions',
+      'Once your foundation is solid, Intermediate training lets you deepen through specialty weekend workshops. Choose the areas that match your clinical interests and client needs — each workshop is a self-contained immersion designed to expand your toolkit in a specific domain.',
+    workshops: [
+      {
+        number: '01',
+        title: 'Nervous System + PTSD',
+        description: 'Advanced protocols for working with dysregulated nervous systems, complex trauma, and PTSD. Learn to track freeze, fawn, and flight responses in real time and guide clients through titrated release without overwhelm.',
+      },
+      {
+        number: '02',
+        title: 'Touch + Parts-Work',
+        description: 'Somatic touch techniques integrated with parts-work (IFS-informed). Develop the sensitivity to work with wounded inner-child states, body-held memories, and the delicate negotiation between protector and exile parts during session.',
+      },
+      {
+        number: '03',
+        title: 'Relational Intelligence',
+        description: 'Attachment wound repair through the relational field. Explore how facilitator-client dynamics mirror early attachment patterns, and learn to use the therapeutic relationship itself as the vehicle for healing insecure attachment.',
+      },
     ],
+    details: [],
   },
   {
     id: 'advanced',
@@ -162,20 +173,54 @@ export default function MasteryLevels() {
                 <p className="text-lg leading-[1.8] text-foreground/55">
                   {activeLevel.description}
                 </p>
-                <ul className="grid gap-3 pt-2">
-                  {activeLevel.details.map((detail, i) => (
-                    <motion.li
-                      key={detail}
-                      className="flex items-start gap-3 text-foreground/65"
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: i * 0.08 }}
-                    >
-                      <span className="mt-2 h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: activeLevel.accentColor }} />
-                      <span className="text-base leading-relaxed">{detail}</span>
-                    </motion.li>
-                  ))}
-                </ul>
+
+                {/* Numbered workshops (Intermediate) */}
+                {'workshops' in activeLevel && activeLevel.workshops && (
+                  <div className="space-y-10 pt-4">
+                    {activeLevel.workshops.map((ws: { number: string; title: string; description: string }, i: number) => (
+                      <motion.div
+                        key={ws.number}
+                        className="flex gap-6 sm:gap-8"
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <span
+                          className="shrink-0 w-[1.875rem] sm:w-[2.25rem] text-center text-3xl sm:text-4xl font-bold tracking-tight tabular-nums"
+                          style={{ color: i === 0 ? '#FFA500' : i === 1 ? '#FF4500' : '#800080' }}
+                        >
+                          {ws.number}
+                        </span>
+                        <div>
+                          <h4 className="text-xl sm:text-2xl font-semibold text-foreground/85 mb-2 tracking-tight">
+                            {ws.title}
+                          </h4>
+                          <p className="text-base sm:text-lg leading-[1.8] text-foreground/55">
+                            {ws.description}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Bullet details (Beginning & Advanced) */}
+                {activeLevel.details.length > 0 && (
+                  <ul className="grid gap-3 pt-2">
+                    {activeLevel.details.map((detail, i) => (
+                      <motion.li
+                        key={detail}
+                        className="flex items-start gap-3 text-foreground/65"
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: i * 0.08 }}
+                      >
+                        <span className="mt-2 h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: activeLevel.accentColor }} />
+                        <span className="text-base leading-relaxed">{detail}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                )}
               </motion.div>
             ) : (
               <motion.p
