@@ -1,18 +1,34 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Save, Check, ExternalLink, BedDouble, UtensilsCrossed, Accessibility } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Save, Check, ExternalLink, BedDouble, UtensilsCrossed, Accessibility, Crown } from 'lucide-react';
 import { toast } from 'sonner';
 import { useApplication } from '@/hooks/useApplication';
 import { cn } from '@/lib/utils';
 
+import roomMaster from '@/assets/rooms/room-master.avif';
+import room1 from '@/assets/rooms/room-1.avif';
+import room2 from '@/assets/rooms/room-2.avif';
+import room3 from '@/assets/rooms/room-3.avif';
+import room4 from '@/assets/rooms/room-4.avif';
+import room5 from '@/assets/rooms/room-5.avif';
+
+const ROOMS = [
+  { id: 'master', name: 'Master Suite', image: roomMaster, description: 'King bed · En-suite bath · Walk-in closet', badge: 'Premier' },
+  { id: 'bedroom-1', name: 'Bedroom 1', image: room1, description: 'Queen bed · Garden view · Private bath' },
+  { id: 'bedroom-2', name: 'Bedroom 2', image: room2, description: 'Queen bed · Mountain view · Shared bath' },
+  { id: 'bedroom-3', name: 'Bedroom 3', image: room3, description: 'Full bed · Courtyard view · Shared bath' },
+  { id: 'bedroom-4', name: 'Bedroom 4', image: room4, description: 'Full bed · Quiet corner · Shared bath' },
+  { id: 'bedroom-5', name: 'Bedroom 5', image: room5, description: 'Twin beds · Flexible layout · Shared bath' },
+];
+
 const DIETARY_OPTIONS = ['Gluten Free', 'Dairy Free', 'Vegetarian', 'Vegan', 'Other Allergy'];
 
-const DIETARY_COLORS: Record<string, { bg: string; border: string; text: string; glow: string }> = {
-  'Gluten Free':   { bg: '#FFA500', border: '#FFA500', text: '#FFA500', glow: 'rgba(255,165,0,0.15)' },
-  'Dairy Free':    { bg: '#FF4500', border: '#FF4500', text: '#FF4500', glow: 'rgba(255,69,0,0.15)' },
-  'Vegetarian':    { bg: '#22C55E', border: '#22C55E', text: '#22C55E', glow: 'rgba(34,197,94,0.15)' },
-  'Vegan':         { bg: '#800080', border: '#800080', text: '#800080', glow: 'rgba(128,0,128,0.15)' },
-  'Other Allergy': { bg: '#3B82F6', border: '#3B82F6', text: '#3B82F6', glow: 'rgba(59,130,246,0.15)' },
+const DIETARY_COLORS: Record<string, { bg: string; border: string; glow: string }> = {
+  'Gluten Free':   { bg: '#FFA500', border: '#FFA500', glow: 'rgba(255,165,0,0.15)' },
+  'Dairy Free':    { bg: '#FF4500', border: '#FF4500', glow: 'rgba(255,69,0,0.15)' },
+  'Vegetarian':    { bg: '#22C55E', border: '#22C55E', glow: 'rgba(34,197,94,0.15)' },
+  'Vegan':         { bg: '#800080', border: '#800080', glow: 'rgba(128,0,128,0.15)' },
+  'Other Allergy': { bg: '#3B82F6', border: '#3B82F6', glow: 'rgba(59,130,246,0.15)' },
 };
 
 function DietaryPill({ checked, label, onToggle }: { checked: boolean; label: string; onToggle: () => void }) {
@@ -35,9 +51,7 @@ function DietaryPill({ checked, label, onToggle }: { checked: boolean; label: st
       } : undefined}
     >
       <span
-        className={cn(
-          'flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200',
-        )}
+        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200"
         style={{
           borderColor: checked ? colors.border : 'hsl(var(--foreground) / 0.2)',
           backgroundColor: checked ? colors.bg : 'transparent',
@@ -46,6 +60,82 @@ function DietaryPill({ checked, label, onToggle }: { checked: boolean; label: st
         {checked && <Check className="h-3.5 w-3.5 text-white" />}
       </span>
       {label}
+    </motion.button>
+  );
+}
+
+function RoomCard({ room, selected, onSelect }: {
+  room: typeof ROOMS[0];
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onSelect}
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.98 }}
+      className={cn(
+        'group relative rounded-2xl overflow-hidden text-left transition-all duration-400 border-2',
+        selected
+          ? 'border-[#FFA500] shadow-[0_8px_30px_rgba(255,165,0,0.2)]'
+          : 'border-transparent hover:border-foreground/10 shadow-md hover:shadow-xl',
+      )}
+    >
+      {/* Image */}
+      <div className="relative aspect-[4/3] overflow-hidden">
+        <img
+          src={room.image}
+          alt={room.name}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+        {/* Badge */}
+        {room.badge && (
+          <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-[#FFA500]/90 backdrop-blur-sm px-3 py-1">
+            <Crown className="h-3 w-3 text-white" />
+            <span className="text-[11px] font-bold text-white uppercase tracking-wider">{room.badge}</span>
+          </div>
+        )}
+
+        {/* Selected indicator */}
+        <AnimatePresence>
+          {selected && (
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full"
+              style={{
+                background: 'linear-gradient(135deg, #FFA500, #FF4500)',
+                boxShadow: '0 4px 12px rgba(255,69,0,0.4)',
+              }}
+            >
+              <Check className="h-4 w-4 text-white" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Room info overlay */}
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <h3 className="text-lg font-bold text-white tracking-tight">{room.name}</h3>
+          <p className="text-xs text-white/70 mt-0.5">{room.description}</p>
+        </div>
+      </div>
+
+      {/* Selection bar */}
+      <div
+        className={cn(
+          'px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-widest transition-all duration-300',
+          selected
+            ? 'bg-gradient-to-r from-[#FFA500] to-[#FF4500] text-white'
+            : 'bg-foreground/[0.03] text-foreground/40 group-hover:text-foreground/60',
+        )}
+      >
+        {selected ? 'Selected' : 'Select Room'}
+      </div>
     </motion.button>
   );
 }
@@ -109,20 +199,21 @@ export default function PortalAccommodation() {
 
   return (
     <div className="space-y-10">
+      {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground/85">
             Accommodation
           </h1>
           <p className="mt-1 text-foreground/45">
-            Choose your bedroom, set dietary preferences, and note any special needs.
+            Select your room, set dietary preferences, and note any special needs.
           </p>
         </div>
         <motion.button
           onClick={handleSave}
           disabled={saving}
           whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-2 rounded-xl px-5 py-2.5 font-semibold text-white text-sm transition-all disabled:opacity-50"
+          className="flex items-center gap-2 rounded-xl px-5 py-2.5 font-semibold text-white text-sm transition-all disabled:opacity-50 shrink-0"
           style={{
             background: 'linear-gradient(135deg, #FFA500, #FF4500)',
             boxShadow: '0 4px 14px rgba(255, 69, 0, 0.2)',
@@ -133,83 +224,83 @@ export default function PortalAccommodation() {
         </motion.button>
       </div>
 
-      <div className="space-y-8">
-        {/* VRBO Listing */}
-        <motion.div
-          className="rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm overflow-hidden"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="p-6 sm:p-8 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#FF4500]/10">
-                <BedDouble className="h-5 w-5 text-[#FF4500]" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold tracking-tight text-foreground/80">Choose Your Bedroom</h2>
-                <p className="text-sm text-foreground/40">Browse the listing below and tell us which room you'd like.</p>
-              </div>
-            </div>
-
-            {vrboUrl ? (
-              <a
-                href={vrboUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-[#FF4500] border border-[#FF4500]/20 bg-[#FF4500]/5 hover:bg-[#FF4500]/10 transition-all"
-              >
-                <ExternalLink className="h-4 w-4" />
-                View VRBO Listing
-              </a>
-            ) : (
-              <p className="text-sm text-foreground/35 italic">
-                The VRBO listing link will be added by your coordinator soon.
-              </p>
-            )}
-
-            <div>
-              <label className="block text-xs font-medium text-foreground/45 mb-1.5 uppercase tracking-wider">
-                Your Bedroom Choice
-              </label>
-              <input
-                value={bedroomChoice}
-                onChange={(e) => setBedroomChoice(e.target.value)}
-                placeholder="e.g. Master bedroom, Room 2, etc."
-                className="w-full rounded-lg border border-foreground/10 bg-background/80 px-4 py-3 text-foreground placeholder:text-foreground/25 focus:outline-none focus:ring-2 focus:ring-[#FF4500]/25 focus:border-[#FF4500]/40 transition-all text-sm"
-              />
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Dietary Preferences */}
-        <motion.div
-          className="rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm p-6 sm:p-8 space-y-4"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
+      {/* Room Selection */}
+      <motion.div
+        className="space-y-5"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#FFA500]/10">
-              <UtensilsCrossed className="h-5 w-5 text-[#FFA500]" />
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#FF4500]/10">
+              <BedDouble className="h-5 w-5 text-[#FF4500]" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-foreground/80">Dietary Preferences</h2>
-              <p className="text-sm text-foreground/40">Select all that apply so we can plan meals accordingly.</p>
+              <h2 className="text-lg font-semibold tracking-tight text-foreground/80">Choose Your Room</h2>
+              <p className="text-sm text-foreground/40">Tap a room to reserve it for your stay.</p>
             </div>
           </div>
+          {vrboUrl && (
+            <a
+              href={vrboUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-medium text-[#FF4500] border border-[#FF4500]/20 bg-[#FF4500]/5 hover:bg-[#FF4500]/10 transition-all"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Full Listing
+            </a>
+          )}
+        </div>
 
-          <div className="flex flex-wrap gap-2.5">
-            {DIETARY_OPTIONS.map((opt) => (
-              <DietaryPill
-                key={opt}
-                checked={dietaryPreferences.includes(opt)}
-                label={opt}
-                onToggle={() => toggleDietary(opt)}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {ROOMS.map((room, i) => (
+            <motion.div
+              key={room.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: i * 0.08 }}
+            >
+              <RoomCard
+                room={room}
+                selected={bedroomChoice === room.id}
+                onSelect={() => setBedroomChoice(room.id)}
               />
-            ))}
-          </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
 
+      {/* Dietary Preferences */}
+      <motion.div
+        className="rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm p-6 sm:p-8 space-y-4"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#FFA500]/10">
+            <UtensilsCrossed className="h-5 w-5 text-[#FFA500]" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground/80">Dietary Preferences</h2>
+            <p className="text-sm text-foreground/40">Select all that apply so we can plan meals accordingly.</p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2.5">
+          {DIETARY_OPTIONS.map((opt) => (
+            <DietaryPill
+              key={opt}
+              checked={dietaryPreferences.includes(opt)}
+              label={opt}
+              onToggle={() => toggleDietary(opt)}
+            />
+          ))}
+        </div>
+
+        <AnimatePresence>
           {dietaryPreferences.includes('Other Allergy') && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
@@ -227,46 +318,46 @@ export default function PortalAccommodation() {
               />
             </motion.div>
           )}
+        </AnimatePresence>
 
-          <div>
-            <label className="block text-xs font-medium text-foreground/45 mb-1.5 uppercase tracking-wider">
-              Additional Notes
-            </label>
-            <textarea
-              value={dietaryNotes}
-              onChange={(e) => setDietaryNotes(e.target.value)}
-              rows={3}
-              placeholder="Allergies, restrictions, or preferences we should know about…"
-              className="w-full rounded-lg border border-foreground/10 bg-background/80 px-4 py-3 text-foreground placeholder:text-foreground/25 focus:outline-none focus:ring-2 focus:ring-[#FFA500]/25 focus:border-[#FFA500]/40 transition-all text-sm"
-            />
-          </div>
-        </motion.div>
-
-        {/* Special Accommodations */}
-        <motion.div
-          className="rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm p-6 sm:p-8 space-y-4"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#800080]/10">
-              <Accessibility className="h-5 w-5 text-[#800080]" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold tracking-tight text-foreground/80">Special Accommodations</h2>
-              <p className="text-sm text-foreground/40">Anything else we can do to make your stay comfortable.</p>
-            </div>
-          </div>
+        <div>
+          <label className="block text-xs font-medium text-foreground/45 mb-1.5 uppercase tracking-wider">
+            Additional Notes
+          </label>
           <textarea
-            value={specialAccommodations}
-            onChange={(e) => setSpecialAccommodations(e.target.value)}
-            rows={4}
-            placeholder="e.g. Mobility needs, early/late arrival, rooming preferences…"
-            className="w-full rounded-lg border border-foreground/10 bg-background/80 px-4 py-3 text-foreground placeholder:text-foreground/25 focus:outline-none focus:ring-2 focus:ring-[#800080]/25 focus:border-[#800080]/40 transition-all text-sm"
+            value={dietaryNotes}
+            onChange={(e) => setDietaryNotes(e.target.value)}
+            rows={3}
+            placeholder="Allergies, restrictions, or preferences we should know about…"
+            className="w-full rounded-lg border border-foreground/10 bg-background/80 px-4 py-3 text-foreground placeholder:text-foreground/25 focus:outline-none focus:ring-2 focus:ring-[#FFA500]/25 focus:border-[#FFA500]/40 transition-all text-sm"
           />
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
+
+      {/* Special Accommodations */}
+      <motion.div
+        className="rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm p-6 sm:p-8 space-y-4"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#800080]/10">
+            <Accessibility className="h-5 w-5 text-[#800080]" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground/80">Special Accommodations</h2>
+            <p className="text-sm text-foreground/40">Anything else we can do to make your stay comfortable.</p>
+          </div>
+        </div>
+        <textarea
+          value={specialAccommodations}
+          onChange={(e) => setSpecialAccommodations(e.target.value)}
+          rows={4}
+          placeholder="e.g. Mobility needs, early/late arrival, rooming preferences…"
+          className="w-full rounded-lg border border-foreground/10 bg-background/80 px-4 py-3 text-foreground placeholder:text-foreground/25 focus:outline-none focus:ring-2 focus:ring-[#800080]/25 focus:border-[#800080]/40 transition-all text-sm"
+        />
+      </motion.div>
     </div>
   );
 }
