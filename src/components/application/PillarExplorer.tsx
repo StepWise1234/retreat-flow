@@ -112,11 +112,11 @@ export default function PillarExplorer() {
 
           {/* Descriptor */}
           <motion.p
-            className="text-sm sm:text-base leading-[1.9] text-foreground/25 text-center max-w-xl mx-auto mb-8"
-            animate={{ opacity: activePillar ? 0.3 : 1 }}
+            className="text-lg sm:text-xl leading-[1.9] text-foreground/35 text-center max-w-xl mx-auto mb-8"
+            animate={{ opacity: activePillar ? 0.4 : 1 }}
             transition={{ duration: 0.3 }}
           >
-            Click on a circle above to explore StepWise.
+            Tap a circle to explore the StepWise approach.
           </motion.p>
 
           {/* Content area — smooth height expansion */}
