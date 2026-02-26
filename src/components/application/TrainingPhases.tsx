@@ -19,16 +19,17 @@ const phases = [
   },
   {
     id: 'retreat',
-    title: 'In-Person Retreat',
+    title: 'In-Person Training',
     accentColor: '#FF4500',
-    subtitle: 'Embodied Practice',
+    subtitle: 'Immersive & Experiential',
     description:
-      'An immersive multi-day training where theory becomes lived experience. Under expert guidance, you will practice titrated administration protocols, develop somatic tracking skills, and deepen your capacity to hold space. Each session builds on the last — expanding your nervous system\'s bandwidth through direct, supported experience.',
+      'This is where everything changes. Each in-person training or workshop is a multi-day immersion held in carefully chosen locations — intimate group sizes, world-class facilitators, and an environment designed to let you drop fully into the work.\n\nYou won\'t just learn techniques — you\'ll practice them live, receive real-time feedback, and develop the embodied confidence that only comes from direct experience. Every session is structured to progressively expand your capacity: you\'ll track nervous systems in real time, practice titrated protocols hands-on, and navigate the nuances of holding space that no textbook can teach.\n\nSmall cohorts mean deep connection with fellow practitioners and personalized attention from trainers who know your growth edge. You\'ll leave each training not just with new skills, but with a felt sense of readiness — the kind of competence that lives in your body, not just your mind.',
     details: [
-      'Hands-on titrated dosing protocols',
-      'Somatic tracking & co-regulation practice',
-      'Small-group facilitation exercises',
-      'Personal capacity expansion sessions',
+      'Small-group immersions in inspiring, nature-rich locations',
+      'Hands-on practice with live feedback from expert trainers',
+      'Progressive capacity expansion across every session',
+      'Deep peer connection & co-regulation with fellow practitioners',
+      'Personalized coaching on your unique facilitation style',
     ],
   },
   {
