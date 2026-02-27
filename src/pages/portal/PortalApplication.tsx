@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useApplication } from '@/hooks/useApplication';
 import { cn } from '@/lib/utils';
 
-/* ─── Constants matching Apply page ─── */
+/* ─── Constants matching Apply page ───  */
 const PHYSICAL_SYMPTOMS = [
   'Panic attacks', 'Tension', 'Quick temper/irritability', 'Inadequate Sleep',
   'Body Aches', 'Stomach upset', 'Rapid/racing heart', 'Muscle Tension',
