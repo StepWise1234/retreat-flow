@@ -107,8 +107,24 @@ export default function CourseVideoSection({ videos, videosLoading, config }: Co
                 </div>
 
                 {/* Prev / Next */}
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-foreground/[0.06]">
-                  <button
+                <div className="mt-4 pt-4 border-t border-foreground/[0.06]">
+                  {/* Progress bar */}
+                  <div className="mb-3 flex items-center gap-3">
+                    <div className="flex-1 h-1.5 rounded-full bg-foreground/[0.06] overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-300 ease-out"
+                        style={{
+                          width: `${((activeIndex + 1) / videos.length) * 100}%`,
+                          background: config.gradient,
+                        }}
+                      />
+                    </div>
+                    <span className="text-xs text-foreground/30 tabular-nums shrink-0">
+                      {activeIndex + 1} / {videos.length}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <button
                     onClick={goToPrev}
                     disabled={!hasPrev}
                     className={cn(
@@ -124,9 +140,6 @@ export default function CourseVideoSection({ videos, videosLoading, config }: Co
                     </span>
                     <span className="sm:hidden">Prev</span>
                   </button>
-                  <span className="text-xs text-foreground/30 tabular-nums shrink-0">
-                    {activeIndex + 1} / {videos.length}
-                  </span>
                   <button
                     onClick={goToNext}
                     disabled={!hasNext}
@@ -143,6 +156,7 @@ export default function CourseVideoSection({ videos, videosLoading, config }: Co
                     <span className="sm:hidden">Next</span>
                     <ChevronRight className="h-4 w-4" />
                   </button>
+                  </div>
                 </div>
               </div>
             </motion.div>
