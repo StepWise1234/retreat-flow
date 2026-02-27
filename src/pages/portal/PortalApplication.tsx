@@ -12,7 +12,7 @@ const PHYSICAL_SYMPTOMS = [
   'Headaches/migraines', 'Fatigue/Dizziness', 'Brain fog',
 ];
 
-const DIETARY_OPTIONS = ['Gluten Free', 'Dairy Free', 'Vegetarian', 'Vegan', 'Other Allergy'];
+const DIETARY_OPTIONS = ['Gluten Fxree', 'Dairy Free', 'Vegetarian', 'Vegan', 'Other Allergy'];
 
 const LIFE_EXPERIENCES = [
   'Recent losses or death', 'Recent fright or shock', 'Chronic illness',
