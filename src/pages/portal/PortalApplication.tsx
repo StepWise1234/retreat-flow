@@ -1,4 +1,4 @@
-import { useState, useEffect } froZm 'reWact'; 
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Save, Check, ChevronDown, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
@@ -12,7 +12,35 @@ const PHYSICAL_SYMPTOMS = [
   'Headaches/migraines', 'Fatigue/Dizziness', 'Brain fog',
 ];
 
-const DIETARY_OPTIONS = ['Gluten Fxree', 'Dairy Free', 'Vegetarian', 'Vegan', 'Other Allergy'];
+const DIETARY_OPTIONS = ['Gluten Free', 'Dairy Free', 'Vegetarian', 'Vegan', 'Other Allergy'];
+
+const LIFE_CIRCUMSTANCES_OPTIONS = [
+  'Healing from past trauma', 'Deepening my spiritual practice',
+  'Navigating a life transition', 'Supporting a loved one',
+  'Seeking personal growth', 'Processing grief or loss',
+  'Exploring consciousness', 'Called to serve others',
+];
+
+const INTEGRATION_SUPPORT_OPTIONS = [
+  'Therapist', 'Coach', 'Spiritual community',
+  'Support group', 'Partner or family', 'Close friends',
+  'Mentor or elder', 'Online community',
+];
+
+const PSYCHEDELIC_MEDICINE_OPTIONS = [
+  'Ketamine', 'MDMA', 'Psilocybin', 'Ayahuasca', 'San Pedro',
+  'Peyote', 'Ibogaine', 'Bufo', 'Kambo', 'LSD', 'DMT', '5-MeO-DMT',
+];
+
+const SUICIDE_CONSIDERATION_OPTIONS = [
+  'Occasionally', 'Yes, but not now', 'Nope',
+];
+
+const MENTAL_HEALTH_SUPPORT_OPTIONS = [
+  'Therapist', 'Coach', 'Spiritual Minister',
+  'Group Therapy/Coaching', 'Spiritual Group', 'Medicine Ceremony',
+  'Psychedelic-assisted Therapy',
+];
 
 const LIFE_EXPERIENCES = [
   'Recent losses or death', 'Recent fright or shock', 'Chronic illness',
@@ -283,6 +311,10 @@ export default function PortalApplication() {
         serving_experience: application.serving_experience || '',
         life_circumstances: application.life_circumstances || '',
         integration_support: application.integration_support || '',
+      life_circumstances_options: Array.isArray(application.life_circumstances_options) ? application.life_circumstances_options : [],
+      life_circumstances_other: application.life_circumstances_other || '',
+      integration_support_options: Array.isArray(application.integration_support_options) ? application.integration_support_options : [],
+      integration_support_other: application.integration_support_other || '',
         // Physical
         physical_health_issues: application.physical_health_issues || '',
         physical_medications: application.physical_medications || '',
@@ -299,6 +331,10 @@ export default function PortalApplication() {
         recreational_drug_use: application.recreational_drug_use || '',
         suicide_consideration: application.suicide_consideration || '',
         mental_health_professional: application.mental_health_professional || '',
+      psychedelic_medicine_use: Array.isArray(application.psychedelic_medicine_use) ? application.psychedelic_medicine_use : [],
+      psychedelic_medicine_other: application.psychedelic_medicine_other || '',
+      mental_health_support: Array.isArray(application.mental_health_support) ? application.mental_health_support : [],
+      mental_health_support_other: application.mental_health_support_other || '',
         // Stress
         stress_level: application.stress_level ?? 5,
         life_experiences: Array.isArray(application.life_experiences) ? application.life_experiences : [],
@@ -420,19 +456,29 @@ export default function PortalApplication() {
           <Field label="Medicine Experience" value={form.medicine_experience || ''} onChange={(v) => update('medicine_experience', v)} multiline full />
           <Field label="Serving Experience" value={form.serving_experience || ''} onChange={(v) => update('serving_experience', v)} multiline full />
           <Field label="Life Circumstances" value={form.life_circumstances || ''} onChange={(v) => update('life_circumstances', v)} multiline full />
+
+              <CheckboxGroup
+                label="What Resonates With You"
+                options={LIFE_CIRCUMSTANCES_OPTIONS}
+                selected={formData.life_circumstances_options}
+                other={formData.life_circumstances_other}
+                readOnly
+              />
           <Field label="Integration Support" value={form.integration_support || ''} onChange={(v) => update('integration_support', v)} multiline full />
+
+              <CheckboxGroup
+                label="Who Supports Your Journey"
+                options={INTEGRATION_SUPPORT_OPTIONS}
+                selected={formData.integration_support_options}
+                other={formData.integration_support_other}
+                readOnly
+              />
         </div>
       </Section>
 
       <Section title="My Body" color="#800080">
         <div className="space-y-5">
-          <div className="grid gap-4 sm:grid-cols-1">
-            <Field label="Physical Health Issues" value={form.physical_health_issues || ''} onChange={(v) => update('physical_health_issues', v)} multiline full />
-            <Field label="Prescriptions & Reason" value={form.physical_medications || ''} onChange={(v) => update('physical_medications', v)} multiline full />
-            <Field label="Supplements" value={form.supplements || ''} onChange={(v) => update('supplements', v)} multiline full />
-            <Field label="Allergies" value={form.allergies || ''} onChange={(v) => update('allergies', v)} multiline full />
-          </div>
-          <div>
+<div>
             <p className="text-xs font-medium text-foreground/45 mb-2 uppercase tracking-wider">Physical Symptoms</p>
             <CheckboxGroup
               items={PHYSICAL_SYMPTOMS}
@@ -442,17 +488,60 @@ export default function PortalApplication() {
               onOtherChange={(v) => update('physical_symptoms_other', v)}
             />
           </div>
+          <div className="grid gap-4 sm:grid-cols-1">
+            <Field label="Physical Health Diagnoses" value={form.physical_health_issues || ''} onChange={(v) => update('physical_health_issues', v)} multiline full />
+            <Field label="Prescriptions & Reason" value={form.physical_medications || ''} onChange={(v) => update('physical_medications', v)} multiline full />
+            <Field label="Supplements" value={form.supplements || ''} onChange={(v) => update('supplements', v)} multiline full />
+            <Field label="Allergies" value={form.allergies || ''} onChange={(v) => update('allergies', v)} multiline full />
+          </div>
+          
         </div>
       </Section>
 
       <Section title="My Mind" color="#FFA500">
         <div className="grid gap-4 sm:grid-cols-1">
+<div>
+            <p className="text-xs font-medium text-foreground/45 mb-2 uppercase tracking-wider">Cognitive Symptoms</p>
+            <CheckboxGroup
+              items={COGNITIVE_SYMPTOMS}
+              selected={form.cognitive_symptoms || []}
+              onChange={(v) => update('cognitive_symptoms', v)}
+              otherValue={form.cognitive_symptoms_other}
+              onOtherChange={(v) => update('cognitive_symptoms_other', v)}
+            />
+          </div>
           <Field label="Mental Health Diagnoses" value={form.dsm_diagnosis || ''} onChange={(v) => update('dsm_diagnosis', v)} multiline full />
           <Field label="Current Mental Health Concerns" value={form.mental_health_issues || ''} onChange={(v) => update('mental_health_issues', v)} multiline full />
           <Field label="Psychiatric Medications" value={form.psych_medications || ''} onChange={(v) => update('psych_medications', v)} multiline full />
-          <Field label="Recreational / Stimulant Use" value={form.recreational_drug_use || ''} onChange={(v) => update('recreational_drug_use', v)} multiline full />
-          <Field label="Suicide Consideration" value={form.suicide_consideration || ''} onChange={(v) => update('suicide_consideration', v)} multiline full />
-          <Field label="Mental Health Professional" value={form.mental_health_professional || ''} onChange={(v) => update('mental_health_professional', v)} multiline full />
+          <Field label="Psychedelic-Assisted Therapy / Medicine Use" value={form.recreational_drug_use || ''} onChange={(v) => update('recreational_drug_use', v)} multiline full />
+
+              <CheckboxGroup
+                label="Psychedelic Medicine Experience"
+                options={PSYCHEDELIC_MEDICINE_OPTIONS}
+                selected={formData.psychedelic_medicine_use}
+                other={formData.psychedelic_medicine_other}
+                readOnly
+              />
+          <div>
+                <p className="text-xs font-medium text-foreground/45 mb-2 uppercase tracking-wider">Suicide Consideration</p>
+                <div className="flex flex-wrap gap-2">
+                  {SUICIDE_CONSIDERATION_OPTIONS.map(opt => (
+                    <RadioPill
+                      key={opt}
+                      label={opt}
+                      selected={formData.suicide_consideration === opt}
+                      readOnly
+                    />
+                  ))}
+                </div>
+              </div>
+          <CheckboxGroup
+                label="Mental Health Support"
+                options={MENTAL_HEALTH_SUPPORT_OPTIONS}
+                selected={formData.mental_health_support}
+                other={formData.mental_health_support_other}
+                readOnly
+              />
         </div>
       </Section>
 
@@ -471,16 +560,7 @@ export default function PortalApplication() {
             />
           </div>
           <Field label="Biggest Source of Stress" value={form.stress_sources || ''} onChange={(v) => update('stress_sources', v)} multiline full />
-          <div>
-            <p className="text-xs font-medium text-foreground/45 mb-2 uppercase tracking-wider">Cognitive Symptoms</p>
-            <CheckboxGroup
-              items={COGNITIVE_SYMPTOMS}
-              selected={form.cognitive_symptoms || []}
-              onChange={(v) => update('cognitive_symptoms', v)}
-              otherValue={form.cognitive_symptoms_other}
-              onOtherChange={(v) => update('cognitive_symptoms_other', v)}
-            />
-          </div>
+          
           <div>
             <p className="text-xs font-medium text-foreground/45 mb-2 uppercase tracking-wider">I Take the Edge Off By</p>
             <CheckboxGroup
