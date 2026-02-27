@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import ApplyHero from '@/components/application/ApplyHero';
 import TrainingPhases from '@/components/application/TrainingPhases';
-import MasteryLevels from '@/components/application/MasteryLevels';
+import MasteryLevels from '@/components/application/MasteryLevels'; 
 import TrainingStatusDashboard from '@/components/application/TrainingStatusDashboard';
 import { useApplicationRetreats } from '@/hooks/useApplicationRetreats';
 
