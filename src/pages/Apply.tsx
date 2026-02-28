@@ -189,7 +189,7 @@ const initialFormData: FormData = {
   retreatId: '', agreeToTerms: false,
 };
 
-/* âââ Light-themed checkbox pill âââ */
+/* ─── Light-themed checkbox pill ─── */
 function DarkCheckboxPill({ checked, label, onToggle }: { checked: boolean; label: string; onToggle: () => void }) {
   return (
     <motion.button
@@ -239,7 +239,7 @@ function CheckboxGroup({ items, selected, onChange, otherValue, onOtherChange }:
           )}>
             <span className="text-foreground/50 shrink-0">Other:</span>
             <input
-              placeholder="Please specifyâ¦"
+              placeholder="Please specify..."
               value={otherValue || ''}
               onChange={(e) => onOtherChange(e.target.value)}
               className="bg-transparent border-none outline-none text-foreground placeholder:text-foreground/20 text-sm flex-1"
@@ -251,7 +251,7 @@ function CheckboxGroup({ items, selected, onChange, otherValue, onOtherChange }:
   );
 }
 
-/* âââ Light radio pill âââ */
+/* ─── Light radio pill ─── */
 function DarkRadioPill({ checked, label, onSelect }: { checked: boolean; label: string; onSelect: () => void }) {
   return (
     <motion.button
@@ -276,7 +276,7 @@ function DarkRadioPill({ checked, label, onSelect }: { checked: boolean; label: 
   );
 }
 
-/* âââ Light stress slider âââ */
+/* ─── Light stress slider ─── */
 function DarkSlider({ value, onChange }: { value: number[]; onChange: (v: number[]) => void }) {
   const level = value[0];
   const percent = (level / 10) * 100;
@@ -319,7 +319,7 @@ function DarkSlider({ value, onChange }: { value: number[]; onChange: (v: number
         </motion.div>
       </div>
       <div className="flex justify-between text-sm text-foreground/35 mt-2">
-        <span>0 â calm</span>
+        <span>0  -  calm</span>
         <motion.span
           key={level}
           initial={{ scale: 1.3, opacity: 0 }}
@@ -329,13 +329,13 @@ function DarkSlider({ value, onChange }: { value: number[]; onChange: (v: number
         >
           {level}
         </motion.span>
-        <span>10 â overwhelmed</span>
+        <span>10  -  overwhelmed</span>
       </div>
     </div>
   );
 }
 
-/* âââ Page transition wrapper âââ */
+/* ─── Page transition wrapper ─── */
 const pageVariants = {
   enter: { opacity: 0, y: 24, filter: 'blur(4px)' },
   center: { opacity: 1, y: 0, filter: 'blur(0px)' },
@@ -464,7 +464,7 @@ export default function Apply() {
                       </SelectTrigger>
                       <SelectContent className="bg-background border-foreground/10 text-foreground">
                         {retreatsLoading ? (
-                          <SelectItem value="__loading" disabled className="text-foreground/40">Loading trainingsâ¦</SelectItem>
+                          <SelectItem value="__loading" disabled className="text-foreground/40">Loading trainings...</SelectItem>
                         ) : applicationRetreats.length === 0 ? (
                           <SelectItem value="__empty" disabled className="text-foreground/40">No trainings available</SelectItem>
                         ) : (
@@ -555,19 +555,19 @@ export default function Apply() {
               <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
                 <div>
                   <p className="mb-2">My experience with journey work:</p>
-                  <MadLibTextarea value={form.journeyWorkExperience} onChange={(v) => update('journeyWorkExperience', v)} placeholder="Share broadly, no identifying namesâ¦" />
+                  <MadLibTextarea value={form.journeyWorkExperience} onChange={(v) => update('journeyWorkExperience', v)} placeholder="Share broadly, no identifying names..." />
                 </div>
                 <div>
                   <p className="mb-2">My experience with this medicine:</p>
-                  <MadLibTextarea value={form.medicineExperience} onChange={(v) => update('medicineExperience', v)} placeholder="Handshake, hug, full-embrace â include numbersâ¦" />
+                  <MadLibTextarea value={form.medicineExperience} onChange={(v) => update('medicineExperience', v)} placeholder="Handshake, hug, full-embrace  -  include numbers..." />
                 </div>
                 <div>
                   <p className="mb-2">My experience serving others:</p>
-                  <MadLibTextarea value={form.servingExperience} onChange={(v) => update('servingExperience', v)} placeholder="How you've supported othersâ¦" />
+                  <MadLibTextarea value={form.servingExperience} onChange={(v) => update('servingExperience', v)} placeholder="How you've supported others..." />
                 </div>
                 <div>
                   <p className="mb-2">What brought me to this work:</p>
-                  <MadLibTextarea value={form.lifeCircumstances} onChange={(v) => update('lifeCircumstances', v)} placeholder="Life circumstancesâ¦" />
+                  <MadLibTextarea value={form.lifeCircumstances} onChange={(v) => update('lifeCircumstances', v)} placeholder="Life circumstances..." />
                 
                 </div>
                 <div>
@@ -582,7 +582,7 @@ export default function Apply() {
                 </div>
                 <div>
                   <p className="mb-2">For integration support, I can reach out to:</p>
-                  <MadLibTextarea value={form.integrationSupport} onChange={(v) => update('integrationSupport', v)} placeholder="Who supports you after sessionsâ¦" rows={2} />
+                  <MadLibTextarea value={form.integrationSupport} onChange={(v) => update('integrationSupport', v)} placeholder="Who supports you after sessions..." rows={2} />
                 
                 </div>
                 <div>
@@ -601,10 +601,6 @@ export default function Apply() {
             {/* 5: My Body */}
             {step === 5 && (
               <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
-                <div>
-                  <p className="mb-2">Allergies requiring treatment:</p>
-                  <MadLibTextarea value={form.allergies} onChange={(v) => update('allergies', v)} placeholder="Allergies and medicationsâ¦" rows={2} />
-                </div>
                 <div>
                   <p className="mb-3 text-base text-foreground/40">Physical symptoms I experience:</p>
                   <CheckboxGroup
@@ -626,16 +622,20 @@ export default function Apply() {
                   />
                 </div>
                 <div>
+                  <p className="mb-2">Allergies requiring treatment:</p>
+                  <MadLibTextarea value={form.allergies} onChange={(v) => update('allergies', v)} placeholder="Allergies and medications..." rows={2} />
+                </div>
+                <div>
                   <p className="mb-2">Physical Health Diagnoses:</p>
-                  <MadLibTextarea value={form.physicalHealthIssues} onChange={(v) => update('physicalHealthIssues', v)} placeholder="Any significant conditionsâ¦" rows={2} />
+                  <MadLibTextarea value={form.physicalHealthIssues} onChange={(v) => update('physicalHealthIssues', v)} placeholder="Any significant conditions..." rows={2} />
                 </div>
                 <div>
                   <p className="mb-2">Prescriptions I take and why:</p>
-                  <MadLibTextarea value={form.physicalMedications} onChange={(v) => update('physicalMedications', v)} placeholder="Medication, reason, dosageâ¦" rows={2} />
+                  <MadLibTextarea value={form.physicalMedications} onChange={(v) => update('physicalMedications', v)} placeholder="Medication, reason, dosage..." rows={2} />
                 </div>
                 <div>
                   <p className="mb-2">Supplements I take regularly:</p>
-                  <MadLibTextarea value={form.supplements} onChange={(v) => update('supplements', v)} placeholder="Ongoing supplementsâ¦" rows={2} />
+                  <MadLibTextarea value={form.supplements} onChange={(v) => update('supplements', v)} placeholder="Ongoing supplements..." rows={2} />
                 </div>
                 
               </div>
@@ -644,10 +644,6 @@ export default function Apply() {
             {/* 6: My Mind */}
             {step === 6 && (
               <div className="space-y-8 text-lg sm:text-xl leading-relaxed text-foreground/60">
-                <div>
-                  <p className="mb-2">My biggest source of stress right now:</p>
-                  <MadLibTextarea value={form.stressSources} onChange={(v) => update('stressSources', v)} placeholder="What weighs on youâ¦" rows={2} />
-                </div>
                 <div>
                   <p className="mb-3 text-base text-foreground/40">Cognitive symptoms I notice:</p>
                   <CheckboxGroup
@@ -670,19 +666,19 @@ export default function Apply() {
                 </div>
                 <div>
                   <p className="mb-2">Mental health diagnoses:</p>
-                  <MadLibTextarea value={form.dsmDiagnosis} onChange={(v) => update('dsmDiagnosis', v)} placeholder="Diagnosis and when it occurredâ¦" rows={2} />
+                  <MadLibTextarea value={form.dsmDiagnosis} onChange={(v) => update('dsmDiagnosis', v)} placeholder="Diagnosis and when it occurred..." rows={2} />
                 </div>
                 <div>
                   <p className="mb-2">Current mental health concerns:</p>
-                  <MadLibTextarea value={form.mentalHealthIssues} onChange={(v) => update('mentalHealthIssues', v)} placeholder="Significant issuesâ¦" rows={2} />
+                  <MadLibTextarea value={form.mentalHealthIssues} onChange={(v) => update('mentalHealthIssues', v)} placeholder="Significant issues..." rows={2} />
                 </div>
                 <div>
                   <p className="mb-2">Psychiatric medications I take:</p>
-                  <MadLibTextarea value={form.psychMedications} onChange={(v) => update('psychMedications', v)} placeholder="What, whyâ¦" rows={2} />
+                  <MadLibTextarea value={form.psychMedications} onChange={(v) => update('psychMedications', v)} placeholder="What, why..." rows={2} />
                 </div>
                 <div>
                   <p className="mb-2">Psychedelic-Assisted Therapy / Medicine Use:</p>
-                  <MadLibTextarea value={form.recreationalDrugUse} onChange={(v) => update('recreationalDrugUse', v)} placeholder="Type and frequencyâ¦" rows={2} />
+                  <MadLibTextarea value={form.recreationalDrugUse} onChange={(v) => update('recreationalDrugUse', v)} placeholder="Type and frequency..." rows={2} />
                 
                 </div>
                 <div>
@@ -736,10 +732,14 @@ export default function Apply() {
                     onChange={(v) => update('lifeExperiences', v)}
                   />
                 </div>
+                <div>
+                  <p className="mb-2">My biggest source of stress right now:</p>
+                  <MadLibTextarea value={form.stressSources} onChange={(v) => update('stressSources', v)} placeholder="What weighs on you..." rows={2} />
+                </div>
                 
                 <div>
                   <p className="mb-2">Anything else about stress or trauma history:</p>
-                  <MadLibTextarea value={form.traumaDetails} onChange={(v) => update('traumaDetails', v)} placeholder="Anything relevantâ¦" rows={2} />
+                  <MadLibTextarea value={form.traumaDetails} onChange={(v) => update('traumaDetails', v)} placeholder="Anything relevant..." rows={2} />
                 </div>
               </div>
             )}
@@ -767,15 +767,15 @@ export default function Apply() {
                 </div>
                 <div>
                   <p className="mb-2">For fun and relaxation, I love:</p>
-                  <MadLibTextarea value={form.strengthsHobbies} onChange={(v) => update('strengthsHobbies', v)} placeholder="Strengths, hobbies, interestsâ¦" rows={2} />
+                  <MadLibTextarea value={form.strengthsHobbies} onChange={(v) => update('strengthsHobbies', v)} placeholder="Strengths, hobbies, interests..." rows={2} />
                 </div>
                 <div>
                   <p className="mb-2">My goals for this training:</p>
-                  <MadLibTextarea value={form.trainingGoals} onChange={(v) => update('trainingGoals', v)} placeholder="What you hope to gainâ¦" rows={2} />
+                  <MadLibTextarea value={form.trainingGoals} onChange={(v) => update('trainingGoals', v)} placeholder="What you hope to gain..." rows={2} />
                 </div>
                 <div>
                   <p className="mb-2">Anything else we should know:</p>
-                  <MadLibTextarea value={form.anythingElse} onChange={(v) => update('anythingElse', v)} placeholder="So we can support you bestâ¦" rows={2} />
+                  <MadLibTextarea value={form.anythingElse} onChange={(v) => update('anythingElse', v)} placeholder="So we can support you best..." rows={2} />
                 </div>
               </div>
             )}
@@ -802,7 +802,7 @@ export default function Apply() {
                   )}
                   {form.signalHandle && <p><span className="text-foreground/35">Signal:</span> <span className="text-foreground">{form.signalHandle}</span></p>}
                   {form.trainingGoals && (
-                    <p><span className="text-foreground/35">Goals:</span> <span className="text-foreground">{form.trainingGoals.substring(0, 120)}{form.trainingGoals.length > 120 ? 'â¦' : ''}</span></p>
+                    <p><span className="text-foreground/35">Goals:</span> <span className="text-foreground">{form.trainingGoals.substring(0, 120)}{form.trainingGoals.length > 120 ? '...' : ''}</span></p>
                   )}
                 </div>
 
@@ -837,7 +837,7 @@ export default function Apply() {
                   onClick={prev}
                   className="self-start text-foreground/25 hover:text-foreground/50 text-sm tracking-wide transition-colors duration-200"
                 >
-                  â {SECTIONS[step - 1]?.label}
+                  ← {SECTIONS[step - 1]?.label}
                 </button>
               )}
 
