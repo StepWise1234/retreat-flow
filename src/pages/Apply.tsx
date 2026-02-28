@@ -699,11 +699,11 @@ export default function Apply() {
                   <p className="mb-2">Have you considered taking your own life:</p>
                   <div className="flex flex-wrap gap-2">
                     {SUICIDE_CONSIDERATION_OPTIONS.map((option) => (
-                      <RadioPill
+                      <DarkRadioPill
                         key={option}
                         label={option}
-                        selected={form.suicideConsideration === option}
-                        onClick={() => update('suicideConsideration', option)}
+                        checked={form.suicideConsideration === option}
+                        onSelect={() => update('suicideConsideration', option)}
                       />
                     ))}
                   </div>
