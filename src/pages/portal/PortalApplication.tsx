@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useApplication } from '@/hooks/useApplication';
 import { cn } from '@/lib/utils';
 
-/* ─── Constants matching Apply page ───  */ 
+/* âââ Constants matching Apply page âââ  */ 
 const PHYSICAL_SYMPTOMS = [
   'Panic attacks', 'Tension', 'Quick temper/irritability', 'Inadequate Sleep',
   'Body Aches', 'Stomach upset', 'Rapid/racing heart', 'Muscle Tension',
@@ -15,7 +15,7 @@ const PHYSICAL_SYMPTOMS = [
 const DIETARY_OPTIONS = ['Gluten Free', 'Dairy Free', 'Vegetarian', 'Vegan', 'Other Allergy'];
 
 const LIFE_CIRCUMSTANCES_OPTIONS = [
-  'Healing from past trauma', 'Deepenin my spiritual practice',
+  'Healing from past trauma', 'Deepening my spiritual practice',
   'Navigating a life transition', 'Supporting a loved one',
   'Seeking personal growth', 'Processing grief or loss',
   'Exploring consciousness', 'Called to serve others',
@@ -77,7 +77,7 @@ const SUPPORT_NETWORK = [
   'Co-workers', 'Family', 'Partner', 'Pets',
 ];
 
-/* ─── Shared components ─── */
+/* âââ Shared components âââ */
 
 function CheckboxPill({ checked, label, onToggle }: { checked: boolean; label: string; onToggle: () => void }) {
   return (
@@ -128,7 +128,7 @@ function CheckboxGroup({ items, selected, onChange, otherValue, onOtherChange }:
           )}>
             <span className="text-foreground/50 shrink-0">Other:</span>
             <input
-              placeholder="Please specify…"
+              placeholder="Please specifyâ¦"
               value={otherValue || ''}
               onChange={(e) => onOtherChange(e.target.value)}
               className="bg-transparent border-none outline-none text-foreground placeholder:text-foreground/20 text-sm flex-1"
@@ -196,18 +196,18 @@ function StressSlider({ value, onChange }: { value: number; onChange: (v: number
         </motion.div>
       </div>
       <div className="flex justify-between text-sm text-foreground/35 mt-2">
-        <span>0 — calm</span>
+        <span>0 â calm</span>
         <motion.span key={value} initial={{ scale: 1.3, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
           className="font-bold text-2xl" style={{ color: trackColor }}>
           {value}
         </motion.span>
-        <span>10 — overwhelmed</span>
+        <span>10 â overwhelmed</span>
       </div>
     </div>
   );
 }
 
-/* ─── Section accordion ─── */
+/* âââ Section accordion âââ */
 interface SectionProps {
   title: string;
   color: string;
@@ -252,7 +252,7 @@ function Section({ title, color, defaultOpen = false, children }: SectionProps) 
   );
 }
 
-/* ─── Field components ─── */
+/* âââ Field components âââ */
 function Field({ label, value, onChange, multiline, full, type = 'text' }: {
   label: string;
   value: string;
@@ -274,7 +274,7 @@ function Field({ label, value, onChange, multiline, full, type = 'text' }: {
   );
 }
 
-/* ─── Main component ─── */
+/* âââ Main component âââ */
 export default function PortalApplication() {
   const { application, isLoading, updateApplication } = useApplication();
   const [form, setForm] = useState<Record<string, any>>({});
@@ -370,7 +370,7 @@ export default function PortalApplication() {
   };
 
   if (isLoading) {
-    return <div className="text-center py-20 text-foreground/40">Loading your application…</div>;
+    return <div className="text-center py-20 text-foreground/40">Loading your applicationâ¦</div>;
   }
 
   if (!application) {
@@ -405,7 +405,7 @@ export default function PortalApplication() {
           }}
         >
           {saving ? <Save className="h-4 w-4 animate-pulse" /> : <Check className="h-4 w-4" />}
-          {saving ? 'Saving…' : 'Save Changes'}
+          {saving ? 'Savingâ¦' : 'Save Changes'}
         </motion.button>
       </div>
 
@@ -458,20 +458,20 @@ export default function PortalApplication() {
           <Field label="Life Circumstances" value={form.life_circumstances || ''} onChange={(v) => update('life_circumstances', v)} multiline full />
 
               <CheckboxGroup
-                label="What Resonates With You"
-                options={LIFE_CIRCUMSTANCES_OPTIONS}
+                items={LIFE_CIRCUMSTANCES_OPTIONS}
                 selected={form.life_circumstances_options || []}
-                other={form.life_circumstances_other}
-                readOnly
+                onChange={(v) => update('life_circumstances_options', v)}
+                otherValue={form.life_circumstances_other}
+                onOtherChange={(v) => update('life_circumstances_other', v)}
               />
           <Field label="Integration Support" value={form.integration_support || ''} onChange={(v) => update('integration_support', v)} multiline full />
 
               <CheckboxGroup
-                label="Who Supports Your Journey"
-                options={INTEGRATION_SUPPORT_OPTIONS}
+                items={INTEGRATION_SUPPORT_OPTIONS}
                 selected={form.integration_support_options || []}
-                other={form.integration_support_other}
-                readOnly
+                onChange={(v) => update('integration_support_options', v)}
+                otherValue={form.integration_support_other}
+                onOtherChange={(v) => update('integration_support_other', v)}
               />
         </div>
       </Section>
@@ -516,11 +516,11 @@ export default function PortalApplication() {
           <Field label="Psychedelic-Assisted Therapy / Medicine Use" value={form.recreational_drug_use || ''} onChange={(v) => update('recreational_drug_use', v)} multiline full />
 
               <CheckboxGroup
-                label="Psychedelic Medicine Experience"
-                options={PSYCHEDELIC_MEDICINE_OPTIONS}
+                items={PSYCHEDELIC_MEDICINE_OPTIONS}
                 selected={form.psychedelic_medicine_use || []}
-                other={form.psychedelic_medicine_other}
-                readOnly
+                onChange={(v) => update('psychedelic_medicine_use', v)}
+                otherValue={form.psychedelic_medicine_other}
+                onOtherChange={(v) => update('psychedelic_medicine_other', v)}
               />
           <div>
                 <p className="text-xs font-medium text-foreground/45 mb-2 uppercase tracking-wider">Suicide Consideration</p>
@@ -536,11 +536,11 @@ export default function PortalApplication() {
                 </div>
               </div>
           <CheckboxGroup
-                label="Mental Health Support"
-                options={MENTAL_HEALTH_SUPPORT_OPTIONS}
+                items={MENTAL_HEALTH_SUPPORT_OPTIONS}
                 selected={form.mental_health_support || []}
-                other={form.mental_health_support_other}
-                readOnly
+                onChange={(v) => update('mental_health_support', v)}
+                otherValue={form.mental_health_support_other}
+                onOtherChange={(v) => update('mental_health_support_other', v)}
               />
         </div>
       </Section>
@@ -614,7 +614,7 @@ export default function PortalApplication() {
           }}
         >
           {saving ? <Save className="h-4 w-4 animate-pulse" /> : <Check className="h-4 w-4" />}
-          {saving ? 'Saving…' : 'Save All Changes'}
+          {saving ? 'Savingâ¦' : 'Save All Changes'}
         </motion.button>
       </div>
     </div>
