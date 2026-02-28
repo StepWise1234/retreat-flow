@@ -15,7 +15,7 @@ const PHYSICAL_SYMPTOMS = [
 const DIETARY_OPTIONS = ['Gluten Free', 'Dairy Free', 'Vegetarian', 'Vegan', 'Other Allergy'];
 
 const LIFE_CIRCUMSTANCES_OPTIONS = [
-  'Healing from past trauma', 'Deepening my spiritual practice',
+  'Healing from past trauma', 'Deepenin my spiritual practice',
   'Navigating a life transition', 'Supporting a loved one',
   'Seeking personal growth', 'Processing grief or loss',
   'Exploring consciousness', 'Called to serve others',
@@ -460,7 +460,7 @@ export default function PortalApplication() {
               <CheckboxGroup
                 label="What Resonates With You"
                 options={LIFE_CIRCUMSTANCES_OPTIONS}
-                selected={form.life_circumstances_options}
+                selected={form.life_circumstances_options || []}
                 other={form.life_circumstances_other}
                 readOnly
               />
@@ -469,7 +469,7 @@ export default function PortalApplication() {
               <CheckboxGroup
                 label="Who Supports Your Journey"
                 options={INTEGRATION_SUPPORT_OPTIONS}
-                selected={form.integration_support_options}
+                selected={form.integration_support_options || []}
                 other={form.integration_support_other}
                 readOnly
               />
@@ -518,7 +518,7 @@ export default function PortalApplication() {
               <CheckboxGroup
                 label="Psychedelic Medicine Experience"
                 options={PSYCHEDELIC_MEDICINE_OPTIONS}
-                selected={form.psychedelic_medicine_use}
+                selected={form.psychedelic_medicine_use || []}
                 other={form.psychedelic_medicine_other}
                 readOnly
               />
@@ -538,7 +538,7 @@ export default function PortalApplication() {
           <CheckboxGroup
                 label="Mental Health Support"
                 options={MENTAL_HEALTH_SUPPORT_OPTIONS}
-                selected={form.mental_health_support}
+                selected={form.mental_health_support || []}
                 other={form.mental_health_support_other}
                 readOnly
               />
