@@ -7,21 +7,15 @@ import { useApplication } from '@/hooks/useApplication';
 import { useAccommodation } from '@/hooks/useAccommodation';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
-import roomMasterImg from '@/assets/rooms/room-master.avif';
-import room1Img from '@/assets/rooms/room-1.avif';
-import room2Img from '@/assets/rooms/room-2.avif';
-import room3Img from '@/assets/rooms/room-3.avif';
-import room4Img from '@/assets/rooms/room-4.avif';
-import room5Img from '@/assets/rooms/room-5.avif';
 
-// Default 6-bedroom house room images (fallback when image_url not in database)
+// Default 6-bedroom house room images from Airbnb listing 1212201044664650708
 const ROOM_IMAGES: Record<string, string> = {
-  'Master Suite': roomMasterImg,
-  'Bedroom 1': room1Img,
-  'Bedroom 2': room2Img,
-  'Bedroom 3': room3Img,
-  'Bedroom 4': room4Img,
-  'Bedroom 5': room5Img,
+  'Master Suite': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/26d471ab-fb0a-4cea-b2b5-e17ef289e6cf.jpeg',
+  'Bedroom 1': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/d47ce86e-f360-4d71-b786-55bb67cb3804.jpeg',
+  'Bedroom 2': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/8c1c49c4-590a-4972-a57b-679f036491be.jpeg',
+  'Bedroom 3': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/54c37b16-3d29-445c-9103-e5de966472ea.jpeg',
+  'Bedroom 4': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/2d0ed340-81b8-40d2-9e74-78e882ab44a9.jpeg',
+  'Bedroom 5': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/037100cc-fe45-40a5-85fc-a32031cad3e5.jpeg',
 };
 
 // March 13-16 training ID (8-bedroom Somerville house with commute option)
