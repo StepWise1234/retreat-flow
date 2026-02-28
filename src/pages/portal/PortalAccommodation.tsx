@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bed, UtensilsCrossed, StickyNote, Star, Check, Loader2, Calendar, MapPin, Clock, ShoppingCart } from 'lucide-react';
+import { Bed, UtensilsCrossed, StickyNote, Star, Check, Loader2, Calendar, MapPin, Clock, ShoppingCart, Car } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import { useApplication } from '@/hooks/useApplication';
@@ -14,6 +14,7 @@ import room3Img from '@/assets/rooms/room-3.avif';
 import room4Img from '@/assets/rooms/room-4.avif';
 import room5Img from '@/assets/rooms/room-5.avif';
 
+// Default 6-bedroom house room images (fallback when image_url not in database)
 const ROOM_IMAGES: Record<string, string> = {
   'Master Suite': roomMasterImg,
   'Bedroom 1': room1Img,
@@ -21,6 +22,21 @@ const ROOM_IMAGES: Record<string, string> = {
   'Bedroom 3': room3Img,
   'Bedroom 4': room4Img,
   'Bedroom 5': room5Img,
+};
+
+// March 13-16 training ID (8-bedroom Somerville house with commute option)
+const MARCH_TRAINING_ID = 'c626109f-11a4-4549-991e-022727300feb';
+
+// March training room images from Airbnb
+const MARCH_ROOM_IMAGES: Record<string, string> = {
+  'Bedroom 1': 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTQ2ODE3MTkwNDAzODY1MTIyMA==/original/ac000837-767e-4275-9b16-d3180368dc11.png',
+  'Bedroom 2': 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTQ2ODE3MTkwNDAzODY1MTIyMA==/original/cbca7e83-d672-4782-b98a-e2d28c3f5ece.jpeg',
+  'Bedroom 3': 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTQ2ODE3MTkwNDAzODY1MTIyMA==/original/45ce98fd-ec05-4a47-a6a7-3ce5a0166f5a.jpeg',
+  'Bedroom 4': 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTQ2ODE3MTkwNDAzODY1MTIyMA==/original/f082876c-dbff-4a87-bca5-5106561ec8aa.png',
+  'Bedroom 5': 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTQ2ODE3MTkwNDAzODY1MTIyMA==/original/a4af48f7-5990-4e9c-9f62-0bf163f81b29.jpeg',
+  'Bedroom 6': 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTQ2ODE3MTkwNDAzODY1MTIyMA==/original/830a96ee-a45b-4d19-802e-ead87e2bdaa0.jpeg',
+  'Bedroom 7': 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTQ2ODE3MTkwNDAzODY1MTIyMA==/original/bb96cb7a-f048-4951-8f83-9ddacdb0c2fc.png',
+  'Bedroom 8': 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTQ2ODE3MTkwNDAzODY1MTIyMA==/original/1f0bb61f-b55a-4855-81e3-29c331901ca9.jpeg',
 };
 
 const DIETARY_OPTIONS = ['Gluten Free', 'Dairy Free', 'Vegetarian', 'Vegan', 'Other Allergy'];
@@ -181,6 +197,55 @@ export default function PortalAccommodation() {
       day: 'numeric',
       year: 'numeric',
     });
+  };
+
+  // Check if this is the March training with commute option
+  const isMarchTraining = trainingId === MARCH_TRAINING_ID;
+  const [commuteSelected, setCommuteSelected] = useState(false);
+
+  // Initialize commute selection from application data
+  useEffect(() => {
+    if (application?.accommodation_choice === 'commute') {
+      setCommuteSelected(true);
+    }
+  }, [application]);
+
+  const handleCommuteSelect = async () => {
+    // If currently selected, deselect
+    if (commuteSelected) {
+      setCommuteSelected(false);
+      await updateApplication.mutateAsync({ accommodation_choice: null });
+      toast.success('Commute option removed');
+      return;
+    }
+
+    // If user has a room reservation, remove it first
+    if (myReservation) {
+      unreserveRoom.mutate();
+    }
+
+    setCommuteSelected(true);
+    await updateApplication.mutateAsync({ accommodation_choice: 'commute' });
+    toast.success('Commute option selected');
+  };
+
+  const handleRoomSelectWrapper = (roomId: string) => {
+    // Clear commute selection if selecting a room
+    if (commuteSelected) {
+      setCommuteSelected(false);
+      updateApplication.mutateAsync({ accommodation_choice: null });
+    }
+    handleRoomSelect(roomId);
+  };
+
+  // Get image for a room (database URL > training-specific > default fallback)
+  const getRoomImage = (room: typeof rooms[0]) => {
+    // First check database image_url
+    if (room.image_url) return room.image_url;
+    // For March training, use Airbnb images
+    if (isMarchTraining && MARCH_ROOM_IMAGES[room.name]) return MARCH_ROOM_IMAGES[room.name];
+    // Default fallback
+    return ROOM_IMAGES[room.name] || null;
   };
 
   const isLoading = appLoading || trainingLoading;
@@ -363,17 +428,17 @@ export default function PortalAccommodation() {
             ) : (
               <div className="grid gap-4 sm:grid-cols-2">
                 {rooms.map(room => {
-                  const img = ROOM_IMAGES[room.name];
-                  const isMine = room.status === 'mine';
+                  const img = getRoomImage(room);
+                  const isMine = room.status === 'mine' && !commuteSelected;
                   const isReserved = room.status === 'reserved';
-                  const isAvailable = room.status === 'available';
+                  const isAvailable = room.status === 'available' || (room.status === 'mine' && commuteSelected);
 
                   return (
                     <motion.button
                       key={room.id}
                       whileHover={isAvailable || isMine ? { scale: 1.01 } : {}}
                       whileTap={isAvailable || isMine ? { scale: 0.99 } : {}}
-                      onClick={() => !isReserved && handleRoomSelect(room.id)}
+                      onClick={() => !isReserved && handleRoomSelectWrapper(room.id)}
                       disabled={isReserved || reserveRoom.isPending}
                       className={cn(
                         'relative rounded-2xl overflow-hidden text-left transition-all border-2',
@@ -406,7 +471,7 @@ export default function PortalAccommodation() {
                           </div>
                         </div>
                         <p className="text-sm text-gray-500">
-                          {room.bed_type} Â· {room.bath_type}
+                          {room.bed_type} · {room.bath_type}
                         </p>
 
                         {/* Status badge */}
@@ -431,6 +496,47 @@ export default function PortalAccommodation() {
                     </motion.button>
                   );
                 })}
+
+                {/* Commute Option - only for March training */}
+                {isMarchTraining && (
+                  <motion.button
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={handleCommuteSelect}
+                    className={cn(
+                      'relative rounded-2xl overflow-hidden text-left transition-all border-2',
+                      commuteSelected && 'border-amber-500 shadow-lg shadow-amber-100',
+                      !commuteSelected && 'border-dashed border-amber-200 hover:border-amber-300 hover:shadow-md bg-amber-50/50',
+                    )}
+                  >
+                    {/* Commute icon */}
+                    <div className="h-36 bg-gradient-to-br from-amber-100 to-amber-50 flex items-center justify-center">
+                      <Car className="w-12 h-12 text-amber-500" />
+                    </div>
+
+                    <div className="p-4 bg-white">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="font-semibold text-gray-900">Commute</h3>
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        Daily Travel · Sleep at home
+                      </p>
+
+                      {/* Status badge */}
+                      <div className="mt-3">
+                        {commuteSelected ? (
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-50 px-3 py-1 rounded-full">
+                            <Check className="w-3 h-3" /> YOUR SELECTION
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-50 px-3 py-1 rounded-full">
+                            AVAILABLE
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </motion.button>
+                )}
               </div>
             )}
 
