@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useApplication } from '@/hooks/useApplication';
 import { cn } from '@/lib/utils';
 
-/* ─── Constants matching Apply page ───  */
+/* ─── Constants matching Apply page ───  */ 
 const PHYSICAL_SYMPTOMS = [
   'Panic attacks', 'Tension', 'Quick temper/irritability', 'Inadequate Sleep',
   'Body Aches', 'Stomach upset', 'Rapid/racing heart', 'Muscle Tension',
@@ -460,8 +460,8 @@ export default function PortalApplication() {
               <CheckboxGroup
                 label="What Resonates With You"
                 options={LIFE_CIRCUMSTANCES_OPTIONS}
-                selected={formData.life_circumstances_options}
-                other={formData.life_circumstances_other}
+                selected={form.life_circumstances_options}
+                other={form.life_circumstances_other}
                 readOnly
               />
           <Field label="Integration Support" value={form.integration_support || ''} onChange={(v) => update('integration_support', v)} multiline full />
@@ -469,8 +469,8 @@ export default function PortalApplication() {
               <CheckboxGroup
                 label="Who Supports Your Journey"
                 options={INTEGRATION_SUPPORT_OPTIONS}
-                selected={formData.integration_support_options}
-                other={formData.integration_support_other}
+                selected={form.integration_support_options}
+                other={form.integration_support_other}
                 readOnly
               />
         </div>
@@ -518,8 +518,8 @@ export default function PortalApplication() {
               <CheckboxGroup
                 label="Psychedelic Medicine Experience"
                 options={PSYCHEDELIC_MEDICINE_OPTIONS}
-                selected={formData.psychedelic_medicine_use}
-                other={formData.psychedelic_medicine_other}
+                selected={form.psychedelic_medicine_use}
+                other={form.psychedelic_medicine_other}
                 readOnly
               />
           <div>
@@ -529,7 +529,7 @@ export default function PortalApplication() {
                     <RadioPill
                       key={opt}
                       label={opt}
-                      selected={formData.suicide_consideration === opt}
+                      selected={form.suicide_consideration === opt}
                       readOnly
                     />
                   ))}
@@ -538,8 +538,8 @@ export default function PortalApplication() {
           <CheckboxGroup
                 label="Mental Health Support"
                 options={MENTAL_HEALTH_SUPPORT_OPTIONS}
-                selected={formData.mental_health_support}
-                other={formData.mental_health_support_other}
+                selected={form.mental_health_support}
+                other={form.mental_health_support_other}
                 readOnly
               />
         </div>
