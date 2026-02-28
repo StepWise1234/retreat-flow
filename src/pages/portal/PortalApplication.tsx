@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useApplication } from '@/hooks/useApplication';
 import { cn } from '@/lib/utils';
 
-/* âââ Constants matching Apply page âââ  */ 
+/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ Constants matching Apply page Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ  */ 
 const PHYSICAL_SYMPTOMS = [
   'Panic attacks', 'Tension', 'Quick temper/irritability', 'Inadequate Sleep',
   'Body Aches', 'Stomach upset', 'Rapid/racing heart', 'Muscle Tension',
@@ -77,7 +77,7 @@ const SUPPORT_NETWORK = [
   'Co-workers', 'Family', 'Partner', 'Pets',
 ];
 
-/* âââ Shared components âââ */
+/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ Shared components Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ */
 
 function CheckboxPill({ checked, label, onToggle }: { checked: boolean; label: string; onToggle: () => void }) {
   return (
@@ -128,7 +128,7 @@ function CheckboxGroup({ items, selected, onChange, otherValue, onOtherChange }:
           )}>
             <span className="text-foreground/50 shrink-0">Other:</span>
             <input
-              placeholder="Please specifyâ¦"
+              placeholder="Please specifyÃ¢ÂÂ¦"
               value={otherValue || ''}
               onChange={(e) => onOtherChange(e.target.value)}
               className="bg-transparent border-none outline-none text-foreground placeholder:text-foreground/20 text-sm flex-1"
@@ -196,18 +196,18 @@ function StressSlider({ value, onChange }: { value: number; onChange: (v: number
         </motion.div>
       </div>
       <div className="flex justify-between text-sm text-foreground/35 mt-2">
-        <span>0 â calm</span>
+        <span>0 Ã¢ÂÂ calm</span>
         <motion.span key={value} initial={{ scale: 1.3, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
           className="font-bold text-2xl" style={{ color: trackColor }}>
           {value}
         </motion.span>
-        <span>10 â overwhelmed</span>
+        <span>10 Ã¢ÂÂ overwhelmed</span>
       </div>
     </div>
   );
 }
 
-/* âââ Section accordion âââ */
+/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ Section accordion Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ */
 interface SectionProps {
   title: string;
   color: string;
@@ -252,7 +252,7 @@ function Section({ title, color, defaultOpen = false, children }: SectionProps) 
   );
 }
 
-/* âââ Field components âââ */
+/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ Field components Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ */
 function Field({ label, value, onChange, multiline, full, type = 'text' }: {
   label: string;
   value: string;
@@ -274,7 +274,7 @@ function Field({ label, value, onChange, multiline, full, type = 'text' }: {
   );
 }
 
-/* âââ Main component âââ */
+/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ Main component Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ */
 export default function PortalApplication() {
   const { application, isLoading, updateApplication } = useApplication();
   const [form, setForm] = useState<Record<string, any>>({});
@@ -361,7 +361,12 @@ export default function PortalApplication() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await updateApplication.mutateAsync(form);
+      // Transform form data: combine birth fields into birth_date for DB
+      const { birth_month, birth_day, birth_year, ...formData } = form;
+      if (birth_month && birth_day && birth_year) {
+        formData.birth_date = `${birth_year}-${String(birth_month).padStart(2, '0')}-${String(birth_day).padStart(2, '0')}`;
+      }
+      await updateApplication.mutateAsync(formData);
       toast.success('Application updated');
     } catch {
       toast.error('Failed to save changes');
@@ -370,7 +375,7 @@ export default function PortalApplication() {
   };
 
   if (isLoading) {
-    return <div className="text-center py-20 text-foreground/40">Loading your applicationâ¦</div>;
+    return <div className="text-center py-20 text-foreground/40">Loading your applicationÃ¢ÂÂ¦</div>;
   }
 
   if (!application) {
@@ -405,7 +410,7 @@ export default function PortalApplication() {
           }}
         >
           {saving ? <Save className="h-4 w-4 animate-pulse" /> : <Check className="h-4 w-4" />}
-          {saving ? 'Savingâ¦' : 'Save Changes'}
+          {saving ? 'SavingÃ¢ÂÂ¦' : 'Save Changes'}
         </motion.button>
       </div>
 
@@ -529,8 +534,8 @@ export default function PortalApplication() {
                     <RadioPill
                       key={opt}
                       label={opt}
-                      selected={form.suicide_consideration === opt}
-                      readOnly
+                      checked={form.suicide_consideration === opt}
+                      onSelect={() => update('suicide_consideration', opt)}
                     />
                   ))}
                 </div>
@@ -614,7 +619,7 @@ export default function PortalApplication() {
           }}
         >
           {saving ? <Save className="h-4 w-4 animate-pulse" /> : <Check className="h-4 w-4" />}
-          {saving ? 'Savingâ¦' : 'Save All Changes'}
+          {saving ? 'SavingÃ¢ÂÂ¦' : 'Save All Changes'}
         </motion.button>
       </div>
     </div>
