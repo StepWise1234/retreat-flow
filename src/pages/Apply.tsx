@@ -7,9 +7,10 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import ApplyHero from '@/components/application/ApplyHero';
 import TrainingPhases from '@/components/application/TrainingPhases';
-import MasteryLevels from '@/components/application/MasteryLevels'; 
+import MasteryLevels from '@/components/application/MasteryLevels';
 import TrainingStatusDashboard from '@/components/application/TrainingStatusDashboard';
-import { useApplicationRetreats } from '@/hooks/useApplicationRetreats';
+import { useApplicationRetreats, REQUEST_INFO_ID, WAITLIST_ID } from '@/hooks/useApplicationRetreats';
+import { supabase } from '@/integrations/supabase/client';
 
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
@@ -356,7 +357,7 @@ export default function Apply() {
   const next = () => setStep((s) => Math.min(s + 1, SECTIONS.length - 1));
   const prev = () => setStep((s) => Math.max(s - 1, 0));
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!form.retreatId || !form.firstName.trim() || !form.email.trim()) {
       toast.error('Please fill in all required fields (Name, Email, Retreat)');
       return;
@@ -366,17 +367,91 @@ export default function Apply() {
       return;
     }
 
-    const fullName = [form.preferredName || form.firstName, form.lastName].filter(Boolean).join(' ');
-    const participant = addParticipant({
-      fullName,
-      email: form.email.trim(),
-      signalHandle: form.signalHandle.trim(),
-      allergies: [form.allergies, form.dietaryPreferences.join(', '), form.dietaryOther].filter(Boolean).join('; '),
-      specialRequests: [form.physicalHealthIssues, form.supplements].filter(Boolean).join('; '),
-    });
+    try {
+      // Determine training_id (use retreatId if it's a valid UUID, not the fallback options)
+      const isSpecialOption = form.retreatId === REQUEST_INFO_ID || form.retreatId === WAITLIST_ID;
+      const trainingId = !isSpecialOption ? form.retreatId : null;
+      const isWaitlist = form.retreatId === WAITLIST_ID;
 
-    addRegistration(form.retreatId, participant.id, 'Application');
-    setSubmitted(true);
+      // Create entry in applicants table for admin dashboard tracking
+      const fullName = [form.preferredName || form.firstName, form.lastName].filter(Boolean).join(' ');
+      const address = [form.streetAddress, form.streetAddress2, form.city, form.stateProvince, form.postalCode, form.country]
+        .filter(Boolean)
+        .join(', ');
+      const emergencyContact = [form.emergencyFirstName, form.emergencyLastName].filter(Boolean).join(' ');
+
+      const { error: applicantError } = await supabase.from('applicants').insert({
+        name: fullName,
+        email: form.email.trim(),
+        phone: form.phone.trim() || null,
+        address: address || null,
+        birth_date: form.birthYear && form.birthMonth && form.birthDay
+          ? `${form.birthYear}-${form.birthMonth.padStart(2, '0')}-${form.birthDay.padStart(2, '0')}`
+          : null,
+        emergency_contact_name: emergencyContact || null,
+        emergency_contact_phone: form.emergencyPhone.trim() || null,
+        training_id: trainingId,
+        pipeline_stage: 'lead',
+        app_status: 'Received',
+        application_date: new Date().toISOString(),
+        dietary_preferences: form.dietaryPreferences.length > 0 ? form.dietaryPreferences.join(', ') : null,
+        allergies: form.allergies.trim() || null,
+        physical_health: form.physicalHealthIssues.trim() || null,
+        physical_medications: form.physicalMedications.trim() || null,
+        mental_health_dx: form.dsmDiagnosis.trim() || null,
+        current_mental_health: form.mentalHealthIssues.trim() || null,
+        psych_medications: form.psychMedications.trim() || null,
+        // Health screening fields
+        stress_level: form.stressLevel[0],
+        suicide_consideration: form.suicideConsideration || null,
+        life_experiences: form.lifeExperiences.length > 0 ? form.lifeExperiences : null,
+        cognitive_symptoms: form.cognitiveSymptoms.length > 0 ? form.cognitiveSymptoms : null,
+        coping_mechanisms: form.copingMechanisms.length > 0 ? form.copingMechanisms : null,
+        support_network: form.supportNetwork.length > 0 ? form.supportNetwork : null,
+        self_care: form.selfCare || null,
+        stress_sources: form.stressSources.trim() || null,
+        trauma_details: form.traumaDetails.trim() || null,
+        journey_work_experience: form.journeyWorkExperience.trim() || null,
+        medicine_experience: form.medicineExperience.trim() || null,
+        serving_experience: form.servingExperience.trim() || null,
+        training_goals: form.trainingGoals.trim() || null,
+        mental_health_support: form.mentalHealthSupport?.length > 0 ? form.mentalHealthSupport : null,
+        psychedelic_medicine_use: form.psychedelicMedicineUse?.length > 0 ? form.psychedelicMedicineUse : null,
+        // Additional application fields
+        physical_symptoms: form.physicalSymptoms.length > 0 ? form.physicalSymptoms : null,
+        life_circumstances: form.lifeCircumstances.trim() || null,
+        integration_support: form.integrationSupport.trim() || null,
+        supplements: form.supplements.trim() || null,
+        recreational_drug_use: form.recreationalDrugUse.trim() || null,
+        strengths_hobbies: form.strengthsHobbies.trim() || null,
+        anything_else: form.anythingElse.trim() || null,
+        notes: isWaitlist ? 'Joined waitlist for next training' : null,
+      });
+
+      if (applicantError) {
+        console.error('Application submission error:', applicantError);
+        toast.error('Failed to submit application. Please try again.');
+        return;
+      }
+
+      // Also add to local context for backward compatibility
+      const participant = addParticipant({
+        fullName,
+        email: form.email.trim(),
+        signalHandle: form.signalHandle.trim(),
+        allergies: [form.allergies, form.dietaryPreferences.join(', '), form.dietaryOther].filter(Boolean).join('; '),
+        specialRequests: [form.physicalHealthIssues, form.supplements].filter(Boolean).join('; '),
+      });
+
+      if (trainingId) {
+        addRegistration(form.retreatId, participant.id, 'Application');
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Application error:', err);
+      toast.error('Something went wrong. Please try again.');
+    }
   };
 
   return (
