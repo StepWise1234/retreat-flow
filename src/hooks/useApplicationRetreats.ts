@@ -12,8 +12,8 @@ export interface ApplicationRetreat {
 
 // Special ID for "Request Information" fallback option
 export const REQUEST_INFO_ID = '__request_info__';
-// Special ID for waitlist option
-export const WAITLIST_ID = '__waitlist_next__';
+// Waitlist training ID - this is a real training in the database
+export const WAITLIST_ID = 'aaaaaaaa-0000-0000-0000-000000000001';
 
 export function useApplicationRetreats() {
   return useQuery({

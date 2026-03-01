@@ -5,17 +5,18 @@ import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import { useApplication } from '@/hooks/useApplication';
 import { useAccommodation } from '@/hooks/useAccommodation';
+import { useTrainerAssignment } from '@/hooks/useTrainerAssignment';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
-// Default 6-bedroom house room images from Airbnb listing 1212201044664650708
+// Default 6-bedroom house room images (March 30 - April 2 training)
 const ROOM_IMAGES: Record<string, string> = {
-  'Master Suite': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/26d471ab-fb0a-4cea-b2b5-e17ef289e6cf.jpeg',
-  'Bedroom 1': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/d47ce86e-f360-4d71-b786-55bb67cb3804.jpeg',
-  'Bedroom 2': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/8c1c49c4-590a-4972-a57b-679f036491be.jpeg',
-  'Bedroom 3': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/54c37b16-3d29-445c-9103-e5de966472ea.jpeg',
-  'Bedroom 4': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/2d0ed340-81b8-40d2-9e74-78e882ab44a9.jpeg',
-  'Bedroom 5': 'https://a0.muscache.com/im/pictures/prohost-api/Hosting-1212201044664650708/original/037100cc-fe45-40a5-85fc-a32031cad3e5.jpeg',
+  'Master Suite': '/rooms/master-suite.jpg',
+  'Bedroom 1': '/rooms/bedroom-1.jpg',
+  'Bedroom 2': '/rooms/bedroom-2.jpg',
+  'Bedroom 3': '/rooms/bedroom-3.jpg',
+  'Bedroom 4': '/rooms/bedroom-4.jpg',
+  'Bedroom 5': '/rooms/bedroom-5.jpg',
 };
 
 // March 13-16 training ID (8-bedroom Somerville house with commute option)
@@ -24,34 +25,113 @@ const MARCH_TRAINING_ID = 'c626109f-11a4-4549-991e-022727300feb';
 // March 30 - April 2 training ID (meal selection enabled)
 const APRIL_TRAINING_ID = '1952aca4-ef44-4294-bd63-a467cd800497';
 
-// Meal options from Aspire Meal Preps
-const MEAL_OPTIONS = [
-  { name: 'Organic Teriyaki Bowls', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop', category: 'Asian' },
-  { name: 'Organic Chicken Adobo w/Rice', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop', category: 'Filipino' },
-  { name: 'Organic Hawaiian Sauce', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop', category: 'Hawaiian' },
-  { name: 'Hawaiian Bowls w/ Soy Poke Sauce', image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=300&fit=crop', category: 'Hawaiian' },
-  { name: 'Organic USDA Carne Asada Bowls', image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop', category: 'Mexican' },
-  { name: 'Organic Mexican Bowls W/ Salsa', image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&h=300&fit=crop', category: 'Mexican' },
-  { name: 'Organic Burritos', image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=300&fit=crop', category: 'Mexican' },
-  { name: 'Organic Scampi Pasta', image: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&h=300&fit=crop', category: 'Italian' },
-  { name: 'Organic Pomodoro Pasta', image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&h=300&fit=crop', category: 'Italian' },
-  { name: 'Wild Shrimp Pasta Pomodoro', image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&h=300&fit=crop', category: 'Italian' },
-  { name: 'USDA Beef Meatballs Pasta', image: 'https://images.unsplash.com/photo-1515516969-d4008cc6241a?w=400&h=300&fit=crop', category: 'Italian' },
-  { name: 'Organic Italian Sausage w/ Pasta', image: 'https://images.unsplash.com/photo-1611270629569-8b357cb88da9?w=400&h=300&fit=crop', category: 'Italian' },
-  { name: 'Organic USDA Filipino Beef Steak', image: 'https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=400&h=300&fit=crop', category: 'Filipino' },
-  { name: 'Organic Filipino Sisig W/Rice', image: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=400&h=300&fit=crop', category: 'Filipino' },
-  { name: 'Organic USDA Steak Carne Asada Bowl', image: 'https://images.unsplash.com/photo-1529694157872-4e0c0f3b238b?w=400&h=300&fit=crop', category: 'Mexican' },
-  { name: 'Organic USDA Viet Shaking Beef', image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=300&fit=crop', category: 'Asian' },
-  { name: 'Organic Ponzu Dish', image: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=300&fit=crop', category: 'Asian' },
-  { name: 'Organic Sukiyaki Sauce w/ Rice', image: 'https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=400&h=300&fit=crop', category: 'Asian' },
-  { name: 'Organic Soy Yakitori Sauce', image: 'https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=400&h=300&fit=crop', category: 'Asian' },
-  { name: 'Organic Egg Noodle', image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop', category: 'Asian' },
-  { name: 'Organic Spicy Hawaiian Sesame Soy w/ Furikake', image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop', category: 'Hawaiian' },
-  { name: 'Organic Spicy Pepperfin Sushi Sauce', image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop', category: 'Asian' },
-  { name: 'Organic Boiling Crab Sauce', image: 'https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=400&h=300&fit=crop', category: 'Seafood' },
-  { name: 'Organic Taiwanese Dry Rub', image: 'https://images.unsplash.com/photo-1562967916-eb82221dfb44?w=400&h=300&fit=crop', category: 'Asian' },
-  { name: 'Organic Chicken Pollo Asado Bowls', image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&h=300&fit=crop', category: 'Mexican' },
-  { name: 'Organic Breakfast Steak/Egg Bowls', image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop', category: 'Breakfast' },
+// Meal categories with protein/style options
+const MEAL_CATEGORIES = [
+  {
+    id: 'burrito',
+    name: 'Burrito',
+    description: 'Wrapped burrito with your choice of protein',
+    image: '/meals/burrito.jpg',
+    options: ['Beef', 'Chicken', 'Tofu', 'Shrimp', 'Fish'],
+  },
+  {
+    id: 'asian-bowl',
+    name: 'Asian Bowl',
+    description: 'Asian-style rice bowl with your choice of protein',
+    image: '/meals/asian-bowl.jpg',
+    options: ['Chicken', 'Beef', 'Tofu', 'Shrimp', 'Fish'],
+  },
+  {
+    id: 'pasta',
+    name: 'Pasta',
+    description: 'Italian pasta dish with your choice of protein',
+    image: '/meals/pasta.jpg',
+    options: ['Beef', 'Italian Sausage', 'Seafood'],
+  },
+  {
+    id: 'mexican-bowl',
+    name: 'Mexican Bowl',
+    description: 'Mexican-style bowl with rice, beans, and toppings',
+    image: '/meals/mexican-bowl.jpg',
+    options: ['Chicken', 'Steak', 'Shrimp', 'Fish', 'Tofu'],
+  },
+  {
+    id: 'egg-noodle',
+    name: 'Organic Egg Noodle',
+    description: 'Organic egg noodles with your choice of protein',
+    image: '/meals/egg-noodle.jpg',
+    options: ['Chicken', 'Shrimp', 'Beef', 'Fish', 'Tofu'],
+  },
+  {
+    id: 'hawaiian-poke',
+    name: 'Hawaiian Poke Bowl',
+    description: 'Hawaiian poke bowl with soy poke sauce',
+    image: '/meals/hawaiian-poke.jpg',
+    options: ['Tuna', 'Salmon', 'Shrimp', 'Tofu'],
+  },
+  {
+    id: 'chicken-adobo',
+    name: 'Organic Chicken Adobo w/Rice',
+    description: 'Filipino-style chicken adobo served with rice',
+    image: '/meals/chicken-adobo.jpg',
+    options: [], // No protein choice - chicken only
+  },
+  {
+    id: 'filipino-sisig',
+    name: 'Organic Filipino Sisig w/Rice',
+    description: 'Sizzling Filipino sisig served with rice',
+    image: '/meals/filipino-sisig.jpg',
+    options: ['Pork', 'Chicken', 'Tofu'],
+  },
+  {
+    id: 'ponzu-dish',
+    name: 'Organic Ponzu Dish',
+    description: 'Ponzu-glazed protein with rice and pickled vegetables',
+    image: '/meals/ponzu-dish.jpg',
+    options: ['Chicken', 'Beef', 'Shrimp', 'Tofu', 'Fish'],
+  },
+  {
+    id: 'scampi-pasta',
+    name: 'Organic Scampi Pasta',
+    description: 'Garlic butter scampi pasta with lemon and herbs',
+    image: '/meals/scampi-pasta.jpg',
+    options: ['Shrimp', 'Chicken', 'Fish', 'Beef'],
+  },
+  {
+    id: 'spicy-pepperfin',
+    name: 'Organic Spicy Pepperfin Sushi Sauce',
+    description: 'Spicy pepperfin sushi-style dish with savory sauce',
+    image: '/meals/spicy-pepperfin.jpg',
+    options: ['Chicken', 'Beef', 'Organic Tofu', 'Shrimp', 'Salmon'],
+  },
+  {
+    id: 'taiwanese-dry-rub',
+    name: 'Organic Taiwanese Dry Rub',
+    description: 'Taiwanese-style dry rub skewers',
+    image: '/meals/taiwanese-dry-rub.jpg',
+    options: ['Chicken', 'Steak', 'Shrimp', 'Tofu'],
+  },
+  {
+    id: 'filipino-beef-steak',
+    name: 'Organic Filipino Beef Steak',
+    description: 'Filipino bistek with caramelized onions',
+    image: '/meals/filipino-beef-steak.jpg',
+    options: [], // No protein choice - beef only
+  },
+  {
+    id: 'steak-eggs',
+    name: 'Organic Steak and Eggs Bowl',
+    description: 'Steak with scrambled eggs, guacamole, roasted potatoes, and caramelized onions',
+    image: '/meals/steak-eggs.jpg',
+    options: [], // No protein choice - steak only
+  },
+  {
+    id: 'hawaiian-sauce',
+    name: 'Organic Hawaiian Sauce Protein',
+    description: 'Grilled protein with caramelized pineapple in Hawaiian sauce',
+    image: '/meals/hawaiian-sauce.jpg',
+    options: ['Chicken', 'Steak', 'Fish', 'Tofu', 'Shrimp'],
+  },
 ];
 
 // Generate meal dates from training start/end dates
@@ -128,6 +208,7 @@ interface Training {
   stripe_price_id: string | null;
   price_cents: number;
   show_on_apply: boolean;
+  meal_selection_enabled?: boolean;
 }
 
 export default function PortalAccommodation() {
@@ -140,6 +221,12 @@ export default function PortalAccommodation() {
   const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Check if user is a trainer
+  const isTrainer = application?.role === 'trainer';
+
+  // Trainer-specific state: selected training for trainers who can pick from multiple
+  const [selectedTrainerTraining, setSelectedTrainerTraining] = useState<string | null>(null);
+
   // Get current user
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -147,8 +234,22 @@ export default function PortalAccommodation() {
     });
   }, []);
 
-  // Get training info for the user's application
-  const trainingId = application?.training_id || null;
+  // For trainers, use selected training; for participants, use their application's training
+  const trainingId = isTrainer ? selectedTrainerTraining : (application?.training_id || null);
+
+  // Trainer assignment hook (only used for trainers)
+  const {
+    assignment: trainerAssignment,
+    upsertAssignment,
+    assignedTrainings,
+  } = useTrainerAssignment(trainingId);
+
+  // Set default training for trainers (first assigned training)
+  useEffect(() => {
+    if (isTrainer && assignedTrainings.length > 0 && !selectedTrainerTraining) {
+      setSelectedTrainerTraining(assignedTrainings[0]?.id || null);
+    }
+  }, [isTrainer, assignedTrainings, selectedTrainerTraining]);
 
   const { data: training, isLoading: trainingLoading } = useQuery({
     queryKey: ['training', trainingId],
@@ -279,8 +380,8 @@ export default function PortalAccommodation() {
   const isMarchTraining = trainingId === MARCH_TRAINING_ID;
   const [commuteSelected, setCommuteSelected] = useState(false);
 
-  // Meal selection - enabled for all trainings
-  const showMealSelection = !!trainingId; // Show meals for any enrolled user
+  // Meal selection - only show if training has meal_selection_enabled
+  const showMealSelection = !!trainingId && training?.meal_selection_enabled === true;
 
   // Generate meal dates dynamically from training dates
   const MEAL_DATES = training?.start_date && training?.end_date
@@ -289,26 +390,35 @@ export default function PortalAccommodation() {
 
   const [mealSelections, setMealSelections] = useState<MealSelections>({});
   const [activeMealSlot, setActiveMealSlot] = useState<{ date: string; mealType: 'lunch' | 'dinner' } | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Initialize commute selection from application data
+  // Initialize commute selection from application or trainer assignment
   useEffect(() => {
-    if (application?.accommodation_choice === 'commute') {
+    if (isTrainer && trainerAssignment) {
+      setCommuteSelected(trainerAssignment.accommodation_choice === 'commute');
+    } else if (application?.accommodation_choice === 'commute') {
       setCommuteSelected(true);
     }
-  }, [application]);
+  }, [application, isTrainer, trainerAssignment]);
 
-  // Initialize meal selections from application data
+  // Initialize meal selections from application or trainer assignment
   useEffect(() => {
-    if (application?.meal_selections) {
+    if (isTrainer && trainerAssignment?.meal_selections) {
+      setMealSelections(trainerAssignment.meal_selections as MealSelections);
+    } else if (application?.meal_selections) {
       setMealSelections(application.meal_selections as MealSelections);
     }
-  }, [application]);
+  }, [application, isTrainer, trainerAssignment]);
 
   const handleCommuteSelect = async () => {
     // If currently selected, deselect
     if (commuteSelected) {
       setCommuteSelected(false);
-      await updateApplication.mutateAsync({ accommodation_choice: null });
+      if (isTrainer) {
+        await upsertAssignment.mutateAsync({ accommodation_choice: null });
+      } else {
+        await updateApplication.mutateAsync({ accommodation_choice: null });
+      }
       toast.success('Commute option removed');
       return;
     }
@@ -319,7 +429,11 @@ export default function PortalAccommodation() {
     }
 
     setCommuteSelected(true);
-    await updateApplication.mutateAsync({ accommodation_choice: 'commute' });
+    if (isTrainer) {
+      await upsertAssignment.mutateAsync({ accommodation_choice: 'commute' });
+    } else {
+      await updateApplication.mutateAsync({ accommodation_choice: 'commute' });
+    }
     toast.success('Commute option selected');
   };
 
@@ -327,7 +441,11 @@ export default function PortalAccommodation() {
     // Clear commute selection if selecting a room
     if (commuteSelected) {
       setCommuteSelected(false);
-      updateApplication.mutateAsync({ accommodation_choice: null });
+      if (isTrainer) {
+        upsertAssignment.mutateAsync({ accommodation_choice: null });
+      } else {
+        updateApplication.mutateAsync({ accommodation_choice: null });
+      }
     }
     handleRoomSelect(roomId);
   };
@@ -348,10 +466,14 @@ export default function PortalAccommodation() {
     setMealSelections(updated);
     setActiveMealSlot(null);
 
-    // Auto-save to database
+    // Auto-save to database (trainer_assignments for trainers, applications for participants)
     setAutoSaveStatus('saving');
     try {
-      await updateApplication.mutateAsync({ meal_selections: updated });
+      if (isTrainer) {
+        await upsertAssignment.mutateAsync({ meal_selections: updated });
+      } else {
+        await updateApplication.mutateAsync({ meal_selections: updated });
+      }
       setAutoSaveStatus('saved');
       setTimeout(() => setAutoSaveStatus('idle'), 2000);
       toast.success(`${mealType === 'lunch' ? 'Lunch' : 'Dinner'} selected for ${MEAL_DATES.find(d => d.date === date)?.label}`);
@@ -374,7 +496,11 @@ export default function PortalAccommodation() {
 
     setAutoSaveStatus('saving');
     try {
-      await updateApplication.mutateAsync({ meal_selections: updated });
+      if (isTrainer) {
+        await upsertAssignment.mutateAsync({ meal_selections: updated });
+      } else {
+        await updateApplication.mutateAsync({ meal_selections: updated });
+      }
       setAutoSaveStatus('saved');
       setTimeout(() => setAutoSaveStatus('idle'), 2000);
     } catch {
@@ -411,8 +537,8 @@ export default function PortalAccommodation() {
     );
   }
 
-  // Non-enrolled user view: show available trainings
-  if (!trainingId) {
+  // Non-enrolled user view: show available trainings (but not for trainers)
+  if (!trainingId && !isTrainer) {
     // Training level colors and gradients
     const getLevelStyle = (level: string) => {
       switch (level) {
@@ -549,10 +675,35 @@ export default function PortalAccommodation() {
     <>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Accommodation</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          {isTrainer ? 'Trainer Accommodation' : 'Accommodation'}
+        </h1>
         <p className="text-gray-500 mb-4">
-          Select your room, set dietary preferences, and note any special needs.
+          {isTrainer
+            ? 'Select a training, then choose your room and meal preferences.'
+            : 'Select your room, set dietary preferences, and note any special needs.'}
         </p>
+
+        {/* Trainer training selector */}
+        {isTrainer && assignedTrainings.length > 0 && (
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-200 p-5 mb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-amber-600 font-semibold text-sm uppercase tracking-wide">Trainer Mode</span>
+            </div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Select Training</label>
+            <select
+              value={selectedTrainerTraining || ''}
+              onChange={(e) => setSelectedTrainerTraining(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border border-amber-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-300"
+            >
+              {assignedTrainings.map((t: Training) => (
+                <option key={t.id} value={t.id}>
+                  {t.name} ({formatDate(t.start_date)} - {formatDate(t.end_date)})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Training info banner */}
         {training && (
@@ -700,8 +851,8 @@ export default function PortalAccommodation() {
               );
             })}
 
-            {/* Commute Option - only for March training */}
-            {isMarchTraining && (
+            {/* Commute Option - for March and April trainings */}
+            {(isMarchTraining || trainingId === APRIL_TRAINING_ID) && (
               <motion.button
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
@@ -873,50 +1024,105 @@ export default function PortalAccommodation() {
                 >
                   {/* Modal header */}
                   <div className="p-5 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
-                    <div>
-                      <h3 className="font-semibold text-gray-900">
-                        Choose {activeMealSlot.mealType === 'lunch' ? 'Lunch' : 'Dinner'}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {MEAL_DATES.find(d => d.date === activeMealSlot.date)?.label}
-                      </p>
+                    <div className="flex items-center gap-3">
+                      {selectedCategory && (
+                        <button
+                          onClick={() => setSelectedCategory(null)}
+                          className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      )}
+                      <div>
+                        <h3 className="font-semibold text-gray-900">
+                          {selectedCategory
+                            ? `Choose your ${selectedCategory} option`
+                            : `Choose ${activeMealSlot.mealType === 'lunch' ? 'Lunch' : 'Dinner'}`
+                          }
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {MEAL_DATES.find(d => d.date === activeMealSlot.date)?.label}
+                        </p>
+                      </div>
                     </div>
                     <button
-                      onClick={() => setActiveMealSlot(null)}
+                      onClick={() => { setActiveMealSlot(null); setSelectedCategory(null); }}
                       className="p-2 rounded-full hover:bg-gray-100"
                     >
                       <X className="w-5 h-5" />
                     </button>
                   </div>
 
-                  {/* Meal options grid */}
-                  <div className="p-5 overflow-y-auto max-h-[60vh] grid gap-3 sm:grid-cols-2">
-                    {MEAL_OPTIONS.map((meal) => (
-                      <motion.button
-                        key={meal.name}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => handleMealSelect(meal.name)}
-                        className="relative rounded-xl overflow-hidden border-2 border-gray-100 hover:border-purple-300 transition-all text-left group"
-                      >
-                        <div className="h-28 bg-gray-100 overflow-hidden">
-                          <img
-                            src={meal.image}
-                            alt={meal.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                        <div className="p-3 bg-white">
-                          <span className="text-xs font-medium text-purple-600 uppercase tracking-wide">
-                            {meal.category}
-                          </span>
-                          <p className="font-medium text-gray-900 text-sm mt-0.5 line-clamp-2">
-                            {meal.name}
-                          </p>
-                        </div>
-                      </motion.button>
-                    ))}
-                  </div>
+                  {/* Step 1: Choose category */}
+                  {!selectedCategory && (
+                    <div className="p-5 overflow-y-auto max-h-[60vh] grid gap-3 sm:grid-cols-2">
+                      {MEAL_CATEGORIES.map((cat) => (
+                        <motion.button
+                          key={cat.id}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => {
+                            if (cat.options.length === 0) {
+                              // No options - select directly
+                              handleMealSelect(cat.name);
+                            } else {
+                              setSelectedCategory(cat.id);
+                            }
+                          }}
+                          className="relative rounded-xl overflow-hidden border-2 border-gray-100 hover:border-purple-300 transition-all text-left group"
+                        >
+                          <div className="h-32 bg-gray-100 overflow-hidden">
+                            <img
+                              src={`/meals/${cat.id}.jpg`}
+                              alt={cat.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
+                          <div className="p-4 bg-white">
+                            <p className="font-semibold text-gray-900">{cat.name}</p>
+                            <p className="text-sm text-gray-500 mt-0.5">{cat.description}</p>
+                            {cat.options.length > 0 ? (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {cat.options.map(opt => (
+                                  <span key={opt} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                                    {opt}
+                                  </span>
+                                ))}
+                              </div>
+                            ) : (
+                              <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full mt-2 inline-block">
+                                Tap to select
+                              </span>
+                            )}
+                          </div>
+                        </motion.button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Step 2: Choose option within category */}
+                  {selectedCategory && (
+                    <div className="p-5 overflow-y-auto max-h-[60vh]">
+                      <div className="grid gap-2">
+                        {MEAL_CATEGORIES.find(c => c.id === selectedCategory)?.options.map((option) => (
+                          <motion.button
+                            key={option}
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
+                            onClick={() => {
+                              const categoryName = MEAL_CATEGORIES.find(c => c.id === selectedCategory)?.name;
+                              handleMealSelect(`${categoryName} - ${option}`);
+                              setSelectedCategory(null);
+                            }}
+                            className="w-full p-4 rounded-xl border-2 border-gray-100 hover:border-purple-300 hover:bg-purple-50 transition-all text-left flex items-center justify-between"
+                          >
+                            <span className="font-medium text-gray-900">{option}</span>
+                            <span className="text-purple-500">Select</span>
+                          </motion.button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </motion.div>
               </motion.div>
             )}

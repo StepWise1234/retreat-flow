@@ -368,10 +368,10 @@ export default function Apply() {
     }
 
     try {
-      // Determine training_id (use retreatId if it's a valid UUID, not the fallback options)
-      const isSpecialOption = form.retreatId === REQUEST_INFO_ID || form.retreatId === WAITLIST_ID;
-      const trainingId = !isSpecialOption ? form.retreatId : null;
+      // Determine training_id - Waitlist now has a real training ID, only REQUEST_INFO gets null
+      const isRequestInfo = form.retreatId === REQUEST_INFO_ID;
       const isWaitlist = form.retreatId === WAITLIST_ID;
+      const trainingId = !isRequestInfo ? form.retreatId : null;
 
       // Create entry in applicants table for admin dashboard tracking
       const fullName = [form.preferredName || form.firstName, form.lastName].filter(Boolean).join(' ');

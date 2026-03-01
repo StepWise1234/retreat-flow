@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { AppProvider } from "@/contexts/AppContext";
+import { AdminProvider } from "@/contexts/AdminContext";
 import ApplicationForm from "./pages/ApplicationForm";
 import Apply from "./pages/Apply";
 import FindFacilitator from "./pages/FindFacilitator";
@@ -37,10 +38,11 @@ const App = () => (
     <TooltipProvider>
       <BrowserRouter>
         <AppProvider>
-          <Toaster />
-          <Sonner />
-          <ScrollToTop />
-          <Routes>
+          <AdminProvider>
+            <Toaster />
+            <Sonner />
+            <ScrollToTop />
+            <Routes>
             {/* Public: Application Form is the homepage */}
             <Route path="/" element={<ApplicationForm />} />
             <Route path="/apply" element={<Apply />} />
@@ -65,7 +67,8 @@ const App = () => (
             <Route path="/contact" element={<ProtectedRoute><ContactGroups /></ProtectedRoute>} />
 
             <Route path="*" element={<NotFound />} />
-          </Routes>
+            </Routes>
+          </AdminProvider>
         </AppProvider>
       </BrowserRouter>
     </TooltipProvider>
