@@ -9,14 +9,22 @@ import { useTrainerAssignment } from '@/hooks/useTrainerAssignment';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
+// Import room images from assets
+import roomMaster from '@/assets/rooms/room-master.avif';
+import room1 from '@/assets/rooms/room-1.avif';
+import room2 from '@/assets/rooms/room-2.avif';
+import room3 from '@/assets/rooms/room-3.avif';
+import room4 from '@/assets/rooms/room-4.avif';
+import room5 from '@/assets/rooms/room-5.avif';
+
 // Default 6-bedroom house room images (March 30 - April 2 training)
 const ROOM_IMAGES: Record<string, string> = {
-  'Master Suite': '/rooms/master-suite.jpg',
-  'Bedroom 1': '/rooms/bedroom-1.jpg',
-  'Bedroom 2': '/rooms/bedroom-2.jpg',
-  'Bedroom 3': '/rooms/bedroom-3.jpg',
-  'Bedroom 4': '/rooms/bedroom-4.jpg',
-  'Bedroom 5': '/rooms/bedroom-5.jpg',
+  'Master Suite': roomMaster,
+  'Bedroom 1': room1,
+  'Bedroom 2': room2,
+  'Bedroom 3': room3,
+  'Bedroom 4': room4,
+  'Bedroom 5': room5,
 };
 
 // March 13-16 training ID (8-bedroom Somerville house with commute option)
@@ -31,105 +39,105 @@ const MEAL_CATEGORIES = [
     id: 'burrito',
     name: 'Burrito',
     description: 'Wrapped burrito with your choice of protein',
-    image: '/meals/burrito.jpg',
+    image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=300&fit=crop',
     options: ['Beef', 'Chicken', 'Tofu', 'Shrimp', 'Fish'],
   },
   {
     id: 'asian-bowl',
     name: 'Asian Bowl',
     description: 'Asian-style rice bowl with your choice of protein',
-    image: '/meals/asian-bowl.jpg',
+    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop',
     options: ['Chicken', 'Beef', 'Tofu', 'Shrimp', 'Fish'],
   },
   {
     id: 'pasta',
     name: 'Pasta',
     description: 'Italian pasta dish with your choice of protein',
-    image: '/meals/pasta.jpg',
+    image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&h=300&fit=crop',
     options: ['Beef', 'Italian Sausage', 'Seafood'],
   },
   {
     id: 'mexican-bowl',
     name: 'Mexican Bowl',
     description: 'Mexican-style bowl with rice, beans, and toppings',
-    image: '/meals/mexican-bowl.jpg',
+    image: 'https://images.unsplash.com/photo-1613514785940-daed07799d9b?w=400&h=300&fit=crop',
     options: ['Chicken', 'Steak', 'Shrimp', 'Fish', 'Tofu'],
   },
   {
     id: 'egg-noodle',
     name: 'Organic Egg Noodle',
     description: 'Organic egg noodles with your choice of protein',
-    image: '/meals/egg-noodle.jpg',
+    image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop',
     options: ['Chicken', 'Shrimp', 'Beef', 'Fish', 'Tofu'],
   },
   {
     id: 'hawaiian-poke',
     name: 'Hawaiian Poke Bowl',
     description: 'Hawaiian poke bowl with soy poke sauce',
-    image: '/meals/hawaiian-poke.jpg',
+    image: 'https://images.unsplash.com/photo-1546069901-d5bfd2cbfb1f?w=400&h=300&fit=crop',
     options: ['Tuna', 'Salmon', 'Shrimp', 'Tofu'],
   },
   {
     id: 'chicken-adobo',
     name: 'Organic Chicken Adobo w/Rice',
     description: 'Filipino-style chicken adobo served with rice',
-    image: '/meals/chicken-adobo.jpg',
+    image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&h=300&fit=crop',
     options: [], // No protein choice - chicken only
   },
   {
     id: 'filipino-sisig',
     name: 'Organic Filipino Sisig w/Rice',
     description: 'Sizzling Filipino sisig served with rice',
-    image: '/meals/filipino-sisig.jpg',
+    image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&h=300&fit=crop',
     options: ['Pork', 'Chicken', 'Tofu'],
   },
   {
     id: 'ponzu-dish',
     name: 'Organic Ponzu Dish',
     description: 'Ponzu-glazed protein with rice and pickled vegetables',
-    image: '/meals/ponzu-dish.jpg',
+    image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=300&fit=crop',
     options: ['Chicken', 'Beef', 'Shrimp', 'Tofu', 'Fish'],
   },
   {
     id: 'scampi-pasta',
     name: 'Organic Scampi Pasta',
     description: 'Garlic butter scampi pasta with lemon and herbs',
-    image: '/meals/scampi-pasta.jpg',
+    image: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&h=300&fit=crop',
     options: ['Shrimp', 'Chicken', 'Fish', 'Beef'],
   },
   {
     id: 'spicy-pepperfin',
     name: 'Organic Spicy Pepperfin Sushi Sauce',
     description: 'Spicy pepperfin sushi-style dish with savory sauce',
-    image: '/meals/spicy-pepperfin.jpg',
+    image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400&h=300&fit=crop',
     options: ['Chicken', 'Beef', 'Organic Tofu', 'Shrimp', 'Salmon'],
   },
   {
     id: 'taiwanese-dry-rub',
     name: 'Organic Taiwanese Dry Rub',
     description: 'Taiwanese-style dry rub skewers',
-    image: '/meals/taiwanese-dry-rub.jpg',
+    image: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=300&fit=crop',
     options: ['Chicken', 'Steak', 'Shrimp', 'Tofu'],
   },
   {
     id: 'filipino-beef-steak',
     name: 'Organic Filipino Beef Steak',
     description: 'Filipino bistek with caramelized onions',
-    image: '/meals/filipino-beef-steak.jpg',
+    image: 'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?w=400&h=300&fit=crop',
     options: [], // No protein choice - beef only
   },
   {
     id: 'steak-eggs',
     name: 'Organic Steak and Eggs Bowl',
     description: 'Steak with scrambled eggs, guacamole, roasted potatoes, and caramelized onions',
-    image: '/meals/steak-eggs.jpg',
+    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop',
     options: [], // No protein choice - steak only
   },
   {
     id: 'hawaiian-sauce',
     name: 'Organic Hawaiian Sauce Protein',
     description: 'Grilled protein with caramelized pineapple in Hawaiian sauce',
-    image: '/meals/hawaiian-sauce.jpg',
+    image: 'https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=400&h=300&fit=crop',
     options: ['Chicken', 'Steak', 'Fish', 'Tofu', 'Shrimp'],
   },
 ];
@@ -1073,7 +1081,7 @@ export default function PortalAccommodation() {
                         >
                           <div className="h-32 bg-gray-100 overflow-hidden">
                             <img
-                              src={`/meals/${cat.id}.jpg`}
+                              src={cat.image}
                               alt={cat.name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
