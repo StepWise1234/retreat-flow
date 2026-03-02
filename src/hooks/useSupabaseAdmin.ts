@@ -18,7 +18,6 @@ export type PipelineStage =
   | 'Chemistry Call'
   | 'Application'
   | 'Interview'
-  | 'Approval'
   | 'Payment'
   | 'Accommodation Selection'
   | 'Online Course Link';

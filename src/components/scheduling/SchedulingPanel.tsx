@@ -22,7 +22,7 @@ const STATUS_BADGE: Record<string, string> = {
   NotScheduled: 'bg-secondary text-muted-foreground',
   Proposed: 'bg-stage-leads-light text-stage-leads',
   Scheduled: 'bg-stage-chemistry-light text-stage-chemistry',
-  Completed: 'bg-stage-approval-light text-stage-approval',
+  Completed: 'bg-stage-chemistry-light text-stage-chemistry',
   NoShow: 'bg-destructive/10 text-destructive',
 };
 
@@ -43,8 +43,8 @@ export default function SchedulingPanel({ registration, retreat, participant }: 
         moveStage(registration.id, 'Application', 'Chemistry call completed');
         toast.success('Moved to Application');
       } else if (type === 'Interview' && registration.currentStage === 'Interview') {
-        moveStage(registration.id, 'Approval', 'Interview completed');
-        toast.success('Moved to Approval');
+        moveStage(registration.id, 'Payment', 'Interview completed');
+        toast.success('Moved to Payment');
       }
     }
   };

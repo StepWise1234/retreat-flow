@@ -10,13 +10,56 @@ export function useApplication() {
     queryKey: ['application', user?.id],
     queryFn: async () => {
       if (!user) return null;
-      const { data, error } = await supabase
+
+      // First check if user already has an application
+      const { data: existingApp, error: fetchError } = await supabase
         .from('applications')
         .select('*')
         .eq('user_id', user.id)
         .maybeSingle();
-      if (error) throw error;
-      return data;
+
+      if (fetchError) throw fetchError;
+      if (existingApp) return existingApp;
+
+      // No application found - check if there's a matching applicant record by email
+      const userEmail = user.email?.toLowerCase();
+      if (!userEmail) return null;
+
+      const { data: matchingApplicant } = await supabase
+        .from('applicants')
+        .select('id, name, email, training_id')
+        .ilike('email', userEmail)
+        .maybeSingle();
+
+      if (matchingApplicant && matchingApplicant.training_id) {
+        // Found a matching applicant with a training assignment - auto-create application
+        const nameParts = matchingApplicant.name?.split(' ') || [];
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+
+        const { data: newApp, error: createError } = await supabase
+          .from('applications')
+          .insert({
+            user_id: user.id,
+            email: userEmail,
+            first_name: firstName,
+            last_name: lastName,
+            training_id: matchingApplicant.training_id,
+            status: 'approved',
+          })
+          .select()
+          .single();
+
+        if (createError) {
+          console.error('Error auto-creating application:', createError);
+          return null;
+        }
+
+        console.log('Auto-created application for existing applicant:', matchingApplicant.email);
+        return newApp;
+      }
+
+      return null;
     },
     enabled: !!user,
   });

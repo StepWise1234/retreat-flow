@@ -152,7 +152,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-1', retreatId: 'retreat-1', participantId: 'p-1',
     currentStage: 'Payment',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-10'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment'], '2026-01-10'),
     lastTouchedAt: '2026-02-05T10:00:00Z', opsNotes: 'Very enthusiastic about the program.',
     tags: ['priority'], ...defaultRegFields, paymentStatus: 'Unpaid', amountDue: 3500,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
@@ -171,7 +171,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-2', retreatId: 'retreat-1', participantId: 'p-2',
     currentStage: 'Accommodation Selection',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment', 'Accommodation Selection'], '2026-01-12'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment', 'Accommodation Selection'], '2026-01-12'),
     lastTouchedAt: '2026-02-04T16:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 3500, amountPaid: 3500,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
@@ -207,7 +207,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-bs5', retreatId: 'retreat-1', participantId: 'p-11',
     currentStage: 'Online Course Link',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment', 'Accommodation Selection', 'Online Course Link'], '2026-01-02'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment', 'Accommodation Selection', 'Online Course Link'], '2026-01-02'),
     lastTouchedAt: '2026-02-06T08:00:00Z', opsNotes: 'Fully onboarded.',
     tags: ['complete'], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 3500, amountPaid: 3500,
     accommodationChoice: 'Ocean View Cabin', accommodationPriceAdjustment: 500,
@@ -245,8 +245,8 @@ export const seedRegistrations: Registration[] = [
   },
   {
     id: 'reg-bs8', retreatId: 'retreat-1', participantId: 'p-16',
-    currentStage: 'Approval',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval'], '2026-01-15'),
+    currentStage: 'Payment',
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment'], '2026-01-15'),
     lastTouchedAt: '2026-02-04T10:00:00Z', opsNotes: 'Strong candidate', tags: [], ...defaultRegFields,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [
@@ -303,8 +303,8 @@ export const seedRegistrations: Registration[] = [
   },
   {
     id: 'reg-bs13', retreatId: 'retreat-1', participantId: 'p-23',
-    currentStage: 'Approval',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval'], '2026-01-12'),
+    currentStage: 'Payment',
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment'], '2026-01-12'),
     lastTouchedAt: '2026-02-05T16:00:00Z', opsNotes: 'Excellent interview.',
     tags: ['strong-fit'], ...defaultRegFields,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
@@ -316,7 +316,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-bs14', retreatId: 'retreat-1', participantId: 'p-24',
     currentStage: 'Payment',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-08'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment'], '2026-01-08'),
     lastTouchedAt: '2026-02-06T10:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Partial', amountDue: 3500, amountPaid: 1750,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
@@ -330,7 +330,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-5', retreatId: 'retreat-2', participantId: 'p-5',
     currentStage: 'Online Course Link',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment', 'Accommodation Selection', 'Online Course Link'], '2026-01-05'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment', 'Accommodation Selection', 'Online Course Link'], '2026-01-05'),
     lastTouchedAt: '2026-02-06T09:00:00Z', opsNotes: 'Fully onboarded.',
     tags: ['complete'], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 4000, amountPaid: 4000,
     accommodationChoice: 'Beachfront Palapa', accommodationPriceAdjustment: 400,
@@ -344,7 +344,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-6', retreatId: 'retreat-2', participantId: 'p-6',
     currentStage: 'Payment',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-10'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment'], '2026-01-10'),
     lastTouchedAt: '2026-02-03T14:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Unpaid', amountDue: 4000,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
@@ -356,7 +356,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-7', retreatId: 'retreat-2', participantId: 'p-7',
     currentStage: 'Payment',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-08'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment'], '2026-01-08'),
     lastTouchedAt: '2026-02-03T10:00:00Z', opsNotes: 'Waiting for payment.',
     tags: [], ...defaultRegFields, paymentStatus: 'Partial', amountDue: 4000, amountPaid: 2000,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
@@ -368,7 +368,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-t4', retreatId: 'retreat-2', participantId: 'p-11',
     currentStage: 'Accommodation Selection',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment', 'Accommodation Selection'], '2026-01-03'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment', 'Accommodation Selection'], '2026-01-03'),
     lastTouchedAt: '2026-02-05T12:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 4000, amountPaid: 4000,
     accommodationChoice: 'Jungle Casita', accommodationPriceAdjustment: 200,
@@ -381,7 +381,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-t5', retreatId: 'retreat-2', participantId: 'p-12',
     currentStage: 'Online Course Link',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment', 'Accommodation Selection', 'Online Course Link'], '2026-01-02'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment', 'Accommodation Selection', 'Online Course Link'], '2026-01-02'),
     lastTouchedAt: '2026-02-06T10:00:00Z', opsNotes: '',
     tags: ['complete'], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 4000, amountPaid: 4000,
     accommodationChoice: 'Cenote Suite', accommodationPriceAdjustment: 300,
@@ -394,7 +394,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-t6', retreatId: 'retreat-2', participantId: 'p-13',
     currentStage: 'Accommodation Selection',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment', 'Accommodation Selection'], '2026-01-04'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment', 'Accommodation Selection'], '2026-01-04'),
     lastTouchedAt: '2026-02-04T09:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 4000, amountPaid: 4000,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
@@ -409,7 +409,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-t7', retreatId: 'retreat-2', participantId: 'p-14',
     currentStage: 'Payment',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-06'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment'], '2026-01-06'),
     lastTouchedAt: '2026-02-02T14:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Unpaid', amountDue: 4000,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
@@ -423,8 +423,8 @@ export const seedRegistrations: Registration[] = [
   },
   {
     id: 'reg-t8', retreatId: 'retreat-2', participantId: 'p-4',
-    currentStage: 'Approval',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval'], '2026-01-12'),
+    currentStage: 'Payment',
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment'], '2026-01-12'),
     lastTouchedAt: '2026-02-04T10:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
@@ -480,8 +480,8 @@ export const seedRegistrations: Registration[] = [
   },
   {
     id: 'reg-b5', retreatId: 'retreat-3', participantId: 'p-18',
-    currentStage: 'Approval',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval'], '2026-01-15'),
+    currentStage: 'Payment',
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment'], '2026-01-15'),
     lastTouchedAt: '2026-02-05T10:00:00Z', opsNotes: '', tags: [], ...defaultRegFields,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
     activities: [makeActivity('Lead added', '2026-01-15T09:00:00Z')],
@@ -489,7 +489,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-b6', retreatId: 'retreat-3', participantId: 'p-1',
     currentStage: 'Payment',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment'], '2026-01-10'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment'], '2026-01-10'),
     lastTouchedAt: '2026-02-06T12:00:00Z', opsNotes: 'Returning from Big Sur.',
     tags: ['returning'], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 5000, amountPaid: 5000,
     chemistryCallStatus: 'Completed', interviewStatus: 'Completed',
@@ -498,7 +498,7 @@ export const seedRegistrations: Registration[] = [
   {
     id: 'reg-b7', retreatId: 'retreat-3', participantId: 'p-2',
     currentStage: 'Accommodation Selection',
-    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Approval', 'Payment', 'Accommodation Selection'], '2026-01-08'),
+    stageHistory: makeHistory(['Leads', 'Chemistry Call', 'Application', 'Interview', 'Payment', 'Accommodation Selection'], '2026-01-08'),
     lastTouchedAt: '2026-02-06T14:00:00Z', opsNotes: '',
     tags: [], ...defaultRegFields, paymentStatus: 'Paid', amountDue: 5000, amountPaid: 5000,
     accommodationChoice: 'Rice Terrace Room', accommodationPriceAdjustment: 300,
@@ -652,7 +652,7 @@ export const seedTasks: Task[] = [
   {
     id: 'task-1', retreatId: 'retreat-1', registrationId: 'reg-3',
     title: 'Risk & Care review — Anika Patel',
-    description: 'Review care plan for trauma-informed facilitation before advancing to Approval.',
+    description: 'Review care plan for trauma-informed facilitation before advancing to Payment.',
     dueDate: '2026-02-09', status: 'Open', priority: 'High',
     createdAt: '2026-01-20T11:00:00Z', updatedAt: '2026-01-20T11:00:00Z',
   },

@@ -38,10 +38,7 @@ const STAGE_ACTIONS: Record<PipelineStage, StageAction[]> = {
   ],
   'Interview': [
     { label: 'Record Interview notes', icon: FileText, activityLog: 'Interview notes recorded', movesForward: false },
-    { label: 'Approve', icon: Check, activityLog: 'Participant approved', movesForward: true },
-  ],
-  'Approval': [
-    { label: 'Send Payment link', icon: CreditCard, activityLog: 'Payment link sent', movesForward: true },
+    { label: 'Approve & Send Payment link', icon: Check, activityLog: 'Approved and payment link sent', movesForward: true },
   ],
   'Payment': [
     { label: 'Mark Paid', icon: Check, activityLog: 'Payment confirmed', movesForward: false, isPaymentAction: true },
@@ -116,7 +113,7 @@ export default function AutomationPanel({ registration, participant, retreat }: 
   if (currentStage === 'Chemistry Call' && retreat.applicationLink) {
     retreatLinks.push({ label: 'Application Link', url: retreat.applicationLink });
   }
-  if (currentStage === 'Approval' && retreat.paymentLink) {
+  if (currentStage === 'Interview' && retreat.paymentLink) {
     retreatLinks.push({ label: 'Payment Link', url: retreat.paymentLink });
   }
   if (currentStage === 'Payment' && retreat.accommodationSelectionLink) {

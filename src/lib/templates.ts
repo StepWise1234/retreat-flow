@@ -45,33 +45,24 @@ Retreat Team`,
   {
     id: 'tpl-4',
     stage: 'Interview',
-    subject: 'Welcome to {{retreatName}}!',
+    subject: 'Welcome to {{retreatName}} - Payment Details',
     body: `Hi {{firstName}},
 
-Wonderful news — you've been approved for {{retreatName}}!
+Wonderful news - you've been approved for {{retreatName}}!
 
-We'll be sending you payment details shortly. If you have any questions, don't hesitate to reach out.
+Here are the payment details to secure your spot:
+
+Payment link: {{paymentLink}}
+
+Please complete payment within 7 days. The retreat runs {{startDate}} through {{endDate}}.
+
+If you have any questions, don't hesitate to reach out.
 
 Excited to have you,
 Retreat Team`,
   },
   {
     id: 'tpl-5',
-    stage: 'Approval',
-    subject: 'Payment Details – {{retreatName}}',
-    body: `Hi {{firstName}},
-
-Here are the payment details for your spot at {{retreatName}}:
-
-Payment link: {{paymentLink}}
-
-Please complete payment within 7 days to secure your spot. The retreat runs {{startDate}} through {{endDate}}.
-
-Thank you,
-Retreat Team`,
-  },
-  {
-    id: 'tpl-6',
     stage: 'Payment',
     subject: 'Choose Your Accommodation – {{retreatName}}',
     body: `Hi {{firstName}},
@@ -84,7 +75,7 @@ Best,
 Retreat Team`,
   },
   {
-    id: 'tpl-7',
+    id: 'tpl-6',
     stage: 'Accommodation Selection',
     subject: 'Your Online Course Access – {{retreatName}}',
     body: `Hi {{firstName}},
@@ -99,7 +90,7 @@ Warmly,
 Retreat Team`,
   },
   {
-    id: 'tpl-8',
+    id: 'tpl-7',
     stage: 'Online Course Link',
     subject: 'Onboarding Complete – See You at {{retreatName}}!',
     body: `Hi {{firstName}},

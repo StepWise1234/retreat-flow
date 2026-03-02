@@ -3,7 +3,6 @@ export const PIPELINE_STAGES = [
   'Chemistry Call',
   'Application',
   'Interview',
-  'Approval',
   'Payment',
   'Accommodation Selection',
   'Online Course Link',
@@ -194,14 +193,6 @@ export const STAGE_STYLE_MAP: Record<
     border: 'border-stage-interview',
     gradient: 'from-stage-interview-light to-transparent',
   },
-  'Approval': {
-    key: 'approval',
-    dot: 'bg-stage-approval',
-    bg: 'bg-stage-approval-light',
-    text: 'text-stage-approval',
-    border: 'border-stage-approval',
-    gradient: 'from-stage-approval-light to-transparent',
-  },
   'Payment': {
     key: 'payment',
     dot: 'bg-stage-payment',
@@ -273,7 +264,7 @@ export const ENROLLED_STAGES: PipelineStage[] = ['Payment', 'Accommodation Selec
 
 export const STATUS_STYLES: Record<RetreatStatus, string> = {
   Draft: 'bg-secondary text-muted-foreground',
-  Open: 'bg-stage-approval-light text-stage-approval',
+  Open: 'bg-stage-chemistry-light text-stage-chemistry',
   Full: 'bg-stage-payment-light text-stage-payment',
   Closed: 'bg-stage-leads-light text-stage-leads',
   Archived: 'bg-secondary text-muted-foreground',

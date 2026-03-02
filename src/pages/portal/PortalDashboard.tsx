@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FileText, BedDouble, Play, ChevronRight } from 'lucide-react';
 import { usePortalAuth } from '@/hooks/usePortalAuth';
 import { useApplication } from '@/hooks/useApplication';
+import { QuestionBox } from '@/components/portal/QuestionBox';
 
 const cards = [
   {
@@ -93,6 +94,9 @@ export default function PortalDashboard() {
           </motion.div>
         ))}
       </div>
+
+      {/* Question Box */}
+      <QuestionBox />
     </div>
   );
 }

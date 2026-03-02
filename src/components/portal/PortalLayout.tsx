@@ -33,17 +33,8 @@ export default function PortalLayout() {
       {/* Top nav */}
       <header className="relative z-20 border-b border-foreground/[0.06] bg-[#fafafa]/80 backdrop-blur-sm">
         <div className="mx-auto max-w-5xl px-6 h-16 flex items-center justify-between">
-          {/* Brand dots + name */}
-          <div className="flex items-center gap-3">
-            <div className="flex gap-1.5">
-              {['#FFA500', '#FF4500', '#800080'].map((c) => (
-                <span key={c} className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: c }} />
-              ))}
-            </div>
-            <span className="text-lg font-bold tracking-tight text-foreground/80">
-              Step<span className="text-foreground/50">Wise</span>
-            </span>
-          </div>
+          {/* Logo */}
+          <img src="/logo.svg" alt="StepWise" className="h-6" />
 
           {/* Nav links */}
           <nav className="hidden sm:flex items-center gap-1">
