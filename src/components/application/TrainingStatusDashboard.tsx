@@ -57,7 +57,8 @@ function useBeginningTrainings() {
           id: t.id,
           title: t.name,
           date: dateStr,
-          location: t.location || '',
+          // Override location to British Columbia for public Apply page
+          location: 'British Columbia, Canada',
           spotsTotal,
           spotsFilled,
           status,
