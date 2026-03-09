@@ -24,6 +24,7 @@ import PortalDashboard from "./pages/portal/PortalDashboard";
 import PortalApplication from "./pages/portal/PortalApplication";
 import PortalAccommodation from "./pages/portal/PortalAccommodation";
 import PortalCourse from "./pages/portal/PortalCourse";
+import PortalEvents from "./pages/portal/PortalEvents";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -56,6 +57,7 @@ const App = () => (
               <Route path="application" element={<PortalApplication />} />
               <Route path="accommodation" element={<PortalAccommodation />} />
               <Route path="course" element={<PortalCourse />} />
+              <Route path="events" element={<PortalEvents />} />
             </Route>
 
             {/* Protected: Admin-only routes */}

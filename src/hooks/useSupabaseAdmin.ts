@@ -177,6 +177,31 @@ export function useTrainings() {
         .select()
         .single();
       if (error) throw error;
+
+      // Auto-create rooms from April training template
+      const APRIL_TRAINING_ID = '1952aca4-ef44-4294-bd63-a467cd800497';
+      const { data: templateRooms } = await supabase
+        .from('rooms')
+        .select('*')
+        .eq('training_id', APRIL_TRAINING_ID)
+        .order('sort_order');
+
+      if (templateRooms && templateRooms.length > 0) {
+        const newRooms = templateRooms.map(room => ({
+          training_id: data.id,
+          name: room.name,
+          description: room.description,
+          bed_type: room.bed_type,
+          bath_type: room.bath_type,
+          image_url: room.image_url,
+          price_adjustment_cents: room.price_adjustment_cents,
+          is_premier: room.is_premier,
+          sort_order: room.sort_order,
+        }));
+
+        await supabase.from('rooms').insert(newRooms);
+      }
+
       return data;
     },
     onSuccess: () => {

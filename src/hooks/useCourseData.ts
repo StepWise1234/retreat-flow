@@ -41,11 +41,14 @@ export interface CourseLesson {
   is_published: boolean;
   created_at: string;
   updated_at: string;
+  // Client-side enriched
+  thumbnail_url?: string;
 }
 
 export interface CourseResource {
   id: string;
   module_id: string;
+  lesson_id: string | null;
   title: string;
   file_path: string;
   resource_type: string;
@@ -75,11 +78,68 @@ export interface UserCourseAccess {
   granted_by: string | null;
 }
 
+export interface UserLessonProgress {
+  id: string;
+  user_id: string;
+  course_id: string;
+  lesson_id: string;
+  completed: boolean;
+  last_viewed_at: string;
+  completed_at: string | null;
+  created_at: string;
+}
+
 export interface CourseWithContent extends Course {
   modules: (CourseModule & {
     lessons: CourseLesson[];
     resources: CourseResource[];
   })[];
+}
+
+// ============================================================================
+// Vimeo Thumbnail Helper
+// ============================================================================
+
+// Cache for Vimeo thumbnails to avoid repeated API calls
+const vimeoThumbnailCache = new Map<string, string>();
+
+/**
+ * Fetch thumbnail URL for a Vimeo video using oEmbed API
+ */
+export async function getVimeoThumbnail(vimeoId: string): Promise<string | null> {
+  if (vimeoThumbnailCache.has(vimeoId)) {
+    return vimeoThumbnailCache.get(vimeoId) || null;
+  }
+
+  try {
+    const response = await fetch(
+      `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${vimeoId}&width=640`
+    );
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    const thumbnailUrl = data.thumbnail_url || null;
+
+    if (thumbnailUrl) {
+      vimeoThumbnailCache.set(vimeoId, thumbnailUrl);
+    }
+    return thumbnailUrl;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Hook to fetch Vimeo thumbnail for a single video
+ */
+export function useVimeoThumbnail(vimeoId: string | null) {
+  return useQuery({
+    queryKey: ['vimeo-thumbnail', vimeoId],
+    queryFn: () => vimeoId ? getVimeoThumbnail(vimeoId) : null,
+    enabled: !!vimeoId,
+    staleTime: 1000 * 60 * 60 * 24, // Cache for 24 hours
+    gcTime: 1000 * 60 * 60 * 24 * 7, // Keep in cache for 7 days
+  });
 }
 
 // ============================================================================
@@ -172,13 +232,35 @@ export function useCourseWithContent(courseId: string | null) {
 
         lessons = lessonsData || [];
 
-        const { data: resourcesData } = await supabase
-          .from('course_resources')
-          .select('*')
-          .in('module_id', moduleIds)
-          .order('sort_order', { ascending: true });
+        // Fetch resources via the protected API endpoint (bypasses RLS with service role)
+        try {
+          const { data: sessionData } = await supabase.auth.getSession();
+          const token = sessionData?.session?.access_token;
 
-        resources = resourcesData || [];
+          if (token) {
+            const response = await fetch('https://stepwise.education/resources-api/resources-by-modules', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ module_ids: moduleIds }),
+            });
+
+            if (response.ok) {
+              resources = await response.json();
+            }
+          }
+        } catch (err) {
+          console.error('Error fetching resources:', err);
+          // Fallback to direct Supabase query (may return empty if RLS blocks)
+          const { data: resourcesData } = await supabase
+            .from('course_resources')
+            .select('*')
+            .in('module_id', moduleIds)
+            .order('sort_order', { ascending: true });
+          resources = resourcesData || [];
+        }
       }
 
       // Assemble the nested structure
@@ -362,6 +444,110 @@ export function useUpdateDiscussion() {
 }
 
 /**
+ * Get user's lesson progress for a course (completed lessons + last viewed)
+ */
+export function useLessonProgress(courseId: string | null) {
+  const { user } = usePortalAuth();
+
+  return useQuery({
+    queryKey: ['lesson-progress', user?.id, courseId],
+    queryFn: async () => {
+      if (!user || !courseId) return { completedLessons: new Set<string>(), lastViewedLessonId: null };
+
+      const { data, error } = await supabase
+        .from('user_lesson_progress')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('course_id', courseId)
+        .order('last_viewed_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching lesson progress:', error);
+        return { completedLessons: new Set<string>(), lastViewedLessonId: null };
+      }
+
+      const completedLessons = new Set(
+        data?.filter((p: UserLessonProgress) => p.completed).map((p: UserLessonProgress) => p.lesson_id) || []
+      );
+
+      // The first item is the most recently viewed
+      const lastViewedLessonId = data?.[0]?.lesson_id || null;
+
+      return { completedLessons, lastViewedLessonId };
+    },
+    enabled: !!user && !!courseId,
+  });
+}
+
+/**
+ * Track lesson view - updates last_viewed_at timestamp
+ */
+export function useTrackLessonView() {
+  const { user } = usePortalAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ courseId, lessonId }: { courseId: string; lessonId: string }) => {
+      if (!user) throw new Error('Must be logged in');
+
+      const { error } = await supabase
+        .from('user_lesson_progress')
+        .upsert(
+          {
+            user_id: user.id,
+            course_id: courseId,
+            lesson_id: lessonId,
+            last_viewed_at: new Date().toISOString(),
+          },
+          {
+            onConflict: 'user_id,lesson_id',
+          }
+        );
+
+      if (error) throw error;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['lesson-progress', user?.id, variables.courseId] });
+    },
+  });
+}
+
+/**
+ * Mark a lesson as completed
+ */
+export function useMarkLessonComplete() {
+  const { user } = usePortalAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ courseId, lessonId }: { courseId: string; lessonId: string }) => {
+      if (!user) throw new Error('Must be logged in');
+
+      const { error } = await supabase
+        .from('user_lesson_progress')
+        .upsert(
+          {
+            user_id: user.id,
+            course_id: courseId,
+            lesson_id: lessonId,
+            completed: true,
+            completed_at: new Date().toISOString(),
+            last_viewed_at: new Date().toISOString(),
+          },
+          {
+            onConflict: 'user_id,lesson_id',
+          }
+        );
+
+      if (error) throw error;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['lesson-progress', user?.id, variables.courseId] });
+    },
+  });
+}
+
+/**
  * Course color helper - generates gradient from course color
  */
 export function getCourseGradient(color: string | null): string {
@@ -375,8 +561,8 @@ export function getCourseGradient(color: string | null): string {
     '#FFA500': '#FF4500', // orange -> red-orange
     '#FF6B35': '#FF4500', // light orange -> red-orange
     '#14B8A6': '#0D9488', // teal -> darker teal
-    '#8B5CF6': '#7C3AED', // purple -> violet
-    '#7C3AED': '#6D28D9', // violet -> deeper violet
+    '#9D067A': '#7B0560', // purple -> violet
+    '#7B0560': '#5C0448', // violet -> deeper violet
   };
 
   const endColor = colorMap[baseColor] || '#FF4500';
@@ -391,8 +577,8 @@ export function getCourseMetaBySlug(slug: string) {
     beginning: { label: 'Beginning', color: '#FFA500', gradient: 'linear-gradient(135deg, #FFA500, #FF4500)' },
     'intermediate-touch': { label: 'Touch', color: '#FF6B35', gradient: 'linear-gradient(135deg, #FF6B35, #FF4500)' },
     'intermediate-nsr': { label: 'NSR', color: '#14B8A6', gradient: 'linear-gradient(135deg, #14B8A6, #0D9488)' },
-    'intermediate-ri': { label: 'RI', color: '#8B5CF6', gradient: 'linear-gradient(135deg, #8B5CF6, #7C3AED)' },
-    advanced: { label: 'Advanced', color: '#7C3AED', gradient: 'linear-gradient(135deg, #7C3AED, #6D28D9)' },
+    'intermediate-ri': { label: 'RI', color: '#9D067A', gradient: 'linear-gradient(135deg, #9D067A, #7B0560)' },
+    advanced: { label: 'Advanced', color: '#7B0560', gradient: 'linear-gradient(135deg, #7B0560, #5C0448)' },
   };
 
   return metaMap[slug] || metaMap.beginning;

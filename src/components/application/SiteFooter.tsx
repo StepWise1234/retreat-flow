@@ -1,15 +1,34 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const BRAND_COLORS = ['#FFA500', '#FF4500', '#800080'];
 
 const NAV_LINKS = [
   { label: 'Find a Facilitator', href: '/facilitators' },
-  { label: 'Common Questions', href: '#faq' },
+  { label: 'Common Questions', href: '/#faq' },
   { label: 'Apply', href: '/apply' },
   { label: 'Portal', href: '/portal' },
 ];
 
 export default function SiteFooter() {
+  const navigate = useNavigate();
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Handle hash links that go to homepage
+    if (href.startsWith('/#')) {
+      e.preventDefault();
+      const hash = href.substring(1); // Get '#faq' from '/#faq'
+
+      // If already on homepage, just scroll smoothly
+      if (window.location.pathname === '/') {
+        const element = document.querySelector(hash);
+        element?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // Navigate to homepage with hash - browser will jump directly to section
+        window.location.href = href;
+      }
+    }
+  };
+
   return (
     <footer className="relative bg-background border-t border-foreground/10">
       <div className="mx-auto max-w-2xl px-6 py-16 md:py-20">
@@ -31,25 +50,16 @@ export default function SiteFooter() {
 
         {/* Nav */}
         <nav className="flex flex-wrap gap-x-8 gap-y-3 mb-12">
-          {NAV_LINKS.map((link) =>
-            link.href.startsWith('/') ? (
-              <Link
-                key={link.label}
-                to={link.href}
-                className="text-sm text-foreground/50 hover:text-foreground transition-colors duration-200"
-              >
-                {link.label}
-              </Link>
-            ) : (
-              <a
-                key={link.label}
-                href={link.href}
-                className="text-sm text-foreground/50 hover:text-foreground transition-colors duration-200"
-              >
-                {link.label}
-              </a>
-            )
-          )}
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.label}
+              to={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
+              className="text-sm text-foreground/50 hover:text-foreground transition-colors duration-200"
+            >
+              {link.label}
+            </Link>
+          ))}
         </nav>
 
         {/* Divider */}

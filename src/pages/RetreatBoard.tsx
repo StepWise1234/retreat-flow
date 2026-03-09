@@ -14,6 +14,7 @@ import CapacityBanner from '@/components/CapacityBanner';
 import BoardFilters, { BoardFilter, BoardSort } from '@/components/BoardFilters';
 import BulkActionBar from '@/components/bulk/BulkActionBar';
 import ListView from '@/components/ListView';
+import { PipelineEmailSettings } from '@/components/PipelineEmailSettings';
 import RetreatCalendar from '@/components/scheduling/RetreatCalendar';
 import RetreatTasksView from '@/components/risk/RetreatTasksView';
 import { Input } from '@/components/ui/input';
@@ -249,6 +250,7 @@ export default function RetreatBoard() {
             onSortChange={setSort}
           />
           {!isReadOnly && <QuickAddLeadDialog retreatId={retreat.id} />}
+          <PipelineEmailSettings />
         </div>
       </div>
 

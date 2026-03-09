@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Play, FileText, Clock, CheckCircle2 } from 'lucide-react';
+import { ChevronDown, Play, FileText, Clock, CheckCircle2, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
 import type { CourseModule, CourseLesson, CourseResource } from '@/hooks/useCourseData';
 
 interface ModuleCardProps {
@@ -27,6 +28,51 @@ export default function ModuleCard({
   defaultExpanded = false,
 }: ModuleCardProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+
+  // Authenticated download handler
+  const handleDownload = useCallback(async (resource: CourseResource) => {
+    setDownloadingId(resource.id);
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      if (!session?.session?.access_token) {
+        alert('Please log in to download resources');
+        return;
+      }
+
+      const resourcePath = resource.file_path.startsWith('/')
+        ? resource.file_path.slice(1)
+        : resource.file_path;
+
+      const response = await fetch(
+        `https://app.stepwise.education/resources/${resourcePath}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session.session.access_token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = resource.title + '.' + (resource.resource_type || 'pdf');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } else {
+        alert('Failed to download resource');
+      }
+    } catch (error) {
+      console.error('Download error:', error);
+      alert('Failed to download resource');
+    } finally {
+      setDownloadingId(null);
+    }
+  }, []);
 
   const totalLessons = module.lessons.length;
   const totalDuration = module.lessons.reduce(
@@ -187,16 +233,23 @@ export default function ModuleCard({
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {module.resources.map((resource) => (
-                    <a
+                    <button
                       key={resource.id}
-                      href={resource.file_path}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-foreground/[0.04] text-foreground/50 hover:bg-foreground/[0.08] hover:text-foreground/70 transition-all"
+                      onClick={() => handleDownload(resource)}
+                      disabled={downloadingId === resource.id}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-foreground/[0.04] text-foreground/50 hover:bg-foreground/[0.08] hover:text-foreground/70 transition-all disabled:opacity-50"
                     >
-                      <FileText className="h-3 w-3" />
+                      {downloadingId === resource.id ? (
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          className="h-3 w-3 border border-current border-t-transparent rounded-full"
+                        />
+                      ) : (
+                        <Download className="h-3 w-3" />
+                      )}
                       {resource.title}
-                    </a>
+                    </button>
                   ))}
                 </div>
               </div>

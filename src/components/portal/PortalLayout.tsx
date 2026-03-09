@@ -1,6 +1,6 @@
 import { Navigate, NavLink, Outlet } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FileText, Home as HomeIcon, BedDouble, Play, LogOut } from 'lucide-react';
+import { FileText, Home as HomeIcon, BedDouble, Play, LogOut, Calendar } from 'lucide-react';
 import { usePortalAuth } from '@/hooks/usePortalAuth';
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 import { cn } from '@/lib/utils';
@@ -8,8 +8,9 @@ import { cn } from '@/lib/utils';
 const navItems = [
   { to: '/portal', icon: HomeIcon, label: 'Dashboard', end: true },
   { to: '/portal/application', icon: FileText, label: 'Application', end: false },
-  { to: '/portal/accommodation', icon: BedDouble, label: 'Accommodation', end: false },
+  { to: '/portal/accommodation', icon: BedDouble, label: 'Retreat', end: false },
   { to: '/portal/course', icon: Play, label: 'Online Course', end: false },
+  { to: '/portal/events', icon: Calendar, label: 'Events', end: false },
 ];
 
 export default function PortalLayout() {

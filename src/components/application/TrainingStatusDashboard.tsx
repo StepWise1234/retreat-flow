@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 import { MapPin, Users, Clock } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { format, parseISO } from 'date-fns';
 
 interface Training {
   id: string;
@@ -12,16 +15,60 @@ interface Training {
   status: 'open' | 'limited' | 'waitlist';
 }
 
-const trainings: Record<string, { color: string; label: string; items: Training[] }> = {
-  beginning: {
-    color: '#FFA500',
-    label: 'Beginning',
-    items: [
-      { id: 'b1', title: 'Beginning Level — Cohort 7', date: 'Jun 1–4, 2026', location: 'Whistler, B.C. Canada', spotsTotal: 6, spotsFilled: 2, status: 'open' },
-      { id: 'b2', title: 'Beginning Level — Cohort 8', date: 'Jul 20–23, 2026', location: 'Tofino, B.C. Canada', spotsTotal: 6, spotsFilled: 2, status: 'open' },
-      { id: 'b3', title: 'Beginning Level — Cohort 9', date: 'Aug 24–27, 2026', location: 'Salt Spring Island, B.C. Canada', spotsTotal: 6, spotsFilled: 0, status: 'open' },
-    ],
-  },
+// Fetch live Beginning level trainings from database
+function useBeginningTrainings() {
+  return useQuery({
+    queryKey: ['beginning-trainings-apply'],
+    queryFn: async () => {
+      const today = new Date().toISOString().split('T')[0];
+
+      const { data, error } = await supabase
+        .from('trainings')
+        .select('id, name, start_date, end_date, location, max_capacity, spots_filled, training_type')
+        .eq('show_on_apply', true)
+        .gte('start_date', today)
+        .order('start_date', { ascending: true });
+
+      if (error) throw error;
+
+      // Filter out Workshop and Online types (keep null and Standard)
+      const filtered = (data || []).filter(t =>
+        t.training_type !== 'Workshop' && t.training_type !== 'Online'
+      );
+
+      return filtered.map(t => {
+        const spotsTotal = t.max_capacity || 6;
+        const spotsFilled = t.spots_filled || 0;
+        const spotsLeft = spotsTotal - spotsFilled;
+
+        let status: 'open' | 'limited' | 'waitlist' = 'open';
+        if (spotsLeft <= 0) status = 'waitlist';
+        else if (spotsLeft <= 2) status = 'limited';
+
+        // Format date range
+        let dateStr = '';
+        if (t.start_date && t.end_date) {
+          const start = parseISO(t.start_date);
+          const end = parseISO(t.end_date);
+          dateStr = `${format(start, 'MMM d')}–${format(end, 'd, yyyy')}`;
+        }
+
+        return {
+          id: t.id,
+          title: t.name,
+          date: dateStr,
+          location: t.location || '',
+          spotsTotal,
+          spotsFilled,
+          status,
+        } as Training;
+      });
+    },
+  });
+}
+
+// Static data for Intermediate and Advanced (keeping existing placeholder data)
+const staticTrainings: Record<string, { color: string; label: string; items: Training[] }> = {
   intermediate: {
     color: '#FF4500',
     label: 'Intermediate',
@@ -79,6 +126,8 @@ function StatusBadge({ status, color }: { status: Training['status']; color: str
 
 function CapacityBar({ filled, total, color }: { filled: number; total: number; color: string }) {
   const pct = Math.min((filled / total) * 100, 100);
+  // Show minimum 4% bar width when empty so there's always a visible indicator
+  const displayPct = filled === 0 ? 4 : pct;
   return (
     <div className="flex items-center gap-3">
       <div className="flex-1 h-1.5 rounded-full bg-foreground/8 overflow-hidden">
@@ -86,7 +135,7 @@ function CapacityBar({ filled, total, color }: { filled: number; total: number; 
           className="h-full rounded-full"
           style={{ backgroundColor: color }}
           initial={{ width: 0 }}
-          whileInView={{ width: `${pct}%` }}
+          whileInView={{ width: `${displayPct}%` }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         />
@@ -99,6 +148,18 @@ function CapacityBar({ filled, total, color }: { filled: number; total: number; 
 }
 
 export default function TrainingStatusDashboard() {
+  const { data: beginningTrainings = [], isLoading } = useBeginningTrainings();
+
+  // Combine live Beginning data with static Intermediate/Advanced
+  const trainings: Record<string, { color: string; label: string; items: Training[] }> = {
+    beginning: {
+      color: '#FFA500',
+      label: 'Beginning',
+      items: beginningTrainings,
+    },
+    ...staticTrainings,
+  };
+
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]">
@@ -140,6 +201,16 @@ export default function TrainingStatusDashboard() {
 
               {/* Training cards */}
               <div className="space-y-1.5">
+                {key === 'beginning' && isLoading && (
+                  <div className="rounded-lg border border-foreground/[0.06] bg-background/60 backdrop-blur-sm px-4 py-3 text-sm text-foreground/50">
+                    Loading trainings...
+                  </div>
+                )}
+                {key === 'beginning' && !isLoading && level.items.length === 0 && (
+                  <div className="rounded-lg border border-foreground/[0.06] bg-background/60 backdrop-blur-sm px-4 py-3 text-sm text-foreground/50">
+                    No upcoming trainings scheduled. Join the waitlist below.
+                  </div>
+                )}
                 {level.items.map((training, i) => (
                   <motion.div
                     key={training.id}

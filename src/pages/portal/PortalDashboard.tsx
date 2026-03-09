@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FileText, BedDouble, Play, ChevronRight } from 'lucide-react';
+import { FileText, BedDouble, Play, ChevronRight, Calendar } from 'lucide-react';
 import { usePortalAuth } from '@/hooks/usePortalAuth';
 import { useApplication } from '@/hooks/useApplication';
 import { QuestionBox } from '@/components/portal/QuestionBox';
@@ -26,6 +26,13 @@ const cards = [
     color: '#800080',
     title: 'Online Course',
     description: 'Access your pre-training video curriculum on Vimeo.',
+  },
+  {
+    to: '/portal/events',
+    icon: Calendar,
+    color: '#14B8A6',
+    title: 'Events',
+    description: 'Browse and register for upcoming trainings and workshops.',
   },
 ];
 
@@ -57,9 +64,10 @@ export default function PortalDashboard() {
         </motion.p>
       </div>
 
-      {/* Navigation cards */}
+      {/* Navigation cards - 2 rows: top row has 3 cards, bottom row has Events + QuestionBox */}
       <div className="grid gap-4 sm:grid-cols-3">
-        {cards.map((card, i) => (
+        {/* First row: Application, Accommodation, Online Course */}
+        {cards.slice(0, 3).map((card, i) => (
           <motion.div
             key={card.to}
             initial={{ opacity: 0, y: 16 }}
@@ -68,7 +76,7 @@ export default function PortalDashboard() {
           >
             <Link
               to={card.to}
-              className="group block rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm p-6 transition-all duration-300 hover:border-foreground/[0.12] hover:shadow-lg hover:-translate-y-1"
+              className="group block rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm p-6 transition-all duration-300 hover:border-foreground/[0.12] hover:shadow-lg hover:-translate-y-1 h-full"
               style={{ boxShadow: `0 2px 8px ${card.color}08` }}
             >
               <div
@@ -93,10 +101,51 @@ export default function PortalDashboard() {
             </Link>
           </motion.div>
         ))}
-      </div>
 
-      {/* Question Box */}
-      <QuestionBox />
+        {/* Second row: Events (1 col) + QuestionBox (2 cols) */}
+        {(() => {
+          const eventsCard = cards[3];
+          const EventsIcon = eventsCard.icon;
+          return (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Link
+                to={eventsCard.to}
+                className="group block rounded-xl border border-foreground/[0.06] bg-background/60 backdrop-blur-sm p-6 transition-all duration-300 hover:border-foreground/[0.12] hover:shadow-lg hover:-translate-y-1 h-full"
+                style={{ boxShadow: `0 2px 8px ${eventsCard.color}08` }}
+              >
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
+                  style={{ backgroundColor: `${eventsCard.color}12`, color: eventsCard.color }}
+                >
+                  <EventsIcon className="h-5 w-5" />
+                </div>
+                <h3 className="text-lg font-semibold tracking-tight text-foreground/80 mb-1">
+                  {eventsCard.title}
+                </h3>
+                <p className="text-sm text-foreground/45 leading-relaxed mb-4">
+                  {eventsCard.description}
+                </p>
+                <span
+                  className="inline-flex items-center gap-1 text-sm font-medium transition-colors duration-200"
+                  style={{ color: eventsCard.color }}
+                >
+                  Open
+                  <ChevronRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </span>
+              </Link>
+            </motion.div>
+          );
+        })()}
+
+        {/* QuestionBox spans 2 columns */}
+        <div className="sm:col-span-2">
+          <QuestionBox />
+        </div>
+      </div>
     </div>
   );
 }

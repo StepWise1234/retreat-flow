@@ -48,7 +48,7 @@ export function QuestionBox() {
               Have a Question?
             </h3>
             <p className="text-sm text-foreground/45">
-              Ask Laela directly - she'll respond via email
+              Ask us directly. We'll respond via Signal (if we have your handle) or email.
             </p>
           </div>
         </div>
@@ -86,7 +86,7 @@ export function QuestionBox() {
               className="mt-3 flex items-center gap-2 text-green-600"
             >
               <CheckCircle className="h-4 w-4" />
-              <span className="text-sm">Question sent! Laela will respond via email.</span>
+              <span className="text-sm">Question sent! We'll respond via Signal or email.</span>
             </motion.div>
           )}
         </AnimatePresence>

@@ -36,7 +36,7 @@ const QUESTIONS = [
 
 export default function CommonQuestions() {
   return (
-    <section className="relative bg-[#fafafa] overflow-hidden">
+    <section id="faq" className="relative bg-[#fafafa] overflow-hidden">
       <AnimatedGridPattern
         numSquares={30}
         maxOpacity={0.12}

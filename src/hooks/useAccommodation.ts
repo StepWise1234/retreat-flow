@@ -30,6 +30,19 @@ export interface RoomWithStatus extends Room {
   reservedBy?: string;
 }
 
+// Default room template (based on April training setup)
+const DEFAULT_ROOMS: Omit<Room, 'id' | 'training_id'>[] = [
+  { name: 'Master Suite', description: 'Premier suite with private bathroom', bed_type: '1 king bed', bath_type: 'Private bath', image_url: null, price_adjustment_cents: 50000, is_premier: true, sort_order: 0 },
+  { name: 'Bedroom 1', description: null, bed_type: '1 queen bed', bath_type: 'Shared bath', image_url: null, price_adjustment_cents: 0, is_premier: false, sort_order: 1 },
+  { name: 'Bedroom 2', description: null, bed_type: '2 double beds', bath_type: 'Shared bath', image_url: null, price_adjustment_cents: 0, is_premier: false, sort_order: 2 },
+  { name: 'Bedroom 3', description: null, bed_type: '2 double beds', bath_type: 'Shared bath', image_url: null, price_adjustment_cents: 0, is_premier: false, sort_order: 3 },
+  { name: 'Bedroom 4', description: null, bed_type: '2 double beds', bath_type: 'Shared bath', image_url: null, price_adjustment_cents: 0, is_premier: false, sort_order: 4 },
+  { name: 'Bedroom 5', description: null, bed_type: '1 queen bed', bath_type: 'Shared bath', image_url: null, price_adjustment_cents: 0, is_premier: false, sort_order: 5 },
+];
+
+// April training ID - template for room setup
+const APRIL_TRAINING_ID = '1952aca4-ef44-4294-bd63-a467cd800497';
+
 export function useAccommodation(trainingId: string | null, userId: string | null, applicationId: string | null) {
   const queryClient = useQueryClient();
   const [reservations, setReservations] = useState<RoomReservation[]>([]);
@@ -38,12 +51,78 @@ export function useAccommodation(trainingId: string | null, userId: string | nul
     queryKey: ['rooms', trainingId],
     queryFn: async () => {
       if (!trainingId) return [];
-      const { data, error } = await supabase
+
+      // First try to get rooms for this specific training
+      let { data, error } = await supabase
         .from('rooms')
         .select('*')
         .eq('training_id', trainingId)
         .order('sort_order');
+
       if (error) throw error;
+
+      // If no rooms exist for this training, create them from template
+      if (!data || data.length === 0) {
+        console.log('[useAccommodation] No rooms found for training, creating from template...');
+
+        // Try to copy from April training template
+        const { data: templateRooms, error: templateError } = await supabase
+          .from('rooms')
+          .select('*')
+          .eq('training_id', APRIL_TRAINING_ID)
+          .order('sort_order');
+
+        console.log('[useAccommodation] Template rooms:', templateRooms?.length, 'error:', templateError);
+
+        if (templateRooms && templateRooms.length > 0) {
+          // Copy template rooms to this training
+          const newRooms = templateRooms.map(room => ({
+            training_id: trainingId,
+            name: room.name,
+            description: room.description,
+            bed_type: room.bed_type,
+            bath_type: room.bath_type,
+            image_url: room.image_url,
+            price_adjustment_cents: room.price_adjustment_cents,
+            is_premier: room.is_premier,
+            sort_order: room.sort_order,
+          }));
+
+          console.log('[useAccommodation] Inserting', newRooms.length, 'rooms for training', trainingId);
+
+          const { data: insertedRooms, error: insertError } = await supabase
+            .from('rooms')
+            .insert(newRooms)
+            .select();
+
+          console.log('[useAccommodation] Insert result:', insertedRooms?.length, 'error:', insertError);
+
+          if (!insertError && insertedRooms) {
+            return insertedRooms as Room[];
+          }
+        }
+
+        // Fallback to default rooms if template doesn't exist
+        console.log('[useAccommodation] Using default rooms fallback');
+        const defaultRoomsWithTraining = DEFAULT_ROOMS.map(room => ({
+          ...room,
+          training_id: trainingId,
+        }));
+
+        const { data: insertedDefaults, error: defaultError } = await supabase
+          .from('rooms')
+          .insert(defaultRoomsWithTraining)
+          .select();
+
+        console.log('[useAccommodation] Default insert result:', insertedDefaults?.length, 'error:', defaultError);
+
+        if (!defaultError && insertedDefaults) {
+          return insertedDefaults as Room[];
+        }
+
+        return [];
+      }
+
       return data as Room[];
     },
     enabled: !!trainingId,

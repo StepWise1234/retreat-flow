@@ -83,7 +83,7 @@ export default function CourseDiscussion({
 
   const getAvatarColor = (userId: string) => {
     // Generate consistent color from user ID
-    const colors = ['#FFA500', '#FF4500', '#800080', '#14B8A6', '#8B5CF6', '#EC4899'];
+    const colors = ['#FFA500', '#FF4500', '#9D067A', '#14B8A6', '#E53935', '#EC4899'];
     const index = userId.charCodeAt(0) % colors.length;
     return colors[index];
   };

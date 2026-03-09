@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useApplication } from '@/hooks/useApplication';
 import { useAccommodation } from '@/hooks/useAccommodation';
 import { useTrainerAssignment } from '@/hooks/useTrainerAssignment';
+import { WAITLIST_ID } from '@/hooks/useApplicationRetreats';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
@@ -235,6 +236,10 @@ export default function PortalAccommodation() {
   // Trainer-specific state: selected training for trainers who can pick from multiple
   const [selectedTrainerTraining, setSelectedTrainerTraining] = useState<string | null>(null);
 
+  // State for training selection (non-enrolled users)
+  const [selectingTrainingId, setSelectingTrainingId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Get current user
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -384,12 +389,12 @@ export default function PortalAccommodation() {
     });
   };
 
-  // Check if this is the March training with commute option
+  // Check if this is the March training (uses different room images)
   const isMarchTraining = trainingId === MARCH_TRAINING_ID;
   const [commuteSelected, setCommuteSelected] = useState(false);
 
-  // Meal selection - only show if training has meal_selection_enabled
-  const showMealSelection = !!trainingId && training?.meal_selection_enabled === true;
+  // Meal selection - show for all trainings by default (same as April training)
+  const showMealSelection = !!trainingId;
 
   // Generate meal dates dynamically from training dates
   const MEAL_DATES = training?.start_date && training?.end_date
@@ -545,133 +550,221 @@ export default function PortalAccommodation() {
     );
   }
 
-  // Non-enrolled user view: show available trainings (but not for trainers)
-  if (!trainingId && !isTrainer) {
-    // Training level colors and gradients
-    const getLevelStyle = (level: string) => {
-      switch (level) {
-        case 'Beginning':
-          return { bg: 'from-amber-50 to-orange-50', border: 'border-amber-200', accent: 'text-amber-600', dot: 'bg-amber-400', button: 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600' };
-        case 'Intermediate':
-          return { bg: 'from-rose-50 to-red-50', border: 'border-rose-200', accent: 'text-rose-600', dot: 'bg-rose-500', button: 'bg-gradient-to-r from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600' };
-        case 'Advanced':
-          return { bg: 'from-violet-50 to-purple-50', border: 'border-violet-200', accent: 'text-violet-600', dot: 'bg-violet-600', button: 'bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700' };
-        default:
-          return { bg: 'from-gray-50 to-slate-50', border: 'border-gray-200', accent: 'text-gray-600', dot: 'bg-gray-400', button: 'bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800' };
+  // Handle training selection - update user's application with training and move to interview stage
+  const handleSelectTraining = async (selectedTrainingId: string) => {
+    if (!userId) {
+      toast.error('Please log in to select a training');
+      return;
+    }
+
+    setSelectingTrainingId(selectedTrainingId);
+    setIsSubmitting(true);
+
+    try {
+      // Get user email for applicant lookup
+      const { data: userData } = await supabase.auth.getUser();
+      const userEmail = userData?.user?.email;
+
+      if (!userEmail) {
+        toast.error('Unable to find your account information');
+        return;
       }
-    };
+
+      // Check if user has an applicant record, if so update it
+      const { data: existingApplicant } = await supabase
+        .from('applicants')
+        .select('id')
+        .eq('email', userEmail)
+        .maybeSingle();
+
+      if (existingApplicant) {
+        // Update existing applicant
+        const { error: updateError } = await supabase
+          .from('applicants')
+          .update({
+            training_id: selectedTrainingId,
+            pipeline_stage: 'interview',
+            app_status: 'Interview Scheduled',
+            notes: `Selected training on ${new Date().toLocaleDateString()}`,
+          })
+          .eq('id', existingApplicant.id);
+
+        if (updateError) throw updateError;
+      } else {
+        // Create new applicant record
+        const userName = userData?.user?.user_metadata?.first_name
+          ? `${userData.user.user_metadata.first_name} ${userData.user.user_metadata.last_name || ''}`
+          : userEmail.split('@')[0];
+
+        const { error: insertError } = await supabase
+          .from('applicants')
+          .insert({
+            name: userName,
+            email: userEmail,
+            phone: userData?.user?.phone || null,
+            training_id: selectedTrainingId,
+            pipeline_stage: 'interview',
+            app_status: 'Interview Scheduled',
+            application_date: new Date().toISOString(),
+            notes: `Selected training from portal on ${new Date().toLocaleDateString()}`,
+          });
+
+        if (insertError) throw insertError;
+      }
+
+      // Also update the applications table if they have one
+      if (application?.id) {
+        await supabase
+          .from('applications')
+          .update({
+            training_id: selectedTrainingId,
+            status: 'interview',
+          })
+          .eq('id', application.id);
+      }
+
+      toast.success('Training selected! Our team will reach out to schedule your interview.');
+
+      // Refresh the page to show accommodation options
+      window.location.reload();
+    } catch (error) {
+      console.error('Error selecting training:', error);
+      toast.error('Failed to select training. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+      setSelectingTrainingId(null);
+    }
+  };
+
+  // Non-enrolled user view OR waitlist user: show available trainings (but not for trainers)
+  // Waitlist users have training_id set to WAITLIST_ID - they should also see training selection
+  // Only show Beginning level trainings with openings
+  const isWaitlistUser = application?.training_id === WAITLIST_ID;
+  if ((!trainingId || isWaitlistUser) && !isTrainer) {
+    const beginningTrainings = availableTrainings.filter(
+      t => t.training_level === 'Beginning' && (t.max_capacity - t.spots_filled) > 0
+    );
 
     return (
       <>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Upcoming Trainings</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Select Your Training</h1>
         <p className="text-gray-500 mb-8">
-          You're not currently enrolled in a training. Explore our upcoming experiences below.
+          Choose a Beginning Level training to get started on your StepWise journey.
         </p>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {availableTrainings.map(t => {
-            const style = getLevelStyle(t.training_level);
+        <div className="space-y-4">
+          {beginningTrainings.map(t => {
             const spotsLeft = t.max_capacity - t.spots_filled;
             const isFilling = spotsLeft <= 3;
+            const isSelecting = selectingTrainingId === t.id;
 
             return (
               <motion.div
                 key={t.id}
-                whileHover={{ y: -4, scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className={cn(
-                  'relative rounded-2xl overflow-hidden border-2 transition-shadow duration-300',
-                  style.border,
-                  'hover:shadow-xl hover:shadow-black/5'
-                )}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative rounded-2xl overflow-hidden border border-foreground/[0.08] bg-background hover:border-amber-300 transition-all duration-300 hover:shadow-lg"
               >
-                {/* Gradient header */}
-                <div className={cn('bg-gradient-to-br p-6 pb-8', style.bg)}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <span className={cn('w-2.5 h-2.5 rounded-full', style.dot)} />
-                      <span className={cn('text-xs font-semibold uppercase tracking-wider', style.accent)}>
-                        {t.training_level}
-                      </span>
-                    </div>
-                    {isFilling && (
-                      <span className="text-xs font-medium text-rose-600 bg-rose-100 px-2.5 py-1 rounded-full">
-                        {spotsLeft === 1 ? '1 spot left' : `${spotsLeft} spots left`}
-                      </span>
-                    )}
-                  </div>
+                {/* Top color bar */}
+                <div className="h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
 
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">{t.name}</h3>
-
-                  <div className="flex items-center gap-3 text-sm text-gray-600 mt-3">
-                    <span className="flex items-center gap-1.5">
-                      <Calendar className="w-4 h-4 opacity-60" />
-                      {formatDate(t.start_date)} - {formatDate(t.end_date)}
-                    </span>
-                  </div>
-
-                  {t.location && (
-                    <div className="flex items-center gap-1.5 text-sm text-gray-500 mt-1.5">
-                      <MapPin className="w-4 h-4 opacity-60" />
-                      {t.location}
-                    </div>
-                  )}
-                </div>
-
-                {/* Bottom section */}
-                <div className="bg-white p-5 -mt-3 rounded-t-2xl relative">
-                  <div className="flex items-center justify-between mb-4">
-                    {t.price_cents > 0 ? (
-                      <div>
-                        <span className="text-2xl font-bold text-gray-900">
-                          ${(t.price_cents / 100).toLocaleString()}
+                <div className="p-6">
+                  {/* Header row */}
+                  <div className="flex items-start justify-between gap-4 mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="w-2 h-2 rounded-full bg-amber-400" />
+                        <span className="text-xs font-semibold uppercase tracking-wider text-amber-600">
+                          Beginning Level
                         </span>
-                        <span className="text-sm text-gray-400 ml-1">per person</span>
                       </div>
-                    ) : (
-                      <div className="text-sm text-gray-500">Contact for pricing</div>
-                    )}
+                      <h3 className="text-xl font-bold text-foreground/90">{t.name}</h3>
+                    </div>
 
+                    {isFilling && (
+                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-rose-100 text-rose-600">
+                        {spotsLeft === 1 ? '1 spot left!' : `${spotsLeft} spots left`}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Details */}
+                  <div className="flex flex-wrap gap-4 text-sm text-foreground/50 mb-5">
+                    <div className="flex items-center gap-1.5">
+                      <Calendar className="w-4 h-4" />
+                      <span>{formatDate(t.start_date)} - {formatDate(t.end_date)}</span>
+                    </div>
+                    {t.location && (
+                      <div className="flex items-center gap-1.5">
+                        <MapPin className="w-4 h-4" />
+                        <span>{t.location}</span>
+                      </div>
+                    )}
                     {!isFilling && (
-                      <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                      <div className="flex items-center gap-1.5">
                         <Clock className="w-4 h-4" />
-                        {spotsLeft} spots
+                        <span>{spotsLeft} spots available</span>
                       </div>
                     )}
                   </div>
 
-                  <a
-                    href={t.stripe_price_id ? `https://buy.stripe.com/${t.stripe_price_id}` : '/apply'}
-                    target={t.stripe_price_id ? '_blank' : undefined}
-                    rel={t.stripe_price_id ? 'noopener noreferrer' : undefined}
-                    className={cn(
-                      'w-full inline-flex items-center justify-center gap-2 rounded-xl text-white px-6 py-3.5 font-semibold transition-all duration-200 shadow-lg shadow-black/10',
-                      style.button
-                    )}
-                  >
-                    {t.stripe_price_id ? (
-                      <>
-                        <ShoppingCart className="w-4 h-4" />
-                        Reserve Your Spot
-                      </>
-                    ) : (
-                      'Apply Now'
-                    )}
-                  </a>
+                  {/* Price and CTA */}
+                  <div className="flex items-center justify-between pt-4 border-t border-foreground/[0.06]">
+                    <div>
+                      {t.price_cents > 0 ? (
+                        <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3">
+                          <span className="text-xl font-bold text-foreground/90">${(t.price_cents / 100).toLocaleString()} <span className="text-sm font-normal text-foreground/50">Private Room</span></span>
+                          <span className="text-lg font-semibold text-foreground/70">${((t.price_cents / 100) * 0.79).toLocaleString(undefined, {maximumFractionDigits: 0})} <span className="text-sm font-normal text-foreground/50">Commuter</span></span>
+                        </div>
+                      ) : (
+                        <span className="text-foreground/50">Contact for pricing</span>
+                      )}
+                    </div>
+
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleSelectTraining(t.id)}
+                      disabled={isSubmitting}
+                      className={cn(
+                        'flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200',
+                        'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600',
+                        'shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30',
+                        isSubmitting && 'opacity-70 cursor-not-allowed'
+                      )}
+                    >
+                      {isSelecting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Selecting...
+                        </>
+                      ) : (
+                        <>
+                          <Check className="w-4 h-4" />
+                          Select This Training
+                        </>
+                      )}
+                    </motion.button>
+                  </div>
                 </div>
               </motion.div>
             );
           })}
         </div>
 
-        {availableTrainings.length === 0 && (
+        {beginningTrainings.length === 0 && (
           <div className="text-center py-16">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Calendar className="w-8 h-8 text-gray-400" />
+            <div className="w-16 h-16 bg-foreground/5 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Calendar className="w-8 h-8 text-foreground/30" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No Upcoming Trainings</h3>
-            <p className="text-gray-500">Check back soon for new training dates.</p>
+            <h3 className="text-lg font-semibold text-foreground/70 mb-2">No Available Trainings</h3>
+            <p className="text-foreground/50 mb-6">All Beginning Level trainings are currently full.</p>
+            <a
+              href="/apply"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 transition-all"
+            >
+              Join the Waitlist
+            </a>
           </div>
         )}
       </>
@@ -859,8 +952,8 @@ export default function PortalAccommodation() {
               );
             })}
 
-            {/* Commute Option - for March and April trainings */}
-            {(isMarchTraining || trainingId === APRIL_TRAINING_ID) && (
+            {/* Commute Option - available for all trainings */}
+            {trainingId && (
               <motion.button
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}

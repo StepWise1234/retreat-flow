@@ -56,31 +56,22 @@ export function useTrainerAssignment(trainingId: string | null) {
     },
   });
 
-  // Fetch all trainings this trainer is assigned to (only open/future trainings)
+  // Fetch ALL active/open trainings for trainers to self-select (exclude Online/Workshop events)
   const { data: assignedTrainings = [] } = useQuery({
     queryKey: ['trainer-trainings', user?.id],
     queryFn: async () => {
       if (!user) return [];
       const today = new Date().toISOString().split('T')[0];
+      // Get all open/future trainings (not just assigned ones), excluding events (Online/Workshop)
       const { data, error } = await supabase
-        .from('trainer_assignments')
-        .select(`
-          training_id,
-          trainings!inner (
-            id,
-            name,
-            start_date,
-            end_date,
-            location,
-            training_level,
-            status
-          )
-        `)
-        .eq('user_id', user.id)
-        .gte('trainings.end_date', today);
+        .from('trainings')
+        .select('id, name, start_date, end_date, location, training_level, training_type, status')
+        .eq('status', 'Open')
+        .gte('end_date', today)
+        .or('training_type.is.null,and(training_type.neq.Online,training_type.neq.Workshop)')
+        .order('start_date', { ascending: true });
       if (error) throw error;
-      // Filter to only Open trainings
-      return data?.map(d => d.trainings).filter(t => t && t.status === 'Open') || [];
+      return data || [];
     },
     enabled: !!user,
   });

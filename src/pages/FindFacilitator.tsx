@@ -8,6 +8,7 @@ import SiteFooter from '@/components/application/SiteFooter';
 import MadLibInput from '@/components/application/MadLibInput';
 import MadLibTextarea from '@/components/application/MadLibTextarea';
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function FindFacilitator() {
   const [submitted, setSubmitted] = useState(false);
@@ -28,12 +29,41 @@ export default function FindFacilitator() {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
     if (!form.firstName.trim() || !form.email.trim()) {
       toast.error('Please provide at least your name and email');
       return;
     }
-    setSubmitted(true);
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('facilitator_inquiries')
+        .insert({
+          first_name: form.firstName.trim(),
+          last_name: form.lastName.trim() || null,
+          email: form.email.trim(),
+          phone: form.phone.trim() || null,
+          location: form.location.trim() || null,
+          previous_experience: form.previousExperience.trim() || null,
+          current_support: form.currentSupport.trim() || null,
+          goals: form.goals.trim() || null,
+          how_heard: form.howHeard.trim() || null,
+          additional_info: form.additionalInfo.trim() || null,
+        });
+
+      if (error) throw error;
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Error submitting inquiry:', err);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -195,12 +225,13 @@ export default function FindFacilitator() {
               <div className="flex justify-center pt-4">
                 <motion.button
                   onClick={handleSubmit}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-3 rounded-full px-10 py-4 text-base font-semibold text-white transition-all duration-300 shadow-lg"
+                  disabled={isSubmitting}
+                  whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                  whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                  className="flex items-center gap-3 rounded-full px-10 py-4 text-base font-semibold text-white transition-all duration-300 shadow-lg disabled:opacity-70"
                   style={{ backgroundColor: '#800080' }}
                 >
-                  Submit Inquiry
+                  {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
                   <ChevronRight className="h-5 w-5" />
                 </motion.button>
               </div>
