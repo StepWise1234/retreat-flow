@@ -25,6 +25,8 @@ import PortalApplication from "./pages/portal/PortalApplication";
 import PortalAccommodation from "./pages/portal/PortalAccommodation";
 import PortalCourse from "./pages/portal/PortalCourse";
 import PortalEvents from "./pages/portal/PortalEvents";
+import PortalFeedback from "./pages/portal/PortalFeedback";
+import PublicFeedback from "./pages/PublicFeedback";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -48,6 +50,7 @@ const App = () => (
             <Route path="/" element={<ApplicationForm />} />
             <Route path="/apply" element={<Apply />} />
             <Route path="/facilitators" element={<FindFacilitator />} />
+            <Route path="/feedback" element={<PublicFeedback />} />
             <Route path="/login" element={<Login />} />
 
             {/* Participant Portal */}
@@ -58,6 +61,7 @@ const App = () => (
               <Route path="accommodation" element={<PortalAccommodation />} />
               <Route path="course" element={<PortalCourse />} />
               <Route path="events" element={<PortalEvents />} />
+              <Route path="feedback" element={<PortalFeedback />} />
             </Route>
 
             {/* Protected: Admin-only routes */}
