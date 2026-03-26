@@ -1,13 +1,36 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, Users, Clock, Check, X, ChevronRight, Sparkles, UserPlus, DollarSign, Trash2, CreditCard, Loader2 } from 'lucide-react';
+import { Calendar, MapPin, Users, Clock, Check, X, ChevronRight, Sparkles, UserPlus, DollarSign, Trash2, CreditCard, Loader2, ExternalLink } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
-import { useEvents, useMyEventRegistrations, useRegisterForEvent, useCancelRegistration, sendGuestPaymentEmail, Event, GuestInput, PaymentOption } from '@/hooks/useEvents';
+import { useEvents, useMyEventRegistrations, useRegisterForEvent, useCancelRegistration, useCaseConsultTierCounts, sendGuestPaymentEmail, Event, GuestInput, PaymentOption } from '@/hooks/useEvents';
+import { supabase } from '@/integrations/supabase/client';
 import { usePortalAuth } from '@/hooks/usePortalAuth';
-import { useCreatePayPalOrder, useCapturePayPalOrder, useCreatePayPalSubscription, useActivatePayPalSubscription } from '@/hooks/usePayPal';
+import { useCreateStripeCheckout, useVerifyStripePayment } from '@/hooks/useStripe';
 import { cn } from '@/lib/utils';
 import { useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+
+// Calendly URLs for Group Case Consult scheduling
+const CALENDLY_CASE_CONSULT_MONDAY = 'https://calendly.com/laela-coaching/group-case-consult-monthly';
+const CALENDLY_CASE_CONSULT_TUESDAY = 'https://calendly.com/laela-coaching/group-case-consult';
+
+// Case Consult tier pricing
+const CASE_CONSULT_TIERS = {
+  monday: {
+    price: 7500, // $75
+    label: 'Mondays',
+    description: '1st Monday of each month',
+    schedule: '1st Monday',
+  },
+  tuesday: {
+    price: 12500, // $125
+    label: 'Tuesdays',
+    description: '1st & 3rd Tuesday of each month',
+    schedule: '1st & 3rd Tuesday',
+  },
+} as const;
+
+type CaseConsultTier = keyof typeof CASE_CONSULT_TIERS;
 
 // Training level colors (yellow for beginning, red for intermediate, purple for advanced)
 const LEVEL_COLORS: Record<string, string> = {
@@ -29,6 +52,161 @@ function getEventColor(event: { training_type: string | null; training_level: st
   // Trainings get level-based color
   if (!event.training_level) return '#6B7280';
   return LEVEL_COLORS[event.training_level] || '#6B7280';
+}
+
+// Case Consult Registration Modal - tier selection with Stripe subscription
+function CaseConsultRegistrationModal({
+  event,
+  onClose,
+  onRegisterWithTier,
+  isPending,
+  mondayRemaining,
+  tuesdayRemaining
+}: {
+  event: Event;
+  onClose: () => void;
+  onRegisterWithTier: (tier: CaseConsultTier) => void;
+  isPending: boolean;
+  mondayRemaining: number;
+  tuesdayRemaining: number;
+}) {
+  const [selectedTier, setSelectedTier] = useState<CaseConsultTier>('monday');
+  const color = getEventColor(event);
+
+  const tierInfo = CASE_CONSULT_TIERS[selectedTier];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        className="w-full max-w-md bg-background rounded-2xl shadow-xl overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="h-1.5" style={{ backgroundColor: color }} />
+        <div className="p-6 border-b border-foreground/[0.06]">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold text-foreground/85">{event.name}</h2>
+              <p className="text-sm text-foreground/50 mt-1">5 month commitment (May - September)</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-lg text-foreground/40 hover:text-foreground/60 hover:bg-foreground/5 transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-5">
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-foreground/50 uppercase tracking-wide">Choose your group</p>
+            <div className="grid grid-cols-2 gap-3">
+              {/* Monday tier */}
+              <button
+                onClick={() => setSelectedTier('monday')}
+                disabled={mondayRemaining <= 0}
+                className={cn(
+                  "p-4 rounded-xl border-2 text-left transition-all relative",
+                  mondayRemaining <= 0 ? "opacity-50 cursor-not-allowed" : "",
+                  selectedTier === 'monday'
+                    ? "border-current bg-current/5"
+                    : "border-foreground/10 hover:border-foreground/20"
+                )}
+                style={selectedTier === 'monday' ? { borderColor: color, backgroundColor: `${color}10` } : {}}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Calendar className="h-4 w-4 text-foreground/50" />
+                  <span className="font-semibold text-foreground/80">Monday</span>
+                </div>
+                <p className="text-xl font-bold text-foreground/80">$75<span className="text-sm font-normal text-foreground/50">/mo</span></p>
+                <p className="text-xs text-foreground/50 mt-1">1st Monday each month</p>
+                <p className="text-xs text-foreground/40">3-5pm PT / 6-8pm ET</p>
+                <p className="text-xs mt-2" style={{ color: mondayRemaining <= 2 ? '#E53935' : color }}>
+                  {mondayRemaining <= 0 ? 'Full' : `${mondayRemaining} spots left`}
+                </p>
+              </button>
+
+              {/* Tuesday tier */}
+              <button
+                onClick={() => setSelectedTier('tuesday')}
+                disabled={tuesdayRemaining <= 0}
+                className={cn(
+                  "p-4 rounded-xl border-2 text-left transition-all relative",
+                  tuesdayRemaining <= 0 ? "opacity-50 cursor-not-allowed" : "",
+                  selectedTier === 'tuesday'
+                    ? "border-current bg-current/5"
+                    : "border-foreground/10 hover:border-foreground/20"
+                )}
+                style={selectedTier === 'tuesday' ? { borderColor: color, backgroundColor: `${color}10` } : {}}
+              >
+                <span className="absolute -top-2.5 right-2 px-2 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow-sm">2 Sessions/Mo</span>
+                <div className="flex items-center gap-2 mb-2">
+                  <Calendar className="h-4 w-4 text-foreground/50" />
+                  <span className="font-semibold text-foreground/80">Tuesday</span>
+                </div>
+                <p className="text-xl font-bold text-foreground/80">$125<span className="text-sm font-normal text-foreground/50">/mo</span></p>
+                <p className="text-xs text-foreground/50 mt-1">1st & 3rd Tuesday</p>
+                <p className="text-xs text-foreground/40">3-5pm PT / 6-8pm ET</p>
+                <p className="text-xs mt-2" style={{ color: tuesdayRemaining <= 2 ? '#E53935' : color }}>
+                  {tuesdayRemaining <= 0 ? 'Full' : `${tuesdayRemaining} spots left`}
+                </p>
+              </button>
+            </div>
+          </div>
+
+          {/* Summary */}
+          <div className="p-4 rounded-xl bg-foreground/[0.03] space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-foreground/60">Monthly subscription</span>
+              <span className="font-semibold text-foreground/80">${tierInfo.price / 100}/mo</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-foreground/60">Commitment</span>
+              <span className="text-foreground/70">5 months (ends September)</span>
+            </div>
+            <div className="flex justify-between text-sm pt-2 border-t border-foreground/[0.06]">
+              <span className="text-foreground/60">Total value</span>
+              <span className="font-semibold text-foreground/80">${(tierInfo.price / 100) * 5}</span>
+            </div>
+          </div>
+
+          <p className="text-xs text-foreground/40 text-center">
+            Secure payment via Stripe. You'll be charged monthly through September.
+          </p>
+        </div>
+
+        <div className="p-6 border-t border-foreground/[0.06] bg-foreground/[0.02]">
+          <button
+            onClick={() => onRegisterWithTier(selectedTier)}
+            disabled={isPending || (selectedTier === 'monday' && mondayRemaining <= 0) || (selectedTier === 'tuesday' && tuesdayRemaining <= 0)}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-white transition-all disabled:opacity-50"
+            style={{ backgroundColor: '#635BFF' }}
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              <>
+                <CreditCard className="h-4 w-4" />
+                Subscribe - ${tierInfo.price / 100}/month
+              </>
+            )}
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
 }
 
 // Registration modal for events with guest support
@@ -102,7 +280,7 @@ function RegistrationModal({
               <p className="text-sm text-foreground/50 mt-1">
                 {event.start_date
                   ? format(parseISO(event.start_date), 'MMMM d, yyyy')
-                  : '1st Tuesday of month @ 3pm PST'
+                  : 'Schedule TBD'
                 }
                 {event.location && ` - ${event.location}`}
               </p>
@@ -262,7 +440,7 @@ function RegistrationModal({
   );
 }
 
-// Payment Modal Component
+// Payment Modal Component - Uses Stripe for payments
 function PaymentModal({
   enrollment,
   event,
@@ -274,57 +452,56 @@ function PaymentModal({
   onClose: () => void;
   onPaymentComplete: () => void;
 }) {
-  const createOrder = useCreatePayPalOrder();
-  const createSubscription = useCreatePayPalSubscription();
+  const createCheckout = useCreateStripeCheckout();
   const [paymentStep, setPaymentStep] = useState<'select' | 'processing' | 'success' | 'error'>('select');
   const [errorMessage, setErrorMessage] = useState('');
+  const [selectedTier, setSelectedTier] = useState<CaseConsultTier>('monday');
 
-  const amount = event.price_cents ? event.price_cents / 100 : 0;
   const color = getEventColor(event);
-  const isSubscription = event.name === 'StepWise Group Case Consult';
+  const isCaseConsult = event.name === 'StepWise Group Case Consult';
 
-  const handlePayPalPayment = async () => {
+  // For Case Consult, use tier pricing; otherwise use event price
+  const amount = isCaseConsult
+    ? CASE_CONSULT_TIERS[selectedTier].price / 100
+    : (event.price_cents ? event.price_cents / 100 : 0);
+
+  const handleStripePayment = async () => {
     setPaymentStep('processing');
     setErrorMessage('');
 
     try {
-      if (isSubscription) {
-        // Create subscription for Case Consult (monthly)
-        const result = await createSubscription.mutateAsync({
-          enrollmentId: enrollment.id,
-          priceInCents: event.price_cents || 7500,
-          eventName: event.name,
-        });
+      // Save selected tier to enrollment for Case Consult
+      if (isCaseConsult) {
+        await supabase
+          .from('enrollments')
+          .update({ selected_tier: selectedTier })
+          .eq('id', enrollment.id);
+      }
 
-        if (result.approvalUrl) {
-          window.location.href = result.approvalUrl;
-        } else {
-          throw new Error('No approval URL received');
-        }
+      const priceInCents = isCaseConsult
+        ? CASE_CONSULT_TIERS[selectedTier].price
+        : (event.price_cents || 7500);
+
+      const eventNameWithTier = isCaseConsult
+        ? `${event.name} - ${CASE_CONSULT_TIERS[selectedTier].label} (${CASE_CONSULT_TIERS[selectedTier].schedule})`
+        : event.name;
+
+      const result = await createCheckout.mutateAsync({
+        enrollmentId: enrollment.id,
+        priceInCents,
+        eventName: eventNameWithTier,
+        isSubscription: isCaseConsult,
+      });
+
+      if (result.checkoutUrl) {
+        window.location.href = result.checkoutUrl;
       } else {
-        // One-time payment for other events
-        const result = await createOrder.mutateAsync({
-          enrollmentId: enrollment.id,
-          amount,
-          eventName: event.name,
-        });
-
-        if (result.approvalUrl) {
-          window.location.href = result.approvalUrl;
-        } else {
-          throw new Error('No approval URL received');
-        }
+        throw new Error('No checkout URL received');
       }
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Payment failed');
       setPaymentStep('error');
     }
-  };
-
-  const handleVenmoPayment = async () => {
-    // Venmo uses the same PayPal checkout flow - PayPal will show Venmo option
-    // if user is on mobile and has Venmo app
-    handlePayPalPayment();
   };
 
   return (
@@ -359,42 +536,70 @@ function PaymentModal({
 
           {paymentStep === 'select' && (
             <div className="space-y-4">
+              {/* Tier selection for Case Consult */}
+              {isCaseConsult && (
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-foreground/50 uppercase tracking-wide">Choose your plan</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => setSelectedTier('monday')}
+                      className={cn(
+                        "p-4 rounded-xl border-2 text-center transition-all",
+                        selectedTier === 'monday'
+                          ? "border-current bg-current/5"
+                          : "border-foreground/10 hover:border-foreground/20"
+                      )}
+                      style={selectedTier === 'monday' ? { borderColor: color, backgroundColor: `${color}10` } : {}}
+                    >
+                      <Calendar className="h-5 w-5 mx-auto mb-2 text-foreground/50" />
+                      <p className="font-semibold text-foreground/80">$75/mo</p>
+                      <p className="font-medium text-foreground/70 mt-1">Mondays</p>
+                      <p className="text-xs text-foreground/40 mt-1">1st Monday each month</p>
+                    </button>
+                    <button
+                      onClick={() => setSelectedTier('tuesday')}
+                      className={cn(
+                        "p-4 rounded-xl border-2 text-center transition-all relative",
+                        selectedTier === 'tuesday'
+                          ? "border-current bg-current/5"
+                          : "border-foreground/10 hover:border-foreground/20"
+                      )}
+                      style={selectedTier === 'tuesday' ? { borderColor: color, backgroundColor: `${color}10` } : {}}
+                    >
+                      <span className="absolute -top-2 right-2 px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-500/15 text-green-600">
+                        2x sessions
+                      </span>
+                      <Calendar className="h-5 w-5 mx-auto mb-2 text-foreground/50" />
+                      <p className="font-semibold text-foreground/80">$125/mo</p>
+                      <p className="font-medium text-foreground/70 mt-1">Tuesdays</p>
+                      <p className="text-xs text-foreground/40 mt-1">1st & 3rd Tuesday</p>
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="p-4 rounded-xl bg-foreground/[0.03] text-center">
                 <p className="text-2xl font-semibold text-foreground/80">${amount.toFixed(2)}</p>
                 <p className="text-sm text-foreground/50 mt-1">
-                  {isSubscription ? 'per month' : 'Total due'}
+                  {isCaseConsult ? 'per month' : 'Total due'}
                 </p>
-                {isSubscription && (
+                {isCaseConsult && (
                   <p className="text-xs text-foreground/40 mt-2">
                     Monthly subscription - cancel anytime
                   </p>
                 )}
               </div>
 
-              <div className="space-y-3">
-                <button
-                  onClick={handlePayPalPayment}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-[#0070ba] text-white font-medium transition-all hover:bg-[#005ea6]"
-                >
-                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.63h6.538c2.18 0 3.903.538 4.972 1.523.968.892 1.478 2.177 1.478 3.72 0 2.758-1.132 4.857-3.182 5.922-1.023.532-2.268.8-3.703.8H9.268l-1.09 5.283a.641.641 0 0 1-.627.52H7.5l-.424.48zm4.69-9.218h1.504c1.145 0 2.05-.234 2.691-.697.675-.488 1.077-1.246 1.194-2.254.084-.723.015-1.3-.206-1.716-.26-.493-.78-.87-1.503-.996a8.18 8.18 0 0 0-1.158-.069h-1.23l-.798 3.863-.494 1.869z"/>
-                  </svg>
-                  Pay with PayPal
-                </button>
-
-                <button
-                  onClick={handleVenmoPayment}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-[#008CFF] text-white font-medium transition-all hover:bg-[#0070cc]"
-                >
-                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19.5 3.5c.7 1.1 1 2.3 1 3.7 0 4.2-3.6 9.6-6.5 13.3H6.4L3.5 3.8h6.2l1.7 11.3c1.5-2.5 3.4-6.4 3.4-8.9 0-1.3-.2-2.2-.6-3l5.3.3z"/>
-                  </svg>
-                  Pay with Venmo
-                </button>
-              </div>
+              <button
+                onClick={handleStripePayment}
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-[#635BFF] text-white font-medium transition-all hover:bg-[#5147e5]"
+              >
+                <CreditCard className="h-5 w-5" />
+                Pay with Card
+              </button>
 
               <p className="text-xs text-foreground/40 text-center mt-4">
-                Secure payment processed by PayPal
+                Secure payment processed by Stripe
               </p>
             </div>
           )}
@@ -445,6 +650,87 @@ function PaymentModal({
   );
 }
 
+// Calendly Modal for scheduling after payment
+function CalendlyModal({
+  event,
+  onClose
+}: {
+  event: Event;
+  onClose: () => void;
+}) {
+  const color = getEventColor(event);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        className="w-full max-w-2xl bg-background rounded-2xl shadow-xl overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="h-1.5" style={{ backgroundColor: color }} />
+        <div className="p-6">
+          <div className="flex items-start justify-between gap-4 mb-6">
+            <div>
+              <h2 className="text-xl font-semibold text-foreground/85">Schedule Your Session</h2>
+              <p className="text-sm text-foreground/50 mt-1">{event.name}</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-lg text-foreground/40 hover:text-foreground/60 hover:bg-foreground/5 transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-foreground/60 text-sm">
+              Choose your preferred day for the Group Case Consult session:
+            </p>
+
+            <div className="grid grid-cols-2 gap-3">
+              <a
+                href={CALENDLY_CASE_CONSULT_MONDAY}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-2 px-4 py-4 rounded-xl text-white font-medium transition-all hover:opacity-90"
+                style={{ backgroundColor: color }}
+              >
+                <Calendar className="h-5 w-5" />
+                <span>Mondays</span>
+                <ExternalLink className="h-3 w-3 opacity-60" />
+              </a>
+
+              <a
+                href={CALENDLY_CASE_CONSULT_TUESDAY}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-2 px-4 py-4 rounded-xl text-white font-medium transition-all hover:opacity-90"
+                style={{ backgroundColor: color }}
+              >
+                <Calendar className="h-5 w-5" />
+                <span>Tuesdays</span>
+                <ExternalLink className="h-3 w-3 opacity-60" />
+              </a>
+            </div>
+
+            <p className="text-xs text-foreground/40 text-center">
+              Opens Calendly in a new tab
+            </p>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function PortalEvents() {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
@@ -453,67 +739,60 @@ export default function PortalEvents() {
   const { data: myRegistrations, isLoading: registrationsLoading } = useMyEventRegistrations();
   const registerMutation = useRegisterForEvent();
   const cancelMutation = useCancelRegistration();
-  const captureOrder = useCapturePayPalOrder();
-  const activateSubscription = useActivatePayPalSubscription();
+  const verifyPayment = useVerifyStripePayment();
+
+  // Get Case Consult event ID for tier counts
+  const caseConsultEvent = events?.find(e => e.name === 'StepWise Group Case Consult');
+  const { data: tierCounts } = useCaseConsultTierCounts(caseConsultEvent?.id);
+  const TIER_CAPACITY = 8;
+  const mondayRemaining = TIER_CAPACITY - (tierCounts?.monday || 0);
+  const tuesdayRemaining = TIER_CAPACITY - (tierCounts?.tuesday || 0);
 
   const [registeringEvent, setRegisteringEvent] = useState<Event | null>(null);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [paymentEnrollment, setPaymentEnrollment] = useState<{ id: string; event: Event } | null>(null);
+  const [calendlyEvent, setCalendlyEvent] = useState<Event | null>(null);
 
   const isLoading = eventsLoading || registrationsLoading;
 
-  // Handle PayPal return (one-time payments)
+  // Handle Stripe return - verify payment after redirect
   useEffect(() => {
     const paymentStatus = searchParams.get('payment');
     const enrollmentId = searchParams.get('enrollment');
-    const token = searchParams.get('token'); // PayPal order ID
+    const sessionId = searchParams.get('session_id');
 
-    if (paymentStatus === 'success' && token && enrollmentId) {
-      // Capture the payment
-      captureOrder.mutate(
-        { orderId: token, enrollmentId },
-        {
-          onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
-            // Clear URL params
-            setSearchParams({});
-          },
-          onError: (error) => {
-            console.error('Payment capture failed:', error);
-            setSearchParams({});
+    if (paymentStatus === 'success' && enrollmentId) {
+      // Verify the Stripe payment
+      if (sessionId) {
+        verifyPayment.mutate(
+          { sessionId, enrollmentId },
+          {
+            onSuccess: (result) => {
+              queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
+              // If this is a Case Consult, show Calendly modal
+              const event = events?.find(e =>
+                myRegistrations?.some(r => r.id === enrollmentId && r.training_id === e.id)
+              );
+              if (event?.name === 'StepWise Group Case Consult' && result.success) {
+                setCalendlyEvent(event);
+              }
+              setSearchParams({});
+            },
+            onError: (error) => {
+              console.error('Payment verification failed:', error);
+              setSearchParams({});
+            }
           }
-        }
-      );
+        );
+      } else {
+        // No session ID but marked success - just refresh
+        queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
+        setSearchParams({});
+      }
     } else if (paymentStatus === 'cancelled') {
       setSearchParams({});
     }
-  }, [searchParams]);
-
-  // Handle subscription return
-  useEffect(() => {
-    const subscriptionStatus = searchParams.get('subscription');
-    const enrollmentId = searchParams.get('enrollment');
-    const subscriptionId = searchParams.get('subscription_id');
-
-    if (subscriptionStatus === 'success' && enrollmentId) {
-      // Activate the subscription
-      activateSubscription.mutate(
-        { subscriptionId: subscriptionId || '', enrollmentId },
-        {
-          onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
-            setSearchParams({});
-          },
-          onError: (error) => {
-            console.error('Subscription activation failed:', error);
-            setSearchParams({});
-          }
-        }
-      );
-    } else if (subscriptionStatus === 'cancelled') {
-      setSearchParams({});
-    }
-  }, [searchParams]);
+  }, [searchParams, events, myRegistrations]);
 
   // Check if user is registered for an event
   const getRegistration = (eventId: string) => {
@@ -561,6 +840,44 @@ export default function PortalEvents() {
       setCancellingId(null);
     } catch {
       alert('Failed to cancel registration');
+    }
+  };
+
+  // Handle Case Consult registration with tier - goes directly to Stripe subscription
+  const createCheckout = useCreateStripeCheckout();
+  const [caseConsultPending, setCaseConsultPending] = useState(false);
+
+  const handleCaseConsultRegister = async (tier: CaseConsultTier) => {
+    if (!registeringEvent) return;
+
+    setCaseConsultPending(true);
+    try {
+      // First create the enrollment with the selected tier
+      const result = await registerMutation.mutateAsync({
+        eventId: registeringEvent.id,
+        guests: [],
+        paymentOption: 'self_only',
+        selectedTier: tier
+      });
+
+      // Then create Stripe subscription checkout
+      const tierInfo = CASE_CONSULT_TIERS[tier];
+      const checkoutResult = await createCheckout.mutateAsync({
+        enrollmentId: result.id,
+        priceInCents: tierInfo.price,
+        eventName: `${registeringEvent.name} - ${tierInfo.label} (${tierInfo.schedule})`,
+        isSubscription: true,
+      });
+
+      if (checkoutResult.checkoutUrl) {
+        window.location.href = checkoutResult.checkoutUrl;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error) {
+      console.error('Case Consult registration failed:', error);
+      alert(error instanceof Error ? error.message : 'Registration failed');
+      setCaseConsultPending(false);
     }
   };
 
@@ -636,6 +953,16 @@ export default function PortalEvents() {
                         <div className="flex items-center gap-2">
                           <h3 className="font-semibold text-foreground/80">
                             {event?.name || 'Event'}
+                            {/* Show tier for Case Consult */}
+                            {event?.name === 'StepWise Group Case Consult' && reg.selected_tier && (
+                              <span className={`ml-2 px-2 py-0.5 rounded text-xs font-medium ${
+                                reg.selected_tier === 'monday'
+                                  ? 'bg-blue-500/15 text-blue-600'
+                                  : 'bg-purple-500/15 text-purple-600'
+                              }`}>
+                                {reg.selected_tier === 'monday' ? 'Monday Tier' : 'Tuesday Tier'}
+                              </span>
+                            )}
                           </h3>
                           {reg.current_stage === 'waitlist' && (
                             <span className="px-2 py-0.5 rounded text-xs font-medium bg-orange-500/15 text-orange-500">
@@ -644,8 +971,16 @@ export default function PortalEvents() {
                           )}
                         </div>
                         <p className="text-sm text-foreground/50">
-                          {event?.start_date ? format(parseISO(event.start_date), 'MMM d, yyyy') : ''}
-                          {event?.location ? ` - ${event.location}` : ''}
+                          {event?.name === 'StepWise Group Case Consult' ? (
+                            reg.selected_tier === 'monday'
+                              ? '1st Monday each month - 3-5pm PT / 6-8pm ET'
+                              : '1st & 3rd Tuesday each month - 3-5pm PT / 6-8pm ET'
+                          ) : (
+                            <>
+                              {event?.start_date ? format(parseISO(event.start_date), 'MMM d, yyyy') : ''}
+                              {event?.location ? ` - ${event.location}` : ''}
+                            </>
+                          )}
                         </p>
                         {reg.guests && reg.guests.length > 0 && (
                           <p className="text-xs text-foreground/40 mt-1">
@@ -659,15 +994,33 @@ export default function PortalEvents() {
                       {needsPayment ? (
                         <button
                           onClick={() => event && setPaymentEnrollment({ id: reg.id, event: event as unknown as Event })}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#0070ba] text-white hover:bg-[#005ea6] transition-colors"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#635BFF] text-white hover:bg-[#5147e5] transition-colors"
                         >
                           <CreditCard className="h-3.5 w-3.5" />
                           Pay Now
                         </button>
                       ) : isPaid ? (
-                        <span className="px-2 py-0.5 rounded text-xs font-medium bg-green-500/15 text-green-600">
-                          Paid
-                        </span>
+                        <>
+                          <span className="px-2 py-0.5 rounded text-xs font-medium bg-green-500/15 text-green-600">
+                            Paid
+                          </span>
+                          {/* Show Schedule button for Case Consult - only their tier's Calendly */}
+                          {event?.name === 'StepWise Group Case Consult' && reg.selected_tier && (
+                            <a
+                              href={reg.selected_tier === 'monday' ? CALENDLY_CASE_CONSULT_MONDAY : CALENDLY_CASE_CONSULT_TUESDAY}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                reg.selected_tier === 'monday'
+                                  ? 'bg-blue-500/15 text-blue-600 hover:bg-blue-500/25'
+                                  : 'bg-purple-500/15 text-purple-600 hover:bg-purple-500/25'
+                              }`}
+                            >
+                              <Calendar className="h-3 w-3" />
+                              Schedule Session
+                            </a>
+                          )}
+                        </>
                       ) : null}
 
                       {cancellingId === reg.id ? (
@@ -760,18 +1113,36 @@ export default function PortalEvents() {
                           <span>
                             {event.start_date ? (
                               `${format(parseISO(event.start_date), 'MMM d')} - ${format(parseISO(event.end_date), 'MMM d, yyyy')}`
+                            ) : event.name === 'StepWise Group Case Consult' ? (
+                              '1st Monday or 1st & 3rd Tuesday each month'
                             ) : (
-                              '1st Tuesday of month @ 3pm PST'
+                              'Schedule TBD'
                             )}
                           </span>
                         </div>
-                        {event.location && (
+                        {(event.location || event.name === 'StepWise Group Case Consult') && (
                           <div className="flex items-center gap-2">
                             <MapPin className="h-4 w-4 shrink-0" />
-                            <span>{event.location}</span>
+                            <span>
+                              {event.name === 'StepWise Group Case Consult'
+                                ? 'Online, Zoom - 3 PM PT / 6 PM ET'
+                                : event.location}
+                            </span>
                           </div>
                         )}
-                        {event.max_capacity && (
+                        {event.name === 'StepWise Group Case Consult' ? (
+                          <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2">
+                              <Users className="h-4 w-4 shrink-0" />
+                              <span>Closed group. 5 month commitment.</span>
+                            </div>
+                            <div className="flex items-center gap-2 ml-6 text-sm">
+                              <span>{mondayRemaining} left Monday</span>
+                              <span className="text-foreground/30">|</span>
+                              <span>{tuesdayRemaining} left Tuesday</span>
+                            </div>
+                          </div>
+                        ) : event.max_capacity && (
                           <div className="flex items-center gap-2">
                             <Users className={cn(
                               "h-4 w-4 shrink-0",
@@ -790,21 +1161,24 @@ export default function PortalEvents() {
                             </span>
                           </div>
                         )}
-                        {event.price_cents && event.price_cents > 0 && (
+                        {/* Pricing display */}
+                        {event.name === 'StepWise Group Case Consult' ? (
                           <div className="flex items-center gap-2">
                             <DollarSign className="h-4 w-4 shrink-0" />
-                            {/* Show discount for Case Consult (was $125, now $75 = 40% off, monthly subscription) */}
-                            {event.name === 'StepWise Group Case Consult' ? (
-                              <span className="flex items-center gap-2 flex-wrap">
-                                <span className="line-through text-foreground/30">$125</span>
-                                <span className="font-medium" style={{ color }}>${event.price_cents / 100}/mo</span>
-                                <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-green-500/15 text-green-600">40% off</span>
-                              </span>
-                            ) : (
-                              <span>${event.price_cents / 100} per person</span>
-                            )}
+                            <span className="flex items-center gap-2 flex-wrap">
+                              <span className="font-medium" style={{ color }}>$75/mo</span>
+                              <span className="text-foreground/40">Mon</span>
+                              <span className="text-foreground/30">|</span>
+                              <span className="font-medium" style={{ color }}>$125/mo</span>
+                              <span className="text-foreground/40">Tue (2x)</span>
+                            </span>
                           </div>
-                        )}
+                        ) : event.price_cents && event.price_cents > 0 ? (
+                          <div className="flex items-center gap-2">
+                            <DollarSign className="h-4 w-4 shrink-0" />
+                            <span>${event.price_cents / 100} per person</span>
+                          </div>
+                        ) : null}
                       </div>
 
                       {/* Show description OR notes, not both (prefer description) */}
@@ -855,15 +1229,26 @@ export default function PortalEvents() {
         )}
       </motion.div>
 
-      {/* Registration Modal */}
+      {/* Registration Modal - different modal for Case Consult vs other events */}
       <AnimatePresence>
         {registeringEvent && (
-          <RegistrationModal
-            event={registeringEvent}
-            onClose={() => setRegisteringEvent(null)}
-            onRegister={(guests, paymentOption) => handleRegister(registeringEvent.id, guests, paymentOption)}
-            isPending={registerMutation.isPending}
-          />
+          registeringEvent.name === 'StepWise Group Case Consult' ? (
+            <CaseConsultRegistrationModal
+              event={registeringEvent}
+              onClose={() => { setRegisteringEvent(null); setCaseConsultPending(false); }}
+              onRegisterWithTier={handleCaseConsultRegister}
+              isPending={caseConsultPending}
+              mondayRemaining={mondayRemaining}
+              tuesdayRemaining={tuesdayRemaining}
+            />
+          ) : (
+            <RegistrationModal
+              event={registeringEvent}
+              onClose={() => setRegisteringEvent(null)}
+              onRegister={(guests, paymentOption) => handleRegister(registeringEvent.id, guests, paymentOption)}
+              isPending={registerMutation.isPending}
+            />
+          )
         )}
       </AnimatePresence>
 
@@ -877,7 +1262,21 @@ export default function PortalEvents() {
             onPaymentComplete={() => {
               setPaymentEnrollment(null);
               queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
+              // Show Calendly for Case Consult
+              if (paymentEnrollment.event.name === 'StepWise Group Case Consult') {
+                setCalendlyEvent(paymentEnrollment.event);
+              }
             }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Calendly Modal for scheduling */}
+      <AnimatePresence>
+        {calendlyEvent && (
+          <CalendlyModal
+            event={calendlyEvent}
+            onClose={() => setCalendlyEvent(null)}
           />
         )}
       </AnimatePresence>

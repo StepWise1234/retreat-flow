@@ -44,6 +44,7 @@ export interface EventRegistration {
   current_stage: string;
   payment_status: string | null;
   created_at: string;
+  selected_tier?: string | null;
   training?: Event;
   guests?: EventGuest[];
 }
@@ -189,6 +190,7 @@ export function useMyEventRegistrations() {
           status,
           payment_status,
           registered_at,
+          selected_tier,
           training:trainings(*),
           guests:event_guests(*)
         `)
@@ -205,6 +207,7 @@ export function useMyEventRegistrations() {
         current_stage: e.status,
         payment_status: e.payment_status,
         created_at: e.registered_at,
+        selected_tier: e.selected_tier,
         training: e.training,
         guests: e.guests || []
       })) as EventRegistration[];
@@ -248,7 +251,7 @@ export function useRegisterForEvent() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ eventId, guests, paymentOption }: { eventId: string; guests?: GuestInput[]; paymentOption?: PaymentOption }) => {
+    mutationFn: async ({ eventId, guests, paymentOption, selectedTier }: { eventId: string; guests?: GuestInput[]; paymentOption?: PaymentOption; selectedTier?: string }) => {
       if (!user?.id) throw new Error('Not authenticated');
 
       // Check if already enrolled
@@ -281,7 +284,8 @@ export function useRegisterForEvent() {
           user_id: user.id,
           status,
           payment_status: 'unpaid',
-          notes: paymentOption && guests && guests.length > 0 ? `payment_option:${paymentOption}` : null
+          notes: paymentOption && guests && guests.length > 0 ? `payment_option:${paymentOption}` : null,
+          selected_tier: selectedTier || null
         })
         .select()
         .single();
@@ -326,6 +330,7 @@ export function useRegisterForEvent() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
       queryClient.invalidateQueries({ queryKey: ['portal-events'] });
+      queryClient.invalidateQueries({ queryKey: ['case-consult-tier-counts'] });
     },
   });
 }
@@ -364,6 +369,34 @@ export function useCancelRegistration() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
       queryClient.invalidateQueries({ queryKey: ['portal-events'] });
+      queryClient.invalidateQueries({ queryKey: ['case-consult-tier-counts'] });
     },
+  });
+}
+
+// Get enrollment counts per tier for Case Consult
+export function useCaseConsultTierCounts(eventId: string | undefined) {
+  return useQuery({
+    queryKey: ['case-consult-tier-counts', eventId],
+    queryFn: async () => {
+      if (!eventId) return { monday: 0, tuesday: 0 };
+
+      const { data, error } = await supabase
+        .from('enrollments')
+        .select('selected_tier')
+        .eq('training_id', eventId)
+        .neq('status', 'cancelled');
+
+      if (error) throw error;
+
+      const counts = { monday: 0, tuesday: 0 };
+      (data || []).forEach(e => {
+        if (e.selected_tier === 'monday') counts.monday++;
+        if (e.selected_tier === 'tuesday') counts.tuesday++;
+      });
+
+      return counts;
+    },
+    enabled: !!eventId,
   });
 }
