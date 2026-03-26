@@ -209,7 +209,10 @@ function CaseConsultRegistrationModal({
   );
 }
 
-// Registration modal for events with guest support
+// Payment method type
+type PaymentMethod = 'stripe' | 'paypal' | 'venmo';
+
+// Registration modal for events with guest support and integrated payment
 function RegistrationModal({
   event,
   onClose,
@@ -218,15 +221,20 @@ function RegistrationModal({
 }: {
   event: Event;
   onClose: () => void;
-  onRegister: (guests: GuestInput[], paymentOption: PaymentOption) => void;
+  onRegister: (guests: GuestInput[], paymentOption: PaymentOption, paymentMethod?: PaymentMethod) => void;
   isPending: boolean;
 }) {
   const maxGuests = event.max_guests || 0;
   const [guests, setGuests] = useState<GuestInput[]>([]);
   const [paymentOption, setPaymentOption] = useState<PaymentOption>('self_only');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('stripe');
+  const [isProcessing, setIsProcessing] = useState(false);
   const color = getEventColor(event);
   const pricePerPerson = event.price_cents ? event.price_cents / 100 : 0;
   const validGuests = guests.filter(g => g.name.trim() && g.email.trim());
+  const createCheckout = useCreateStripeCheckout();
+  const registerForEvent = useRegisterForEvent();
+  const queryClient = useQueryClient();
 
   // Calculate total based on payment option
   const getTotal = () => {
@@ -255,6 +263,66 @@ function RegistrationModal({
     updated[index] = { ...updated[index], [field]: value };
     setGuests(updated);
   };
+
+  // Handle registration with payment
+  const handleRegisterAndPay = async () => {
+    setIsProcessing(true);
+    try {
+      // First register the user
+      const enrollment = await registerForEvent.mutateAsync({
+        eventId: event.id,
+        guests: validGuests,
+        paymentOption,
+      });
+
+      if (paymentMethod === 'stripe') {
+        // Create Stripe checkout session
+        const result = await createCheckout.mutateAsync({
+          enrollmentId: enrollment.id,
+          priceInCents: totalPrice * 100,
+          eventName: event.name,
+          isSubscription: false,
+        });
+
+        if (result.checkoutUrl) {
+          window.location.href = result.checkoutUrl;
+        } else {
+          throw new Error('No checkout URL received');
+        }
+      } else {
+        // For PayPal/Venmo, mark as registered and let them pay externally
+        // Update enrollment with payment method choice
+        await supabase
+          .from('enrollments')
+          .update({
+            payment_status: `pending_${paymentMethod}`,
+          })
+          .eq('id', enrollment.id);
+
+        queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
+
+        // Show payment instructions
+        const paymentLinks = {
+          paypal: 'https://paypal.me/laelaleonard',
+          venmo: 'https://venmo.com/laelaleonard',
+        };
+
+        // Open payment link in new tab
+        window.open(paymentLinks[paymentMethod], '_blank');
+
+        // Close modal - registration is confirmed
+        onClose();
+        alert(`Registration confirmed! Please complete your $${totalPrice} payment via ${paymentMethod === 'paypal' ? 'PayPal' : 'Venmo'}. A payment link has been opened in a new tab.`);
+      }
+    } catch (error) {
+      console.error('Registration failed:', error);
+      alert(error instanceof Error ? error.message : 'Registration failed');
+      setIsProcessing(false);
+    }
+  };
+
+  const isWaitlist = (event.spots_filled || 0) >= (event.max_capacity || 999);
+  const hasPaidEvent = pricePerPerson > 0;
 
   return (
     <motion.div
@@ -296,62 +364,126 @@ function RegistrationModal({
 
         {/* Content */}
         <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
-          {/* Price info */}
-          {pricePerPerson > 0 && (
-            <div className="p-4 rounded-xl bg-foreground/[0.03] space-y-3">
-              <div className="flex items-center gap-3">
-                <DollarSign className="h-5 w-5 text-foreground/40" />
-                <div>
-                  <p className="text-sm font-medium text-foreground/70">${pricePerPerson} per person</p>
-                  <p className="text-xs text-foreground/40 mt-0.5">Pay securely with PayPal or Venmo</p>
+          {/* Price display */}
+          {hasPaidEvent && (
+            <div className="p-4 rounded-xl bg-foreground/[0.03] text-center">
+              <p className="text-3xl font-semibold text-foreground/80">${totalPrice}</p>
+              <p className="text-sm text-foreground/50 mt-1">
+                {validGuests.length > 0 && paymentOption === 'all_including_self'
+                  ? `${1 + validGuests.length} people × $${pricePerPerson}`
+                  : 'Total due'
+                }
+              </p>
+            </div>
+          )}
+
+          {/* Guest payment options - only show if there are guests */}
+          {hasPaidEvent && validGuests.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-foreground/50 uppercase tracking-wide">Who's paying?</p>
+
+              <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-foreground/[0.06] cursor-pointer hover:border-foreground/[0.12] transition-colors">
+                <input
+                  type="radio"
+                  name="paymentOption"
+                  checked={paymentOption === 'all_including_self'}
+                  onChange={() => setPaymentOption('all_including_self')}
+                  className="w-4 h-4 accent-current"
+                  style={{ accentColor: color }}
+                />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-foreground/70">I'll pay for everyone</p>
+                  <p className="text-xs text-foreground/40">${pricePerPerson * (1 + validGuests.length)} total</p>
                 </div>
-              </div>
+              </label>
 
-              {/* Payment options - only show if there are guests */}
-              {validGuests.length > 0 && (
-                <div className="pt-3 border-t border-foreground/[0.06] space-y-2">
-                  <p className="text-xs font-medium text-foreground/50 uppercase tracking-wide">Payment Option</p>
-
-                  <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-foreground/[0.06] cursor-pointer hover:border-foreground/[0.12] transition-colors">
-                    <input
-                      type="radio"
-                      name="paymentOption"
-                      checked={paymentOption === 'all_including_self'}
-                      onChange={() => setPaymentOption('all_including_self')}
-                      className="w-4 h-4 accent-current"
-                      style={{ accentColor: color }}
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-foreground/70">I'll pay for all guests</p>
-                      <p className="text-xs text-foreground/40">${pricePerPerson * (1 + validGuests.length)} total</p>
-                    </div>
-                  </label>
-
-                  <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-foreground/[0.06] cursor-pointer hover:border-foreground/[0.12] transition-colors">
-                    <input
-                      type="radio"
-                      name="paymentOption"
-                      checked={paymentOption === 'self_only'}
-                      onChange={() => setPaymentOption('self_only')}
-                      className="w-4 h-4 accent-current"
-                      style={{ accentColor: color }}
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-foreground/70">Guests pay separately</p>
-                      <p className="text-xs text-foreground/40">Payment links sent to each guest via email</p>
-                    </div>
-                  </label>
+              <label className="flex items-center gap-3 p-3 rounded-lg bg-background border border-foreground/[0.06] cursor-pointer hover:border-foreground/[0.12] transition-colors">
+                <input
+                  type="radio"
+                  name="paymentOption"
+                  checked={paymentOption === 'self_only'}
+                  onChange={() => setPaymentOption('self_only')}
+                  className="w-4 h-4 accent-current"
+                  style={{ accentColor: color }}
+                />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-foreground/70">Guests pay separately</p>
+                  <p className="text-xs text-foreground/40">Payment links sent via email</p>
                 </div>
-              )}
+              </label>
+            </div>
+          )}
 
-              {/* Total summary */}
-              {validGuests.length > 0 && paymentOption === 'all_including_self' && (
-                <div className="pt-3 border-t border-foreground/[0.06]">
-                  <p className="text-sm font-medium text-foreground/70">
-                    Your total: <span style={{ color }}>${pricePerPerson * (1 + validGuests.length)}</span>
-                  </p>
+          {/* Payment method selection */}
+          {hasPaidEvent && !isWaitlist && (
+            <div className="space-y-3">
+              <p className="text-xs font-medium text-foreground/50 uppercase tracking-wide">Payment Method</p>
+
+              {/* Stripe / Credit Card */}
+              <button
+                onClick={() => setPaymentMethod('stripe')}
+                className={cn(
+                  "w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left",
+                  paymentMethod === 'stripe'
+                    ? "border-[#635BFF] bg-[#635BFF]/5"
+                    : "border-foreground/[0.08] hover:border-foreground/[0.15]"
+                )}
+              >
+                <div className="w-10 h-10 rounded-lg bg-[#635BFF] flex items-center justify-center shrink-0">
+                  <CreditCard className="h-5 w-5 text-white" />
                 </div>
-              )}
+                <div className="flex-1">
+                  <p className="font-medium text-foreground/80">Credit / Debit Card</p>
+                  <p className="text-xs text-foreground/50">Secure payment via Stripe</p>
+                </div>
+                {paymentMethod === 'stripe' && (
+                  <Check className="h-5 w-5 text-[#635BFF]" />
+                )}
+              </button>
+
+              {/* PayPal */}
+              <button
+                onClick={() => setPaymentMethod('paypal')}
+                className={cn(
+                  "w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left",
+                  paymentMethod === 'paypal'
+                    ? "border-[#003087] bg-[#003087]/5"
+                    : "border-foreground/[0.08] hover:border-foreground/[0.15]"
+                )}
+              >
+                <div className="w-10 h-10 rounded-lg bg-[#003087] flex items-center justify-center shrink-0">
+                  <span className="text-white font-bold text-sm">PP</span>
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-foreground/80">PayPal</p>
+                  <p className="text-xs text-foreground/50">Pay with your PayPal account</p>
+                </div>
+                {paymentMethod === 'paypal' && (
+                  <Check className="h-5 w-5 text-[#003087]" />
+                )}
+              </button>
+
+              {/* Venmo */}
+              <button
+                onClick={() => setPaymentMethod('venmo')}
+                className={cn(
+                  "w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left",
+                  paymentMethod === 'venmo'
+                    ? "border-[#008CFF] bg-[#008CFF]/5"
+                    : "border-foreground/[0.08] hover:border-foreground/[0.15]"
+                )}
+              >
+                <div className="w-10 h-10 rounded-lg bg-[#008CFF] flex items-center justify-center shrink-0">
+                  <span className="text-white font-bold text-sm">V</span>
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-foreground/80">Venmo</p>
+                  <p className="text-xs text-foreground/50">Pay with Venmo</p>
+                </div>
+                {paymentMethod === 'venmo' && (
+                  <Check className="h-5 w-5 text-[#008CFF]" />
+                )}
+              </button>
             </div>
           )}
 
@@ -416,24 +548,57 @@ function RegistrationModal({
         {/* Footer */}
         <div className="p-6 border-t border-foreground/[0.06] bg-foreground/[0.02]">
           {/* Waitlist notice */}
-          {(event.spots_filled || 0) >= (event.max_capacity || 999) && (
+          {isWaitlist && (
             <p className="text-xs text-foreground/50 text-center mb-3">
               This event is full. You'll be added to the waitlist and notified if a spot opens up.
             </p>
           )}
-          <button
-            onClick={() => onRegister(guests, paymentOption)}
-            disabled={isPending}
-            className="w-full px-4 py-3 rounded-xl text-sm font-medium text-white transition-all disabled:opacity-50"
-            style={{ backgroundColor: color }}
-          >
-            {isPending
-              ? 'Registering...'
-              : (event.spots_filled || 0) >= (event.max_capacity || 999)
-                ? 'Join Waitlist'
-                : 'Confirm Registration'
-            }
-          </button>
+
+          {/* Register button */}
+          {isWaitlist ? (
+            <button
+              onClick={() => onRegister(guests, paymentOption)}
+              disabled={isPending}
+              className="w-full px-4 py-3 rounded-xl text-sm font-medium text-white transition-all disabled:opacity-50"
+              style={{ backgroundColor: color }}
+            >
+              {isPending ? 'Joining...' : 'Join Waitlist'}
+            </button>
+          ) : hasPaidEvent ? (
+            <button
+              onClick={handleRegisterAndPay}
+              disabled={isProcessing || isPending}
+              className={cn(
+                "w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-white transition-all disabled:opacity-50",
+                paymentMethod === 'stripe' && "bg-[#635BFF] hover:bg-[#5147e5]",
+                paymentMethod === 'paypal' && "bg-[#003087] hover:bg-[#002060]",
+                paymentMethod === 'venmo' && "bg-[#008CFF] hover:bg-[#0070d6]"
+              )}
+            >
+              {isProcessing ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  {paymentMethod === 'stripe' && <CreditCard className="h-4 w-4" />}
+                  {paymentMethod === 'paypal' && <span className="font-bold">PP</span>}
+                  {paymentMethod === 'venmo' && <span className="font-bold">V</span>}
+                  Register & Pay ${totalPrice}
+                </>
+              )}
+            </button>
+          ) : (
+            <button
+              onClick={() => onRegister(guests, paymentOption)}
+              disabled={isPending}
+              className="w-full px-4 py-3 rounded-xl text-sm font-medium text-white transition-all disabled:opacity-50"
+              style={{ backgroundColor: color }}
+            >
+              {isPending ? 'Registering...' : 'Confirm Registration'}
+            </button>
+          )}
         </div>
       </motion.div>
     </motion.div>
