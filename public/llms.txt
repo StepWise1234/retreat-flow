@@ -1,0 +1,36 @@
+# StepWise.education - Agent Readiness Audit
+
+## About
+Provider of training programs and certification in Psychedelic-Assisted Therapies (PAT), with a focus on low-dose 5-meo-dmt.
+
+## Offerings
+### Training Programs:
+- **Level 1: Foundational PAT Training**
+    - Online course + In-person requirement (Canada, Costa Rica)
+    - Target Audience: Clinicians, Coaches
+- **Level 2: Intermediate PAT Training**
+    - Online course + In-person requirement
+    - Target Audience: Clinicians, Coaches
+- **Level 3: Advanced PAT Training**
+    - Online course + In-person requirement
+    - Target Audience: Clinicians, Coaches
+### Certification:
+- Qualifies individuals to practice PAT (jurisdiction dependent).
+- Requires completion of all 3 training levels + supervision.
+### Private Consultations:
+- For clinicians, coaches, and clients.
+### Directory:
+- Recommends certified practitioners for StepWise sessions.
+
+## Key Features
+- Certification program
+- Online and in-person components
+- International training locations (Canada, Costa Rica)
+- Focus on 5-meo-dmt PAT
+
+## Pricing
+- Refer to website for course package pricing and consultation rates.
+
+## Contact
+- Website: https://stepwise.education
+- Support/Inquiries: (Add primary contact email or link here if available)
