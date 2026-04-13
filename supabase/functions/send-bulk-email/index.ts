@@ -9,6 +9,13 @@ const corsHeaders = {
 interface EmailRecipient {
   email: string;
   name?: string;
+  first_name?: string;
+  last_name?: string;
+  training_name?: string;
+  training_date?: string;
+  // Allow custom html/subject per recipient for full personalization
+  html?: string;
+  subject?: string;
 }
 
 interface SendBulkEmailRequest {
@@ -25,14 +32,36 @@ Deno.serve(async (req) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  // Check for authorization header (basic validation)
+  // Check for authorization header
   const authHeader = req.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    console.log("[send-bulk-email] No bearer token provided");
+    return new Response(JSON.stringify({ error: "Unauthorized - no token" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
+
+  // Validate the JWT with Supabase
+  const token = authHeader.replace("Bearer ", "");
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+  const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
+
+  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    global: { headers: { Authorization: authHeader } }
+  });
+
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    console.log("[send-bulk-email] Token validation failed:", userError?.message);
+    return new Response(JSON.stringify({ error: "Unauthorized - invalid token" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  console.log(`[send-bulk-email] Authenticated user: ${user.email}`);
 
   const resendApiKey = Deno.env.get("RESEND_API_KEY");
 
@@ -56,6 +85,19 @@ Deno.serve(async (req) => {
 
     console.log(`[send-bulk-email] Sending to ${recipients.length} recipients`);
 
+    // Debug: log first recipient data to see what we're receiving
+    if (recipients.length > 0) {
+      const firstRecip = recipients[0];
+      console.log(`[send-bulk-email] First recipient data:`, {
+        email: firstRecip.email,
+        name: firstRecip.name,
+        first_name: firstRecip.first_name,
+        training_date: firstRecip.training_date,
+        hasPersonalizedHtml: !!firstRecip.html,
+        htmlSnippet: firstRecip.html?.substring(0, 200),
+      });
+    }
+
     // Send emails via Resend
     const results: { email: string; success: boolean; error?: string; id?: string }[] = [];
 
@@ -70,8 +112,8 @@ Deno.serve(async (req) => {
           ? `${from_name} <${from_email || "hello@stepwise.education"}>`
           : from_email || "hello@stepwise.education",
         to: [recipient.email],
-        subject: subject,
-        html: personalizeHtml(html, recipient),
+        subject: recipient.subject || personalizeHtml(subject, recipient),
+        html: recipient.html || personalizeHtml(html, recipient),
         reply_to: reply_to,
       }));
 
@@ -141,17 +183,35 @@ Deno.serve(async (req) => {
 });
 
 // Replace variables like {{firstName}} with actual values
-function personalizeHtml(html: string, recipient: EmailRecipient): string {
-  let result = html;
+function personalizeHtml(text: string, recipient: EmailRecipient): string {
+  let result = text;
 
-  // Extract first name from full name
-  const firstName = recipient.name?.split(" ")[0] || "";
-  const lastName = recipient.name?.split(" ").slice(1).join(" ") || "";
+  // Use explicit first/last name if provided, otherwise extract from full name
+  const firstName = recipient.first_name || recipient.name?.split(" ")[0] || "";
+  const lastName = recipient.last_name || recipient.name?.split(" ").slice(1).join(" ") || "";
 
+  // Format training date nicely
+  const formatDate = (dateStr: string | undefined): string => {
+    if (!dateStr) return "";
+    try {
+      return new Date(dateStr).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      });
+    } catch {
+      return dateStr;
+    }
+  };
+
+  result = result.replace(/\{\{first_name\}\}/gi, firstName);
   result = result.replace(/\{\{firstName\}\}/gi, firstName);
+  result = result.replace(/\{\{last_name\}\}/gi, lastName);
   result = result.replace(/\{\{lastName\}\}/gi, lastName);
-  result = result.replace(/\{\{name\}\}/gi, recipient.name || "");
+  result = result.replace(/\{\{name\}\}/gi, recipient.name || `${firstName} ${lastName}`.trim());
   result = result.replace(/\{\{email\}\}/gi, recipient.email);
+  result = result.replace(/\{\{training_name\}\}/gi, recipient.training_name || "");
+  result = result.replace(/\{\{training_date\}\}/gi, formatDate(recipient.training_date));
 
   return result;
 }

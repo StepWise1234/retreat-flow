@@ -232,35 +232,13 @@ export function useCourseWithContent(courseId: string | null) {
 
         lessons = lessonsData || [];
 
-        // Fetch resources via the protected API endpoint (bypasses RLS with service role)
-        try {
-          const { data: sessionData } = await supabase.auth.getSession();
-          const token = sessionData?.session?.access_token;
-
-          if (token) {
-            const response = await fetch('https://stepwise.education/resources-api/resources-by-modules', {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ module_ids: moduleIds }),
-            });
-
-            if (response.ok) {
-              resources = await response.json();
-            }
-          }
-        } catch (err) {
-          console.error('Error fetching resources:', err);
-          // Fallback to direct Supabase query (may return empty if RLS blocks)
-          const { data: resourcesData } = await supabase
-            .from('course_resources')
-            .select('*')
-            .in('module_id', moduleIds)
-            .order('sort_order', { ascending: true });
-          resources = resourcesData || [];
-        }
+        // Fetch resources directly from Supabase (RLS allows authenticated users to read)
+        const { data: resourcesData } = await supabase
+          .from('course_resources')
+          .select('*')
+          .in('module_id', moduleIds)
+          .order('sort_order', { ascending: true });
+        resources = resourcesData || [];
       }
 
       // Assemble the nested structure

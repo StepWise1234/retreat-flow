@@ -20,57 +20,25 @@ export default function ResourceViewer({ resources, courseColor, className }: Re
   const pdfResources = resources.filter(r => r.resource_type === 'pdf');
   const activeResource = pdfResources[activeIndex];
 
-  // Fetch authenticated PDF URL
+  // Build PDF URL directly (PDFs are served via Caddy)
   useEffect(() => {
     if (!activeResource) {
       setPdfUrl(null);
       return;
     }
 
-    const fetchPdfUrl = async () => {
-      setLoading(true);
-      try {
-        const { data: session } = await supabase.auth.getSession();
-        if (!session?.session?.access_token) {
-          setPdfUrl(null);
-          return;
-        }
+    setLoading(true);
+    const resourcePath = activeResource.file_path.startsWith('/')
+      ? activeResource.file_path.slice(1)
+      : activeResource.file_path;
 
-        const resourcePath = activeResource.file_path.startsWith('/')
-          ? activeResource.file_path.slice(1)
-          : activeResource.file_path;
-
-        const response = await fetch(
-          `https://stepwise.education/resources/${resourcePath}`,
-          {
-            headers: {
-              Authorization: `Bearer ${session.session.access_token}`,
-            },
-          }
-        );
-
-        if (response.ok) {
-          const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-          setPdfUrl(url);
-        } else {
-          console.error('Failed to fetch PDF:', response.statusText);
-          setPdfUrl(null);
-        }
-      } catch (error) {
-        console.error('Error fetching PDF:', error);
-        setPdfUrl(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPdfUrl();
+    // Direct URL to the PDF served by Caddy
+    const url = `https://stepwise.education/resources/${resourcePath}`;
+    setPdfUrl(url);
+    setLoading(false);
 
     return () => {
-      if (pdfUrl) {
-        URL.revokeObjectURL(pdfUrl);
-      }
+      // No blob URL to revoke since we're using direct URLs
     };
   }, [activeResource?.id]);
 
@@ -91,40 +59,15 @@ export default function ResourceViewer({ resources, courseColor, className }: Re
     );
   }
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
     if (!activeResource) return;
 
-    try {
-      const { data: session } = await supabase.auth.getSession();
-      if (!session?.session?.access_token) return;
+    const resourcePath = activeResource.file_path.startsWith('/')
+      ? activeResource.file_path.slice(1)
+      : activeResource.file_path;
 
-      const resourcePath = activeResource.file_path.startsWith('/')
-        ? activeResource.file_path.slice(1)
-        : activeResource.file_path;
-
-      const response = await fetch(
-        `https://stepwise.education/resources/${resourcePath}`,
-        {
-          headers: {
-            Authorization: `Bearer ${session.session.access_token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = activeResource.title + '.pdf';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      console.error('Download error:', error);
-    }
+    // Open in new tab for download
+    window.open(`https://stepwise.education/resources/${resourcePath}`, '_blank');
   };
 
   const hasPrev = activeIndex > 0;
