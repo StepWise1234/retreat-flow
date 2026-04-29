@@ -92,6 +92,9 @@ DROP POLICY IF EXISTS "room_reservations_select" ON public.room_reservations;
 DROP POLICY IF EXISTS "room_reservations_insert" ON public.room_reservations;
 DROP POLICY IF EXISTS "room_reservations_update" ON public.room_reservations;
 DROP POLICY IF EXISTS "room_reservations_delete" ON public.room_reservations;
+DROP POLICY IF EXISTS "room_reservations_select_for_training" ON public.room_reservations;
+DROP POLICY IF EXISTS "room_reservations_insert_own_for_application" ON public.room_reservations;
+DROP POLICY IF EXISTS "room_reservations_delete_own_for_application" ON public.room_reservations;
 DROP POLICY IF EXISTS "room_reservations_admin_all" ON public.room_reservations;
 
 CREATE POLICY "room_reservations_select_for_training"
