@@ -35,7 +35,36 @@ type CourseLevel = typeof LEVEL_HIERARCHY[number];
 
 function getLevelIndex(level: string | null): number {
   if (!level) return -1;
-  return LEVEL_HIERARCHY.indexOf(level as CourseLevel);
+  const normalized = level.trim().toLowerCase();
+  return LEVEL_HIERARCHY.findIndex((candidate) => candidate.toLowerCase() === normalized);
+}
+
+function isWorkshopOrOnline(event: Pick<Event, 'training_type'>): boolean {
+  const type = event.training_type?.trim().toLowerCase();
+  return type === 'workshop' || type === 'online';
+}
+
+export function shouldShowPortalEvent(event: Event, userLevel: string | null): boolean {
+  const normalizedName = event.name.trim().toLowerCase();
+  if (normalizedName === 'waitlist') return false;
+
+  if (isWorkshopOrOnline(event)) return true;
+
+  const hasCheckoutPrice = typeof event.price_cents === 'number' && event.price_cents > 0;
+
+  // Paid visible trainings should appear in /portal/events so participants can
+  // register and pay through the same Stripe checkout flow as workshops/events,
+  // even when the public application page keeps them hidden via show_on_apply.
+  if (hasCheckoutPrice) return true;
+
+  if (event.show_on_apply === false) return false;
+
+  const userLevelIndex = getLevelIndex(userLevel);
+  const eventLevelIndex = getLevelIndex(event.training_level);
+
+  if (userLevelIndex < 0 || eventLevelIndex < 0) return true;
+
+  return eventLevelIndex > userLevelIndex;
 }
 
 export interface EventRegistration {
@@ -123,37 +152,13 @@ export function useEvents() {
 
       if (error) throw error;
 
-      const userLevelIndex = getLevelIndex(userLevel || null);
-
-      // Filter events based on user's level
+      // Filter events based on user's level and portal checkout visibility.
       // - Workshops/Online: always visible to everyone
-      // - Trainings: only show levels HIGHER than user's current level
+      // - Paid trainings: visible here even if hidden from the public apply page,
+      //   so participants can register and pay via Stripe Checkout
+      // - Free/unpriced trainings: keep the application-page visibility/level rules
       const events = (data as Event[])
-        .filter(event => {
-          const isFull = (event.spots_filled || 0) >= (event.max_capacity || 999);
-          const isWorkshop = event.training_type === 'Workshop';
-          const isOnline = event.training_type === 'Online';
-          const isTraining = !isWorkshop && !isOnline;
-
-          // Respect hidden opt-in only for trainings.
-          // Workshops/online events are managed via event visibility.
-          if (isTraining && event.show_on_apply === false) return false;
-
-          // Workshops and Online events always visible (unless full)
-          if (isWorkshop || isOnline) return true;
-
-          // Hide full trainings
-          if (isFull) return false;
-
-          // Filter by level - only show higher levels than user's current
-          const eventLevelIndex = getLevelIndex(event.training_level);
-
-          // If user has no level yet, show all trainings
-          if (userLevelIndex < 0) return true;
-
-          // Only show events with higher level than user's current level
-          return eventLevelIndex > userLevelIndex;
-        })
+        .filter(event => shouldShowPortalEvent(event, userLevel || null))
         .sort((a, b) => {
           // Sort order: Workshops first, then Online, then Trainings
           const aIsWorkshop = a.training_type === 'Workshop';
