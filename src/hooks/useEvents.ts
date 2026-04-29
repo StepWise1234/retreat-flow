@@ -16,6 +16,7 @@ export interface Event {
   notes: string | null;
   description: string | null;
   is_visible: boolean;
+  show_on_apply: boolean | null;
   price_cents: number | null;
   max_guests: number | null;
 }
@@ -43,6 +44,7 @@ export interface EventRegistration {
   participant_id: string;
   current_stage: string;
   payment_status: string | null;
+  stripe_checkout_session_id?: string | null;
   created_at: string;
   selected_tier?: string | null;
   training?: Event;
@@ -131,6 +133,11 @@ export function useEvents() {
           const isFull = (event.spots_filled || 0) >= (event.max_capacity || 999);
           const isWorkshop = event.training_type === 'Workshop';
           const isOnline = event.training_type === 'Online';
+          const isTraining = !isWorkshop && !isOnline;
+
+          // Respect hidden opt-in only for trainings.
+          // Workshops/online events are managed via event visibility.
+          if (isTraining && event.show_on_apply === false) return false;
 
           // Workshops and Online events always visible (unless full)
           if (isWorkshop || isOnline) return true;
@@ -189,6 +196,7 @@ export function useMyEventRegistrations() {
           user_id,
           status,
           payment_status,
+          stripe_checkout_session_id,
           registered_at,
           selected_tier,
           training:trainings(*),
@@ -206,6 +214,7 @@ export function useMyEventRegistrations() {
         participant_id: e.user_id,
         current_stage: e.status,
         payment_status: e.payment_status,
+        stripe_checkout_session_id: e.stripe_checkout_session_id,
         created_at: e.registered_at,
         selected_tier: e.selected_tier,
         training: e.training,

@@ -29,14 +29,53 @@ serve(async (req) => {
 
     const { sessionId, enrollmentId } = await req.json()
 
-    if (!sessionId || !enrollmentId) {
-      throw new Error('Missing sessionId or enrollmentId')
+    if (!enrollmentId) {
+      throw new Error('Missing enrollmentId')
+    }
+
+    const { data: enrollment, error: enrollmentError } = await supabase
+      .from('enrollments')
+      .select('id, user_id, stripe_checkout_session_id')
+      .eq('id', enrollmentId)
+      .single()
+
+    if (enrollmentError || !enrollment) {
+      throw new Error('Enrollment not found')
+    }
+
+    const resolveSession = async () => {
+      if (sessionId) {
+        return stripe.checkout.sessions.retrieve(sessionId, {
+          expand: ['subscription', 'payment_intent'],
+        })
+      }
+
+      if (enrollment.stripe_checkout_session_id) {
+        return stripe.checkout.sessions.retrieve(enrollment.stripe_checkout_session_id, {
+          expand: ['subscription', 'payment_intent'],
+        })
+      }
+
+      let startingAfter: string | undefined
+      for (let i = 0; i < 20; i++) {
+        const page = await stripe.checkout.sessions.list({
+          limit: 100,
+          starting_after: startingAfter,
+        })
+        const match = page.data.find((candidate) => candidate.metadata?.enrollmentId === enrollmentId)
+        if (match) {
+          return stripe.checkout.sessions.retrieve(match.id, {
+            expand: ['subscription', 'payment_intent'],
+          })
+        }
+        if (!page.has_more || page.data.length === 0) break
+        startingAfter = page.data[page.data.length - 1].id
+      }
+      throw new Error('Stripe checkout session not found for enrollment')
     }
 
     // Retrieve the checkout session from Stripe
-    const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ['subscription', 'payment_intent'],
-    })
+    const session = await resolveSession()
 
     // Verify the session matches the enrollment
     if (session.metadata?.enrollmentId !== enrollmentId) {
@@ -65,6 +104,7 @@ serve(async (req) => {
     // Update enrollment with payment status
     const updateData: Record<string, unknown> = {
       payment_status: paymentStatus,
+      stripe_checkout_session_id: session.id,
     }
 
     if (subscriptionId) {
@@ -72,13 +112,17 @@ serve(async (req) => {
     }
 
     if (amountPaid) {
-      updateData.amount_paid_cents = amountPaid
+      updateData.payment_amount_cents = amountPaid
+      updateData.payment_date = new Date().toISOString()
     }
 
-    await supabase
+    const { error: updateError } = await supabase
       .from('enrollments')
       .update(updateData)
       .eq('id', enrollmentId)
+    if (updateError) {
+      throw new Error(`Failed to update enrollment payment status: ${updateError.message}`)
+    }
 
     return new Response(
       JSON.stringify({

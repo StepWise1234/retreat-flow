@@ -11,6 +11,7 @@ import MasteryLevels from '@/components/application/MasteryLevels';
 import TrainingStatusDashboard from '@/components/application/TrainingStatusDashboard';
 import { useApplicationRetreats, REQUEST_INFO_ID, WAITLIST_ID } from '@/hooks/useApplicationRetreats';
 import { supabase } from '@/integrations/supabase/client';
+import { submitApplicantApplication } from '@/lib/applicationSubmission';
 
 import FormHeader from '@/components/application/FormHeader';
 import MadLibInput from '@/components/application/MadLibInput';
@@ -380,7 +381,7 @@ export default function Apply() {
         .join(', ');
       const emergencyContact = [form.emergencyFirstName, form.emergencyLastName].filter(Boolean).join(' ');
 
-      const { error: applicantError } = await supabase.from('applicants').insert({
+      const applicantPayload = {
         name: fullName,
         email: form.email.trim(),
         phone: form.phone.trim() || null,
@@ -426,9 +427,11 @@ export default function Apply() {
         strengths_hobbies: form.strengthsHobbies.trim() || null,
         anything_else: form.anythingElse.trim() || null,
         notes: isWaitlist ? 'Joined waitlist for next training' : null,
-      });
+      };
 
-      if (applicantError) {
+      try {
+        await submitApplicantApplication(supabase, applicantPayload);
+      } catch (applicantError) {
         console.error('Application submission error:', applicantError);
         toast.error('Failed to submit application. Please try again.');
         return;

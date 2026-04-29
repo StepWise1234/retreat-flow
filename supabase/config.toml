@@ -1,4 +1,26 @@
-project_id = "ofgdycudacoqvkxtbadr"
+project_id = "ybludwecmqghoheotzzz"
+
+[auth]
+site_url = "https://stepwise.education/portal"
+additional_redirect_urls = [
+  "https://stepwise.education/portal",
+  "https://stepwise.education/portal/",
+  "https://app.stepwise.education",
+  "https://app.stepwise.education/",
+  "https://app.stepwise.education/portal",
+  "https://app.stepwise.education/portal/"
+]
+
+[auth.email.smtp]
+enabled = false
+admin_email = "hello@stepwise.education"
+sender_name = "StepWise"
+
+# Custom Resend email hook for branded admin and portal magic links.
+[auth.hook.send_email]
+enabled = true
+uri = "https://ybludwecmqghoheotzzz.supabase.co/functions/v1/auth-send-email"
+secrets = "env(SEND_EMAIL_HOOK_SECRET)"
 
 [functions.send-email]
 verify_jwt = false
@@ -13,4 +35,22 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.sync-vimeo]
+verify_jwt = false
+
+[functions.auth-send-email]
+verify_jwt = false
+
+[functions.auth-email-debug]
+verify_jwt = false
+
+[functions.submit-application]
+verify_jwt = false
+
+[functions.select-training]
+verify_jwt = true
+
+[functions.submit-facilitator-inquiry]
+verify_jwt = false
+
+[functions.submit-public-feedback]
 verify_jwt = false

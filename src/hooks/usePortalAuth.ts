@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
 
+const MAGIC_LINK_REDIRECT_URL = 'https://stepwise.education/portal';
+
 export function usePortalAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -29,56 +31,8 @@ export function usePortalAuth() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/portal`,
+        emailRedirectTo: MAGIC_LINK_REDIRECT_URL,
       },
-    });
-    return { error };
-  };
-
-  const signInWithPassword = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    return { error };
-  };
-
-  const signUpWithPassword = async (email: string, password: string) => {
-    // Use edge function to set password (handles both new and existing users)
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-
-    try {
-      const response = await fetch(`${supabaseUrl}/functions/v1/set-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': anonKey,
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        return { error: { message: result.error || 'Failed to set password' } };
-      }
-
-      // Password set successfully, now sign in
-      const signInResult = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      return { error: signInResult.error, user: signInResult.data?.user };
-    } catch (err: any) {
-      return { error: { message: err.message || 'Network error' } };
-    }
-  };
-
-  const resetPassword = async (email: string) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/portal/reset-password`,
     });
     return { error };
   };
@@ -87,5 +41,5 @@ export function usePortalAuth() {
     await supabase.auth.signOut();
   };
 
-  return { user, session, loading, signInWithMagicLink, signInWithPassword, signUpWithPassword, resetPassword, signOut };
+  return { user, session, loading, signInWithMagicLink, signOut };
 }

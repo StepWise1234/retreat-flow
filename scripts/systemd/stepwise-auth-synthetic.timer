@@ -1,0 +1,12 @@
+[Unit]
+Description=Run StepWise auth synthetic check every 10 minutes
+
+[Timer]
+OnBootSec=2m
+OnUnitActiveSec=10m
+AccuracySec=1m
+Persistent=true
+Unit=stepwise-auth-synthetic.service
+
+[Install]
+WantedBy=timers.target

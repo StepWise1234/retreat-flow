@@ -2,12 +2,15 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bed, UtensilsCrossed, StickyNote, Star, Check, Loader2, Calendar, MapPin, Clock, ShoppingCart, Car, X, ChefHat, Sun, Moon } from 'lucide-react';
 import { toast } from 'sonner';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useApplication } from '@/hooks/useApplication';
 import { useAccommodation } from '@/hooks/useAccommodation';
 import { useTrainerAssignment } from '@/hooks/useTrainerAssignment';
 import { WAITLIST_ID } from '@/hooks/useApplicationRetreats';
 import { supabase } from '@/integrations/supabase/client';
+import { useCreateStripeCheckout, useVerifyStripePayment } from '@/hooks/useStripe';
+import { selectPortalTraining } from '@/lib/portalTrainingSelection';
 import { cn } from '@/lib/utils';
 
 // Import room images from assets
@@ -222,6 +225,9 @@ interface Training {
 
 export default function PortalAccommodation() {
   const { application, isLoading: appLoading, updateApplication } = useApplication();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const createCheckout = useCreateStripeCheckout();
+  const verifyPayment = useVerifyStripePayment();
   const [userId, setUserId] = useState<string | null>(null);
   const [dietaryPreferences, setDietaryPreferences] = useState<string[]>([]);
   const [dietaryOther, setDietaryOther] = useState('');
@@ -263,6 +269,41 @@ export default function PortalAccommodation() {
       setSelectedTrainerTraining(assignedTrainings[0]?.id || null);
     }
   }, [isTrainer, assignedTrainings, selectedTrainerTraining]);
+
+  useEffect(() => {
+    const payment = searchParams.get('payment');
+    const enrollmentId = searchParams.get('enrollment');
+    const sessionId = searchParams.get('session_id') || undefined;
+
+    if (payment === 'cancelled') {
+      toast.info('Stripe checkout was cancelled. You can restart payment from this page.');
+      setSearchParams({}, { replace: true });
+      return;
+    }
+
+    if (payment !== 'success' || !enrollmentId) return;
+
+    verifyPayment.mutate(
+      { enrollmentId, sessionId },
+      {
+        onSuccess: (result) => {
+          if (result.success) {
+            toast.success('Payment confirmed! Your training registration is complete.');
+          } else {
+            toast.info('Stripe checkout returned, but payment is not marked paid yet. We will keep checking it from your registration.');
+          }
+          setSearchParams({}, { replace: true });
+        },
+        onError: (error) => {
+          console.error('Training payment verification failed:', error);
+          toast.error('We could not verify payment yet. If Stripe charged you, please contact us before paying again.');
+          setSearchParams({}, { replace: true });
+        },
+      },
+    );
+    // Run once for the Stripe return URL; mutation objects are not stable dependencies.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { data: training, isLoading: trainingLoading } = useQuery({
     queryKey: ['training', trainingId],
@@ -561,69 +602,32 @@ export default function PortalAccommodation() {
     setIsSubmitting(true);
 
     try {
-      // Get user email for applicant lookup
-      const { data: userData } = await supabase.auth.getUser();
-      const userEmail = userData?.user?.email;
+      const result = await selectPortalTraining(supabase, {
+        trainingId: selectedTrainingId,
+        applicationId: application?.id,
+      });
 
-      if (!userEmail) {
-        toast.error('Unable to find your account information');
-        return;
+      if (result.enrollment_id && result.price_cents && result.price_cents > 0 && result.payment_status !== 'paid') {
+        toast.success('Training selected. Redirecting to Stripe checkout...');
+        const baseUrl = window.location.origin;
+        const checkout = await createCheckout.mutateAsync({
+          enrollmentId: result.enrollment_id,
+          priceInCents: result.price_cents,
+          eventName: result.training_name || 'StepWise Training',
+          isSubscription: false,
+          successUrl: `${baseUrl}/portal/accommodation?payment=success&enrollment=${result.enrollment_id}&session_id={CHECKOUT_SESSION_ID}`,
+          cancelUrl: `${baseUrl}/portal/accommodation?payment=cancelled`,
+        });
+
+        if (checkout.checkoutUrl) {
+          window.location.href = checkout.checkoutUrl;
+          return;
+        }
+
+        throw new Error('No checkout URL received');
       }
 
-      // Check if user has an applicant record, if so update it
-      const { data: existingApplicant } = await supabase
-        .from('applicants')
-        .select('id')
-        .eq('email', userEmail)
-        .maybeSingle();
-
-      if (existingApplicant) {
-        // Update existing applicant
-        const { error: updateError } = await supabase
-          .from('applicants')
-          .update({
-            training_id: selectedTrainingId,
-            pipeline_stage: 'interview',
-            app_status: 'Interview Scheduled',
-            notes: `Selected training on ${new Date().toLocaleDateString()}`,
-          })
-          .eq('id', existingApplicant.id);
-
-        if (updateError) throw updateError;
-      } else {
-        // Create new applicant record
-        const userName = userData?.user?.user_metadata?.first_name
-          ? `${userData.user.user_metadata.first_name} ${userData.user.user_metadata.last_name || ''}`
-          : userEmail.split('@')[0];
-
-        const { error: insertError } = await supabase
-          .from('applicants')
-          .insert({
-            name: userName,
-            email: userEmail,
-            phone: userData?.user?.phone || null,
-            training_id: selectedTrainingId,
-            pipeline_stage: 'interview',
-            app_status: 'Interview Scheduled',
-            application_date: new Date().toISOString(),
-            notes: `Selected training from portal on ${new Date().toLocaleDateString()}`,
-          });
-
-        if (insertError) throw insertError;
-      }
-
-      // Also update the applications table if they have one
-      if (application?.id) {
-        await supabase
-          .from('applications')
-          .update({
-            training_id: selectedTrainingId,
-            status: 'interview',
-          })
-          .eq('id', application.id);
-      }
-
-      toast.success('Training selected! Our team will reach out to schedule your interview.');
+      toast.success(result.already_registered ? 'Training registration found.' : 'Training registered!');
 
       // Refresh the page to show accommodation options
       window.location.reload();
@@ -741,7 +745,7 @@ export default function PortalAccommodation() {
                       ) : (
                         <>
                           <Check className="w-4 h-4" />
-                          Select This Training
+                          Register & Pay
                         </>
                       )}
                     </motion.button>

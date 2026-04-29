@@ -1,0 +1,16 @@
+[Unit]
+Description=StepWise auth synthetic magic-link check
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/retreat-flow_build
+Environment=SUPABASE_PROJECT_REF=ybludwecmqghoheotzzz
+Environment=EXPECTED_SUPABASE_REF=ybludwecmqghoheotzzz
+EnvironmentFile=/etc/stepwise/auth-synthetic.env
+ExecStart=/usr/bin/node /opt/retreat-flow_build/scripts/synthetic-magic-link-check.mjs
+StandardOutput=append:/var/log/stepwise-auth-synthetic.log
+StandardError=append:/var/log/stepwise-auth-synthetic.log
+
+[Install]
+WantedBy=multi-user.target
