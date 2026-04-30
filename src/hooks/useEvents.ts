@@ -50,14 +50,15 @@ export function shouldShowPortalEvent(event: Event, userLevel: string | null): b
 
   if (isWorkshopOrOnline(event)) return true;
 
+  // For trainings, the admin panel's show_on_apply toggle is labeled
+  // "allow signups". Respect it before allowing portal registration.
+  if (event.show_on_apply === false) return false;
+
   const hasCheckoutPrice = typeof event.price_cents === 'number' && event.price_cents > 0;
 
-  // Paid visible trainings should appear in /portal/events so participants can
-  // register and pay through the same Stripe checkout flow as workshops/events,
-  // even when the public application page keeps them hidden via show_on_apply.
+  // Paid visible trainings should appear in /portal/events when admins allow
+  // signups, so participants can register and pay through Stripe Checkout.
   if (hasCheckoutPrice) return true;
-
-  if (event.show_on_apply === false) return false;
 
   const userLevelIndex = getLevelIndex(userLevel);
   const eventLevelIndex = getLevelIndex(event.training_level);
@@ -154,8 +155,9 @@ export function useEvents() {
 
       // Filter events based on user's level and portal checkout visibility.
       // - Workshops/Online: always visible to everyone
-      // - Paid trainings: visible here even if hidden from the public apply page,
-      //   so participants can register and pay via Stripe Checkout
+      // - Paid trainings: visible when admins allow signups, so participants
+      //   can register and pay via Stripe Checkout
+      // - Hidden trainings: excluded from portal registration
       // - Free/unpriced trainings: keep the application-page visibility/level rules
       const events = (data as Event[])
         .filter(event => shouldShowPortalEvent(event, userLevel || null))

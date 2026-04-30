@@ -21,8 +21,20 @@ const baseEvent: Event = {
 };
 
 describe('portal event visibility', () => {
-  it('shows paid trainings in /portal/events even when hidden from public apply', () => {
-    expect(shouldShowPortalEvent(baseEvent, 'Beginning')).toBe(true);
+  it('shows paid trainings in /portal/events when admin allows signups', () => {
+    expect(
+      shouldShowPortalEvent(
+        {
+          ...baseEvent,
+          show_on_apply: true,
+        },
+        'Beginning',
+      ),
+    ).toBe(true);
+  });
+
+  it('does not show paid trainings when admin hides them from signups', () => {
+    expect(shouldShowPortalEvent(baseEvent, 'Beginning')).toBe(false);
   });
 
   it('does not show the special application waitlist pseudo-training', () => {
