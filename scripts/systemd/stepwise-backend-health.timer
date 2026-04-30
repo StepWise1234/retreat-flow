@@ -1,0 +1,12 @@
+[Unit]
+Description=Run StepWise backend health check every 10 minutes without sending emails
+
+[Timer]
+OnBootSec=2m
+OnUnitActiveSec=10m
+AccuracySec=1m
+Persistent=true
+Unit=stepwise-backend-health.service
+
+[Install]
+WantedBy=timers.target

@@ -9,6 +9,7 @@ import MadLibInput from '@/components/application/MadLibInput';
 import MadLibTextarea from '@/components/application/MadLibTextarea';
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 import { supabase } from '@/integrations/supabase/client';
+import { submitFacilitatorInquiry } from '@/lib/publicFormSubmissions';
 
 export default function FindFacilitator() {
   const [submitted, setSubmitted] = useState(false);
@@ -40,22 +41,18 @@ export default function FindFacilitator() {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase
-        .from('facilitator_inquiries')
-        .insert({
-          first_name: form.firstName.trim(),
-          last_name: form.lastName.trim() || null,
-          email: form.email.trim(),
-          phone: form.phone.trim() || null,
-          location: form.location.trim() || null,
-          previous_experience: form.previousExperience.trim() || null,
-          current_support: form.currentSupport.trim() || null,
-          goals: form.goals.trim() || null,
-          how_heard: form.howHeard.trim() || null,
-          additional_info: form.additionalInfo.trim() || null,
-        });
-
-      if (error) throw error;
+      await submitFacilitatorInquiry(supabase, {
+        first_name: form.firstName.trim(),
+        last_name: form.lastName.trim() || null,
+        email: form.email.trim(),
+        phone: form.phone.trim() || null,
+        location: form.location.trim() || null,
+        previous_experience: form.previousExperience.trim() || null,
+        current_support: form.currentSupport.trim() || null,
+        goals: form.goals.trim() || null,
+        how_heard: form.howHeard.trim() || null,
+        additional_info: form.additionalInfo.trim() || null,
+      });
 
       setSubmitted(true);
     } catch (err) {

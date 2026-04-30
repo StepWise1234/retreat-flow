@@ -51,6 +51,14 @@ serve(async (req) => {
       throw new Error('User not found')
     }
 
+    const ensureSessionTokenInSuccessUrl = (url: string) => {
+      if (url.includes('{CHECKOUT_SESSION_ID}')) return url
+      const separator = url.includes('?') ? '&' : '?'
+      return `${url}${separator}session_id={CHECKOUT_SESSION_ID}`
+    }
+    const resolvedSuccessUrl = ensureSessionTokenInSuccessUrl(successUrl)
+    const resolvedCancelUrl = cancelUrl
+
     let session: Stripe.Checkout.Session
 
     if (isSubscription) {
@@ -97,8 +105,8 @@ serve(async (req) => {
             quantity: 1,
           },
         ],
-        success_url: successUrl,
-        cancel_url: cancelUrl,
+        success_url: resolvedSuccessUrl,
+        cancel_url: resolvedCancelUrl,
         metadata: {
           enrollmentId,
           eventName,
@@ -131,8 +139,8 @@ serve(async (req) => {
             quantity: 1,
           },
         ],
-        success_url: successUrl,
-        cancel_url: cancelUrl,
+        success_url: resolvedSuccessUrl,
+        cancel_url: resolvedCancelUrl,
         metadata: {
           enrollmentId,
           eventName,

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Send, CheckCircle2, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { submitPublicFeedback } from '@/lib/publicFormSubmissions';
 import { toast } from 'sonner';
 
 interface FeedbackData {
@@ -76,7 +77,7 @@ export default function PublicFeedback() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const updateFeedback = (key: keyof FeedbackData, value: any) => {
+  const updateFeedback = <K extends keyof FeedbackData>(key: K, value: FeedbackData[K]) => {
     setFeedback((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -307,7 +308,7 @@ export default function PublicFeedback() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from('public_feedback').insert({
+      await submitPublicFeedback(supabase, {
         first_name: feedback.first_name,
         last_name: feedback.last_name,
         email: feedback.email,
@@ -325,13 +326,11 @@ export default function PublicFeedback() {
         additional_comments: feedback.additional_comments || null,
       });
 
-      if (error) throw error;
-
       setIsSubmitted(true);
       toast.success('Thank you for your feedback!');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Feedback submission error:', err);
-      toast.error(err.message || 'Failed to submit feedback');
+      toast.error(err instanceof Error ? err.message : 'Failed to submit feedback');
     } finally {
       setIsSubmitting(false);
     }

@@ -36,7 +36,9 @@ export function useCreateStripeCheckout() {
           priceInCents,
           eventName,
           isSubscription,
-          successUrl: successUrl || `${baseUrl}/portal/events?payment=success&enrollment=${enrollmentId}`,
+          successUrl:
+            successUrl ||
+            `${baseUrl}/portal/events?payment=success&enrollment=${enrollmentId}&session_id={CHECKOUT_SESSION_ID}`,
           cancelUrl: cancelUrl || `${baseUrl}/portal/events?payment=cancelled`,
         },
       });
@@ -51,7 +53,7 @@ export function useCreateStripeCheckout() {
 }
 
 interface VerifyPaymentParams {
-  sessionId: string;
+  sessionId?: string;
   enrollmentId: string;
 }
 
@@ -59,7 +61,7 @@ export function useVerifyStripePayment() {
   return useMutation({
     mutationFn: async ({ sessionId, enrollmentId }: VerifyPaymentParams) => {
       const response = await supabase.functions.invoke('stripe-verify-payment', {
-        body: { sessionId, enrollmentId },
+        body: { sessionId: sessionId || null, enrollmentId },
       });
 
       if (response.error) {

@@ -10,7 +10,7 @@ const PAYPAL_API_URL = "https://api-m.paypal.com"; // Live
 
 // Case Consult Plan ID - you need to create this in PayPal first
 // We'll create it on first request if it doesn't exist
-let CASE_CONSULT_PLAN_ID: string | null = null;
+const CASE_CONSULT_PLAN_ID: string | null = null;
 
 async function getPayPalAccessToken(): Promise<string> {
   const clientId = Deno.env.get("PAYPAL_CLIENT_ID");
@@ -196,7 +196,7 @@ serve(async (req) => {
       .eq("id", enrollmentId);
 
     // Find approval link
-    const approvalLink = subscriptionData.links?.find((link: any) => link.rel === "approve")?.href;
+    const approvalLink = subscriptionData.links?.find((link: { rel?: string; href?: string }) => link.rel === "approve")?.href;
 
     return new Response(JSON.stringify({
       subscriptionId: subscriptionData.id,

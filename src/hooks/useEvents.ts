@@ -16,6 +16,7 @@ export interface Event {
   notes: string | null;
   description: string | null;
   is_visible: boolean;
+  show_on_apply: boolean | null;
   price_cents: number | null;
   max_guests: number | null;
 }
@@ -34,7 +35,37 @@ type CourseLevel = typeof LEVEL_HIERARCHY[number];
 
 function getLevelIndex(level: string | null): number {
   if (!level) return -1;
-  return LEVEL_HIERARCHY.indexOf(level as CourseLevel);
+  const normalized = level.trim().toLowerCase();
+  return LEVEL_HIERARCHY.findIndex((candidate) => candidate.toLowerCase() === normalized);
+}
+
+function isWorkshopOrOnline(event: Pick<Event, 'training_type'>): boolean {
+  const type = event.training_type?.trim().toLowerCase();
+  return type === 'workshop' || type === 'online';
+}
+
+export function shouldShowPortalEvent(event: Event, userLevel: string | null): boolean {
+  const normalizedName = event.name.trim().toLowerCase();
+  if (normalizedName === 'waitlist') return false;
+
+  if (isWorkshopOrOnline(event)) return true;
+
+  // For trainings, the admin panel's show_on_apply toggle is labeled
+  // "allow signups". Respect it before allowing portal registration.
+  if (event.show_on_apply === false) return false;
+
+  const hasCheckoutPrice = typeof event.price_cents === 'number' && event.price_cents > 0;
+
+  // Paid visible trainings should appear in /portal/events when admins allow
+  // signups, so participants can register and pay through Stripe Checkout.
+  if (hasCheckoutPrice) return true;
+
+  const userLevelIndex = getLevelIndex(userLevel);
+  const eventLevelIndex = getLevelIndex(event.training_level);
+
+  if (userLevelIndex < 0 || eventLevelIndex < 0) return true;
+
+  return eventLevelIndex > userLevelIndex;
 }
 
 export interface EventRegistration {
@@ -43,6 +74,7 @@ export interface EventRegistration {
   participant_id: string;
   current_stage: string;
   payment_status: string | null;
+  stripe_checkout_session_id?: string | null;
   created_at: string;
   selected_tier?: string | null;
   training?: Event;
@@ -121,32 +153,14 @@ export function useEvents() {
 
       if (error) throw error;
 
-      const userLevelIndex = getLevelIndex(userLevel || null);
-
-      // Filter events based on user's level
+      // Filter events based on user's level and portal checkout visibility.
       // - Workshops/Online: always visible to everyone
-      // - Trainings: only show levels HIGHER than user's current level
+      // - Paid trainings: visible when admins allow signups, so participants
+      //   can register and pay via Stripe Checkout
+      // - Hidden trainings: excluded from portal registration
+      // - Free/unpriced trainings: keep the application-page visibility/level rules
       const events = (data as Event[])
-        .filter(event => {
-          const isFull = (event.spots_filled || 0) >= (event.max_capacity || 999);
-          const isWorkshop = event.training_type === 'Workshop';
-          const isOnline = event.training_type === 'Online';
-
-          // Workshops and Online events always visible (unless full)
-          if (isWorkshop || isOnline) return true;
-
-          // Hide full trainings
-          if (isFull) return false;
-
-          // Filter by level - only show higher levels than user's current
-          const eventLevelIndex = getLevelIndex(event.training_level);
-
-          // If user has no level yet, show all trainings
-          if (userLevelIndex < 0) return true;
-
-          // Only show events with higher level than user's current level
-          return eventLevelIndex > userLevelIndex;
-        })
+        .filter(event => shouldShowPortalEvent(event, userLevel || null))
         .sort((a, b) => {
           // Sort order: Workshops first, then Online, then Trainings
           const aIsWorkshop = a.training_type === 'Workshop';
@@ -189,6 +203,7 @@ export function useMyEventRegistrations() {
           user_id,
           status,
           payment_status,
+          stripe_checkout_session_id,
           registered_at,
           selected_tier,
           training:trainings(*),
@@ -206,6 +221,7 @@ export function useMyEventRegistrations() {
         participant_id: e.user_id,
         current_stage: e.status,
         payment_status: e.payment_status,
+        stripe_checkout_session_id: e.stripe_checkout_session_id,
         created_at: e.registered_at,
         selected_tier: e.selected_tier,
         training: e.training,

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, Users, Clock, Check, X, ChevronRight, Sparkles, UserPlus, DollarSign, Trash2, CreditCard, Loader2, ExternalLink } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
@@ -235,6 +235,13 @@ function RegistrationModal({
   const createCheckout = useCreateStripeCheckout();
   const registerForEvent = useRegisterForEvent();
   const queryClient = useQueryClient();
+  const isStripeOnlyEvent = event.name === 'StepWise Day';
+
+  useEffect(() => {
+    if (isStripeOnlyEvent && paymentMethod !== 'stripe') {
+      setPaymentMethod('stripe');
+    }
+  }, [isStripeOnlyEvent, paymentMethod]);
 
   // Calculate total based on payment option
   const getTotal = () => {
@@ -268,6 +275,7 @@ function RegistrationModal({
   const handleRegisterAndPay = async () => {
     setIsProcessing(true);
     try {
+      const selectedPaymentMethod: PaymentMethod = isStripeOnlyEvent ? 'stripe' : paymentMethod;
       // First register the user
       const enrollment = await registerForEvent.mutateAsync({
         eventId: event.id,
@@ -275,7 +283,7 @@ function RegistrationModal({
         paymentOption,
       });
 
-      if (paymentMethod === 'stripe') {
+      if (selectedPaymentMethod === 'stripe') {
         // Create Stripe checkout session
         const result = await createCheckout.mutateAsync({
           enrollmentId: enrollment.id,
@@ -295,7 +303,7 @@ function RegistrationModal({
         await supabase
           .from('enrollments')
           .update({
-            payment_status: `pending_${paymentMethod}`,
+            payment_status: `pending_${selectedPaymentMethod}`,
           })
           .eq('id', enrollment.id);
 
@@ -308,11 +316,11 @@ function RegistrationModal({
         };
 
         // Open payment link in new tab
-        window.open(paymentLinks[paymentMethod], '_blank');
+        window.open(paymentLinks[selectedPaymentMethod], '_blank');
 
         // Close modal - registration is confirmed
         onClose();
-        alert(`Registration confirmed! Please complete your $${totalPrice} payment via ${paymentMethod === 'paypal' ? 'PayPal' : 'Venmo'}. A payment link has been opened in a new tab.`);
+        alert(`Registration confirmed! Please complete your $${totalPrice} payment via ${selectedPaymentMethod === 'paypal' ? 'PayPal' : 'Venmo'}. A payment link has been opened in a new tab.`);
       }
     } catch (error) {
       console.error('Registration failed:', error);
@@ -441,49 +449,53 @@ function RegistrationModal({
                 )}
               </button>
 
-              {/* PayPal */}
-              <button
-                onClick={() => setPaymentMethod('paypal')}
-                className={cn(
-                  "w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left",
-                  paymentMethod === 'paypal'
-                    ? "border-[#003087] bg-[#003087]/5"
-                    : "border-foreground/[0.08] hover:border-foreground/[0.15]"
-                )}
-              >
-                <div className="w-10 h-10 rounded-lg bg-[#003087] flex items-center justify-center shrink-0">
-                  <span className="text-white font-bold text-sm">PP</span>
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-foreground/80">PayPal</p>
-                  <p className="text-xs text-foreground/50">Pay with your PayPal account</p>
-                </div>
-                {paymentMethod === 'paypal' && (
-                  <Check className="h-5 w-5 text-[#003087]" />
-                )}
-              </button>
+              {!isStripeOnlyEvent && (
+                <>
+                  {/* PayPal */}
+                  <button
+                    onClick={() => setPaymentMethod('paypal')}
+                    className={cn(
+                      "w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left",
+                      paymentMethod === 'paypal'
+                        ? "border-[#003087] bg-[#003087]/5"
+                        : "border-foreground/[0.08] hover:border-foreground/[0.15]"
+                    )}
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-[#003087] flex items-center justify-center shrink-0">
+                      <span className="text-white font-bold text-sm">PP</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-foreground/80">PayPal</p>
+                      <p className="text-xs text-foreground/50">Pay with your PayPal account</p>
+                    </div>
+                    {paymentMethod === 'paypal' && (
+                      <Check className="h-5 w-5 text-[#003087]" />
+                    )}
+                  </button>
 
-              {/* Venmo */}
-              <button
-                onClick={() => setPaymentMethod('venmo')}
-                className={cn(
-                  "w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left",
-                  paymentMethod === 'venmo'
-                    ? "border-[#008CFF] bg-[#008CFF]/5"
-                    : "border-foreground/[0.08] hover:border-foreground/[0.15]"
-                )}
-              >
-                <div className="w-10 h-10 rounded-lg bg-[#008CFF] flex items-center justify-center shrink-0">
-                  <span className="text-white font-bold text-sm">V</span>
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-foreground/80">Venmo</p>
-                  <p className="text-xs text-foreground/50">Pay with Venmo</p>
-                </div>
-                {paymentMethod === 'venmo' && (
-                  <Check className="h-5 w-5 text-[#008CFF]" />
-                )}
-              </button>
+                  {/* Venmo */}
+                  <button
+                    onClick={() => setPaymentMethod('venmo')}
+                    className={cn(
+                      "w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left",
+                      paymentMethod === 'venmo'
+                        ? "border-[#008CFF] bg-[#008CFF]/5"
+                        : "border-foreground/[0.08] hover:border-foreground/[0.15]"
+                    )}
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-[#008CFF] flex items-center justify-center shrink-0">
+                      <span className="text-white font-bold text-sm">V</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-foreground/80">Venmo</p>
+                      <p className="text-xs text-foreground/50">Pay with Venmo</p>
+                    </div>
+                    {paymentMethod === 'venmo' && (
+                      <Check className="h-5 w-5 text-[#008CFF]" />
+                    )}
+                  </button>
+                </>
+              )}
             </div>
           )}
 
@@ -570,9 +582,9 @@ function RegistrationModal({
               disabled={isProcessing || isPending}
               className={cn(
                 "w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-white transition-all disabled:opacity-50",
-                paymentMethod === 'stripe' && "bg-[#635BFF] hover:bg-[#5147e5]",
-                paymentMethod === 'paypal' && "bg-[#003087] hover:bg-[#002060]",
-                paymentMethod === 'venmo' && "bg-[#008CFF] hover:bg-[#0070d6]"
+                (isStripeOnlyEvent || paymentMethod === 'stripe') && "bg-[#635BFF] hover:bg-[#5147e5]",
+                !isStripeOnlyEvent && paymentMethod === 'paypal' && "bg-[#003087] hover:bg-[#002060]",
+                !isStripeOnlyEvent && paymentMethod === 'venmo' && "bg-[#008CFF] hover:bg-[#0070d6]"
               )}
             >
               {isProcessing ? (
@@ -582,9 +594,9 @@ function RegistrationModal({
                 </>
               ) : (
                 <>
-                  {paymentMethod === 'stripe' && <CreditCard className="h-4 w-4" />}
-                  {paymentMethod === 'paypal' && <span className="font-bold">PP</span>}
-                  {paymentMethod === 'venmo' && <span className="font-bold">V</span>}
+                  {(isStripeOnlyEvent || paymentMethod === 'stripe') && <CreditCard className="h-4 w-4" />}
+                  {!isStripeOnlyEvent && paymentMethod === 'paypal' && <span className="font-bold">PP</span>}
+                  {!isStripeOnlyEvent && paymentMethod === 'venmo' && <span className="font-bold">V</span>}
                   Register & Pay ${totalPrice}
                 </>
               )}
@@ -917,6 +929,7 @@ export default function PortalEvents() {
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [paymentEnrollment, setPaymentEnrollment] = useState<{ id: string; event: Event } | null>(null);
   const [calendlyEvent, setCalendlyEvent] = useState<Event | null>(null);
+  const reconciledEnrollmentIdsRef = useRef<Set<string>>(new Set());
 
   const isLoading = eventsLoading || registrationsLoading;
 
@@ -950,14 +963,79 @@ export default function PortalEvents() {
           }
         );
       } else {
-        // No session ID but marked success - just refresh
-        queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
-        setSearchParams({});
+        // Backward compatibility for old links that lack session_id:
+        // verify by enrollment id only (function resolves Stripe session).
+        verifyPayment.mutate(
+          { enrollmentId },
+          {
+            onSuccess: () => {
+              queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
+              setSearchParams({});
+            },
+            onError: (verifyError) => {
+              console.error('Payment verification fallback failed:', verifyError);
+              queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
+              setSearchParams({});
+            },
+          }
+        );
       }
     } else if (paymentStatus === 'cancelled') {
       setSearchParams({});
     }
-  }, [searchParams, events, myRegistrations]);
+  }, [searchParams, events, myRegistrations, queryClient, setSearchParams, verifyPayment]);
+
+  // Fallback reconciliation: if a user completed Stripe but landed back without
+  // query params, verify any unpaid enrollment that has a checkout session ID.
+  useEffect(() => {
+    if (!myRegistrations || myRegistrations.length === 0) return;
+
+    const candidates = myRegistrations.filter((registration) => {
+      const hasSessionOrCanResolve = !!registration.stripe_checkout_session_id || registration.current_stage !== 'waitlist';
+      const needsReconcile = registration.payment_status !== 'paid' && registration.current_stage !== 'waitlist';
+      const notAttemptedYet = !reconciledEnrollmentIdsRef.current.has(registration.id);
+      return hasSessionOrCanResolve && needsReconcile && notAttemptedYet;
+    });
+
+    if (candidates.length === 0) return;
+
+    let cancelled = false;
+    const reconcile = async () => {
+      let anyPaid = false;
+
+      for (const registration of candidates) {
+        reconciledEnrollmentIdsRef.current.add(registration.id);
+
+        const response = await supabase.functions.invoke('stripe-verify-payment', {
+          body: {
+            sessionId: registration.stripe_checkout_session_id || null,
+            enrollmentId: registration.id,
+          },
+        });
+
+        if (response.error) {
+          console.error('Background payment reconciliation failed:', response.error);
+          continue;
+        }
+
+        if (response.data?.paymentStatus === 'paid') {
+          anyPaid = true;
+        }
+      }
+
+      if (anyPaid && !cancelled) {
+        queryClient.invalidateQueries({ queryKey: ['my-event-enrollments'] });
+      }
+    };
+
+    reconcile().catch((error) => {
+      console.error('Background payment reconciliation crashed:', error);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [myRegistrations, queryClient]);
 
   // Check if user is registered for an event
   const getRegistration = (eventId: string) => {
